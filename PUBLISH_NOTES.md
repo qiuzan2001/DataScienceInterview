@@ -36,3 +36,20 @@ This repository contains a folder called `StateFarm Interview` which is an Obsid
 ## Alternatives
 
 If you prefer a simpler static site without the interactive graph, you can explore tools like [Quartz](https://github.com/jackyzha0/quartz) or [Obsidian-Mkdocs](https://github.com/jobindjohn/obsidian-mkdocs). These convert your vault into a static website. However, the **Obsidian Digital Garden** plugin offers the closest experience to browsing notes directly in Obsidian, including a graph view.
+
+## Local React demo
+
+For a self-hosted approach, the repository also includes a minimal React project
+in the `webapp` folder. It renders Markdown files and visualizes their links as
+a graph. After installing dependencies, run the `generate` script to copy notes
+and build `graph.json`:
+
+```bash
+cd webapp
+npm install          # install React dependencies
+npm run generate     # copy notes and create graph.json
+npm start            # launch the development server
+```
+
+The site will be available at <http://localhost:3000>. You can navigate through
+notes and click nodes in the graph to jump between them.
