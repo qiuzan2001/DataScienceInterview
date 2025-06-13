@@ -1,0 +1,27 @@
+{
+	"nodes":[
+		{"id":"dbf57a70ceb50a8a","type":"text","text":"**Chapter 1. Introduction**","x":-360,"y":-80,"width":250,"height":60},
+		{"id":"237e99a7cebd2239","type":"text","text":"**Chapter 2. Logistic Regression Overview**","x":-60,"y":-80,"width":250,"height":60},
+		{"id":"9b8716802f5673bb","type":"text","text":"**Chapter 3. Discovery Work**","x":240,"y":-80,"width":250,"height":60},
+		{"id":"56d78f2db828c6ec","type":"text","text":"**Chapter 4. Measuring Classifier Performance**","x":540,"y":-80,"width":250,"height":60},
+		{"id":"612833469162611f","type":"text","text":"[[6.1 Data Preparation & Validation]]","x":-360,"y":81,"width":250,"height":60},
+		{"id":"f712129891b4e25a","type":"text","text":"[[1. Regression]]","x":-60,"y":81,"width":250,"height":60},
+		{"id":"5b0163f5fa1df517","type":"text","text":"[[Imbalanced Data]]","x":-60,"y":220,"width":250,"height":60},
+		{"id":"62ba07049cee5059","type":"text","text":"[[4. Missing Data]]","x":240,"y":81,"width":250,"height":63},
+		{"id":"e8679be280ff72bf","type":"text","text":"[[Dimensionality Reduction]]","x":240,"y":220,"width":250,"height":60},
+		{"id":"ad6827ea99e82391","type":"text","text":"**Variable Screening**\n\t[[Univariate Methods]]\n\t[[Multivariate Methods]]\n\t","x":240,"y":360,"width":250,"height":109},
+		{"id":"25f9ef27e854a221","x":540,"y":81,"width":250,"height":60,"type":"text","text":"[[6. Model Assessment]]"}
+	],
+	"edges":[
+		{"id":"776a0170b970b874","fromNode":"dbf57a70ceb50a8a","fromSide":"right","toNode":"237e99a7cebd2239","toSide":"left"},
+		{"id":"7e10e07e4f3e362b","fromNode":"9b8716802f5673bb","fromSide":"right","toNode":"56d78f2db828c6ec","toSide":"left"},
+		{"id":"27e94c23d7bdc00d","fromNode":"237e99a7cebd2239","fromSide":"right","toNode":"9b8716802f5673bb","toSide":"left"},
+		{"id":"905a4ab8216e9ff1","fromNode":"dbf57a70ceb50a8a","fromSide":"bottom","toNode":"612833469162611f","toSide":"top"},
+		{"id":"5d48b5fd9c289ec6","fromNode":"237e99a7cebd2239","fromSide":"bottom","toNode":"f712129891b4e25a","toSide":"top"},
+		{"id":"c0c64d6ce72acaff","fromNode":"f712129891b4e25a","fromSide":"bottom","toNode":"5b0163f5fa1df517","toSide":"top"},
+		{"id":"413eb2f1a13c668c","fromNode":"9b8716802f5673bb","fromSide":"bottom","toNode":"62ba07049cee5059","toSide":"top"},
+		{"id":"ca9bacdfc569ba5b","fromNode":"62ba07049cee5059","fromSide":"bottom","toNode":"e8679be280ff72bf","toSide":"top"},
+		{"id":"e2770d092b93a332","fromNode":"e8679be280ff72bf","fromSide":"bottom","toNode":"ad6827ea99e82391","toSide":"top"},
+		{"id":"7af9d7a52e6591f0","fromNode":"56d78f2db828c6ec","fromSide":"bottom","toNode":"25f9ef27e854a221","toSide":"top"}
+	]
+}

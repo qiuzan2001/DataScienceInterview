@@ -1,0 +1,450 @@
+{
+  "main": {
+    "id": "674dfc98c1b9c50b",
+    "type": "split",
+    "children": [
+      {
+        "id": "ad9dd53c37a591db",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6503172651832fa8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "08_ML_Methods/8. Ensemble Learning.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "8. Ensemble Learning"
+            }
+          },
+          {
+            "id": "6ffb03a27ab1218c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "08_ML_Methods/8. Ensemble Learning.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "8. Ensemble Learning"
+            }
+          },
+          {
+            "id": "ef838e418a618b67",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "08_ML_Methods/8.4. Boosting.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "8.4. Boosting"
+            }
+          },
+          {
+            "id": "a635e38532f11cde",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Data Science Interview Knowledge Base.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Data Science Interview Knowledge Base"
+            }
+          },
+          {
+            "id": "8ecddb0f666500b7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Prompt.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Prompt"
+            }
+          },
+          {
+            "id": "ef6984db5b4b206a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "08_ML_Methods/8. Ensemble Learning.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "8. Ensemble Learning"
+            }
+          },
+          {
+            "id": "dce3bb371ee14c81",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "07_Random_Forest/7.4. Quantifying Feature Importance.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "7.4. Quantifying Feature Importance"
+            }
+          },
+          {
+            "id": "c60dbc18337fba83",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "05_Dimension_Reduction/RF_GBM.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "RF_GBM"
+            }
+          },
+          {
+            "id": "145be600a7ec5579",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "06_Model_Assessment/6.3 Performance Metrics.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "6.3 Performance Metrics"
+            }
+          },
+          {
+            "id": "d97d8b498ac12b77",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "02_Transformations/2. Transformations.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "2. Transformations"
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "466c8f8d6302ebf7",
+    "type": "split",
+    "children": [
+      {
+        "id": "ed9b2bf902bdc83a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b54ba674cc233a10",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "e4d7bcb283edb13d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "77391a94e92a9907",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 348.5
+  },
+  "right": {
+    "id": "7e2d188640769412",
+    "type": "split",
+    "children": [
+      {
+        "id": "1a21a3cf302ed506",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "63010a9daa740201",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": true,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": false
+              },
+              "icon": "links-coming-in",
+              "title": "反向链接"
+            }
+          },
+          {
+            "id": "80c85ec3973d8450",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "出链"
+            }
+          },
+          {
+            "id": "ea15d63bc590baed",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "39f67dd70159550e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": true,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "大纲"
+            }
+          },
+          {
+            "id": "963bebb62a0bc591",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "graph",
+              "state": {},
+              "pinned": true,
+              "icon": "lucide-git-fork",
+              "title": "关系图谱"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 1580.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "graph:查看关系图谱": false
+    }
+  },
+  "active": "963bebb62a0bc591",
+  "lastOpenFiles": [
+    "Data Science Interview Knowledge Base.md",
+    "Prompt.md",
+    "Self-Intro.md",
+    "Logistic Regression Template.canvas",
+    "08_ML_Methods/8.4.2.1 AdaBoost (Adaptive Boosting).md",
+    "07_Random_Forest/7.4. Quantifying Feature Importance.md",
+    "08_ML_Methods/8.3. Bagging (Bootstrap Aggregating).md",
+    "08_ML_Methods/8. Ensemble Learning.md",
+    "07_Random_Forest/7. Random Forest.md",
+    "08_ML_Methods/8.4.2.2 Gradient Boosting.md",
+    "08_ML_Methods/8.4. Boosting.md",
+    "06_Model_Assessment/6. Model Assessment.md",
+    "05_Dimension_Reduction/RF_GBM.md",
+    "05_Dimension_Reduction/Univariate Methods.md",
+    "05_Dimension_Reduction/Feature selection.md",
+    "05_Dimension_Reduction/5. Dimension Reduction.md",
+    "05_Dimension_Reduction/Clustering.md",
+    "08_ML_Methods/未命名.md",
+    "06_Model_Assessment/6.3 Performance Metrics.md",
+    "06_Model_Assessment/6.2 Model Diagnosis_Bias-Variance Tradeoff.md",
+    "06_Model_Assessment/6.4 Diagnostic & Visualization Tools.md",
+    "06_Model_Assessment/6.1 Data Preparation & Validation.md",
+    "07_Random_Forest/7.2. Building the Forest.md",
+    "08_ML_Methods",
+    "04_Missing_Data/4. Missing Data.md",
+    "02_Transformations/2. Transformations.md",
+    "01_LR_GLMs/1.6 Estimation Issues & Separation.md",
+    "07_Random_Forest",
+    "Images/Pasted image 20250602120039.png",
+    "Images/Pasted image 20250605141224.png",
+    "Images/Pasted image 20250605150014.png",
+    "Images/Pasted image 20250605145035.png",
+    "Images",
+    "06_Model_Assessment",
+    "03_Multicollinearity/PCA/PCA数学推导",
+    "03_Multicollinearity/PCA",
+    "05_Dimension_Reduction",
+    "01_LR_GLMs/Linear_Regression",
+    "04_Missing_Data",
+    "03_Multicollinearity"
+  ]
+}
