@@ -109,7 +109,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "03_Multicollinearity/3. Multicollinearity.md",
+                "file": "02_Transformations/2. Transformations.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -124,7 +124,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "3. Multicollinearity"
+              "title": "2. Transformations"
             }
           }
         ],
@@ -269,9 +269,19 @@
               "icon": "lucide-git-fork",
               "title": "关系图谱"
             }
+          },
+          {
+            "id": "2a057212be5dd849",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
@@ -284,11 +294,14 @@
       "canvas:新建白板": false,
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
-      "command-palette:打开命令面板": false
+      "command-palette:打开命令面板": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "145be600a7ec5579",
+  "active": "6a83513de892b240",
   "lastOpenFiles": [
+    "Data Science Interview Knowledge Base.md",
+    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
     "03_Multicollinearity/3. Multicollinearity.md",
     "04_Missing_Data/4. Missing Data.md",
     "02_Transformations/2. Transformations.md",
@@ -302,13 +315,11 @@
     "01_LR_GLMs/1.5 Dealing with Unbalanced Samples.md",
     "Prompt.md",
     "01_LR_GLMs/1.7 Assumptions.md",
-    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
     "01_LR_GLMs/1.2 Generalized Linear Models (GLMs).md",
     "06_Model_Assessment/6.3 Performance Metrics.md",
     "01_LR_GLMs/1.3 Introducing Logistic Regression.md",
     "01_LR_GLMs/1.4.2 GLM Assumptions Diagnostic.md",
     "01_LR_GLMs/1.4.1 Assumptions Explained.md",
-    "Data Science Interview Knowledge Base.md",
     "LIFT/白名单软约束.md",
     "LIFT/3　同义折叠 → Canonical 叶标签（❸❹）.md",
     "LIFT/未命名.md",

@@ -1,33 +1,56 @@
-### [[1. Logistic Regression & GLMs]]
-**Definition & Purpose**: Statistical models for binary or count outcomes using a link function to relate predictors to expected response. Ideal when the target variable is categorical (often binary).
-**When & How to Identify**: Use when modeling classification tasks (e.g., churn, default). Identify via binary target variable and need for interpretable, probabilistic outputs.
+# [[1. Logistic Regression & GLMs]]
 
-**Core Assumptions and Diagnostics**
+## 🎯 Core Concept
+A **Generalized Linear Model (GLM)** used when the outcome variable is **binary** (0 or 1). It models the probability of an event occurring.
 
-| Linear Model        | GLM                     | Diagnostic Methods                                  | Assumption                      |
-| ------------------- | ----------------------- | --------------------------------------------------- | ------------------------------- |
-| Normal distribution | Exponential family      | Q-Q plot                                            | Yi distribution                 |
-| Linear in mean      | Linear in link function | Residual plots, LOESS                               | Linearity of predictors         |
-| Not expected        | Not expected            | VIF, correlation matrix                             | Multicollinearity               |
-| Must check          | Must check              | Leverage stats, Cook's distance                     | Outliers & high leverage points |
-| Required            | Not required            | Residuals vs fitted, scale-location plot (LM only)  | Homoscedasticity                |
-| Important           | Important               | Residual analysis, AIC/BIC, omitted variable checks | Model specification correctness |
-|                     |                         |                                                     |                                 |
+- **Outcome**: Binary (e.g., Yes/No, Pass/Fail)
+- **Fitting Method**: Maximum Likelihood Estimation (MLE)
 
-**GLM vs GBM: Model Capabilities**
+## 📈 Model & Interpretation
+The model uses a **logit link function** to connect the predictors to the outcome's probability.
 
-| Feature       | GLM   | GBM    |
-| ------------- | ----- | ------ |
-| Non-linearity | No    | Yes    |
-| Interactions  | No    | Yes    |
-| Monotonicity  | Yes   | No     |
-| Accuracy      | Lower | Higher |
+#### Link Function: The Logit
+- **What it is**: The natural log of the odds.
+- **Formula**: `logit(p) = log(p / (1-p))`
+- **Purpose**: Transforms probability `p` (from 0 to 1) to a continuous scale (from -∞ to +∞).
 
-* **Model form & interpretation**: logit link (log-odds), odds ratios, canonical vs non-canonical links
-* **Estimation issues**: complete/quasi-separation, non-convergence, penalized approaches
-* **Evaluation & imbalance**: confusion matrix, accuracy vs precision/recall trade-off, AUROC, resampling, class weights, threshold tuning
+#### Model Equation
+$$ \log\left(\frac{p_i}{1-p_i}\right) = \beta_0 + \beta_1 X_{i1} + \dots + \beta_k X_{ik} $$
 
-### [[2. Transformations]]
+- **Interpretation**: A one-unit change in `X_j` is associated with a `β_j` change in the **log-odds** of the outcome. Exponentiating the coefficient, `exp(β_j)`, gives the **odds ratio**.
+
+## ✅ Key Assumptions
+- **Binary Outcome**: The dependent variable must be binary.
+- **Linearity of the Logit**: A linear relationship exists between the predictors and the log-odds of the outcome.
+- **Independence of Observations**: Observations are not related to each other.
+- **No Perfect Multicollinearity**: Predictors are not perfectly correlated.
+- **Large Sample Size**: A rule of thumb is ≥10-20 cases for the *rarest* outcome class per predictor.
+
+## ⚠️ Common Problems & Solutions
+
+### 1. Imbalanced Samples (Rare Events)
+- **Problem**: Model gets biased towards the majority class.
+- **Solutions**:
+  - **Resampling**: Oversample the minority (e.g., SMOTE) or undersample the majority.
+  - **Class Weights**: Penalize errors on the minority class more heavily.
+  - **Metrics**: Use **AUROC** or **Precision-Recall curves** instead of accuracy.
+
+### 2. Separation
+- **Problem**: A predictor perfectly (or nearly perfectly) separates the two outcome classes. This causes MLE to fail or produce huge standard errors.
+- **Solutions**:
+  - **Penalized Regression**: Use Ridge (L2) or Lasso (L1) regularization.
+  - **Firth's Correction**: A bias-reduction method.
+  - **Bayesian Priors**: Use informative priors to regularize coefficients.
+
+## 📊 Evaluation
+Primary evaluation is done using a **confusion matrix** and its derived metrics:
+
+- **Accuracy**: Overall correctness (misleading for imbalanced data).
+- **Precision**: `TP / (TP + FP)` - How many predicted positives were actually positive?
+- **Recall (Sensitivity)**: `TP / (TP + FN)` - How many actual positives were found?
+- **F1-Score**: Harmonic mean of Precision and Recall.
+- **AUROC**: Ability of the model to rank a random positive case higher than a random negative one.
+# [[2. Transformations]]
 
 **Definition & Purpose**: Mathematical operations applied to input variables to improve model assumptions (linearity, normality, variance stability).
 **When & How to Identify**: Use when predictor distributions are skewed or residuals show non-linearity. Identify via residual plots, skewness/kurtosis metrics, Q-Q plots.
@@ -41,7 +64,7 @@
 | Splines                | Piecewise smooth fitting                  | Non-linear patterns in time series     |
 | GAM (Generalized Add.) | Flexible smoothing with regularization    | Continuous predictors with curvature   |
 
-### [[3. Multicollinearity]]
+# [[3. Multicollinearity]]
 
 **Definition & Purpose**: Situation where two or more predictors are highly correlated, inflating variance and destabilizing coefficient estimates.
 **When & How to Identify**: Use when regression coefficients vary wildly or have unexpected signs. Identify via high VIF (>5–10), strong pairwise correlations, condition index.
@@ -50,7 +73,7 @@
 * **Impact**: inflated coefficient variance, unstable estimates, mis‑leading inference
 * **Remedies**: drop/aggregate variables, hierarchical clustering (VARCLUS), PCA for projection, ridge/LASSO regularization
 
-### [[4. Missing Data]]
+# [[4. Missing Data]]
 
 **Definition & Purpose**: Occurs when observations have absent entries for some variables; must handle thoughtfully to avoid bias.
 **When & How to Identify**: Use when dataset contains NA values. Identify via missing-value counts, patterns (MCAR/MAR/MNAR), visualizations (heatmaps).
@@ -73,7 +96,7 @@
 
 **Considerations**: Bias risk from wrong assumptions, underestimation of variance, and impact on model interpretability.
 
-### [[5. Dimension Reduction]]
+# [[5. Dimension Reduction]]
 
 **Definition & Purpose**: Techniques to reduce the number of variables while retaining most information, improving interpretability and performance.
 **When & How to Identify**: Use when feature count is high relative to observations or multicollinearity is severe. Identify via exploratory analysis, variance explained, overfitting symptoms.
@@ -89,7 +112,7 @@
 | **Dimension reduction (feature selection)**   | **Filter**: correlation, ANOVA, IV <br>**Wrapper**: RFE, forward/backward stepwise <br>**Embedded**: LASSO, tree importances | **Filter**: variance threshold, mutual info <br>**Wrapper**: k-NN with CV <br>**Embedded**: unsupervised feature importance |
 | **Dimension projection (feature extraction)** | PCA supervised variants, supervised autoencoders                                                                             | PCA, ICA, t-SNE, unsupervised autoencoders                                                                                  |
 
-### [[6. Model Assessment]]
+# [[6. Model Assessment]]
 
 **Definition & Purpose**: Framework for evaluating model performance and generalization on unseen data.
 **When & How to Identify**: Use after model training to estimate skill. Identify via need for unbiased performance estimates and model comparison.
@@ -106,7 +129,7 @@
 
 ---
 
-### [[7. Random Forest]]
+# [[7. Random Forest]]
 
 **Definition**
 An ensemble of unpruned decision trees trained on bootstrap samples with random feature subsets at each split. Combines bagging and random feature selection to reduce variance and improve generalization.
@@ -167,7 +190,7 @@ Here's your formatted content using `###` for the main title ("Ensemble Learning
 
 ---
 
-### [[8. Ensemble Learning]]
+# [[8. Ensemble Learning]]
 
 ---
 
