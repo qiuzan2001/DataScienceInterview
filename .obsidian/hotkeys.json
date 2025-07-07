@@ -1,0 +1,29 @@
+{
+  "obsidian-paste-to-current-indentation:paste-in-mode-Markdown": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "M"
+    }
+  ],
+  "obsidian-paste-to-current-indentation:paste-in-mode-MarkdownBlockquote": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "M"
+    }
+  ],
+  "obsidian-paste-to-current-indentation:paste-in-mode-Text": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "V"
+    }
+  ]
+}
