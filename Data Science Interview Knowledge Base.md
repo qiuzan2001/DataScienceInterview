@@ -115,14 +115,37 @@ Primary evaluation is done using a **confusion matrix** and its derived metrics:
 - **Splines / GAMs**: Fit flexible, piecewise curves to the data. More stable and powerful than polynomials for capturing complex relationships without overfitting. A **GAM** automates this by fitting a smooth function `f(x)` for each predictor.
 
 # [[3. Multicollinearity]]
+## **Definition & Core Problem**
+Multicollinearity occurs when predictor variables are highly correlated, making it impossible to determine individual variable effects. The mathematical root: when predictors are correlated, the matrix (X'X)⁻¹ becomes unstable, causing coefficient estimates to explode in variance.
 
-**Definition & Purpose**: Situation where two or more predictors are highly correlated, inflating variance and destabilizing coefficient estimates.
-**When & How to Identify**: Use when regression coefficients vary wildly or have unexpected signs. Identify via high VIF (>5–10), strong pairwise correlations, condition index.
+**The Domino Effect:** High correlation → High VIF → Inflated standard errors → Unstable coefficients → High p-values → Unreliable interpretation
 
-* **Detection**: pairwise correlations, VIF, condition index, variance decomposition proportions
-* **Impact**: inflated coefficient variance, unstable estimates, mis‑leading inference
-* **Remedies**: drop/aggregate variables, hierarchical clustering (VARCLUS), PCA for projection, ridge/LASSO regularization
+## **Model Impact**
+| **Model Type** | **Effect** |
+|:---|:---|
+| **Linear/Logistic/GLMs** | 🚫 **Severely affected** - Unstable coefficients, inflated SEs, unreliable p-values |
+| **Tree-Based Models** | ✅ **Largely immune** - No matrix inversion; naturally selects one variable from correlated groups |
 
+## **Detection Methods**
+1. **Correlation Matrix**: |r| ≥ 0.70 = problematic
+2. **Variance Inflation Factor (VIF)**: VIF = 1/(1-R²)
+   - VIF = 1: No multicollinearity
+   - VIF > 5: Concerning
+   - VIF > 10: Severe problem
+
+## **Solutions
+
+| **Method** | **Approach** | **Pros** | **Cons** |
+|:---|:---|:---|:---|
+| **Variable Removal** | Iteratively remove highest VIF variables | Simple, interpretable | Loses information |
+| **Variable Clustering** | Group correlated variables, select representatives | Preserves meaning | More complex |
+| **Penalized Regression** | Ridge/LASSO with coefficient penalties | Stable, automatic selection | Introduces tuning |
+| **PCA Regression** | Transform to uncorrelated components | Mathematically elegant | Loses interpretability |
+
+## **Key Takeaway**
+- **For Interpretation**: Multicollinearity makes individual coefficients meaningless in GLMs
+- **For Prediction**: Tree-based models handle it naturally; GLMs may need intervention
+- **Quick Fix**: Remove variables with VIF > 10 sequentially, recalculating VIFs after each removal
 # [[4. Missing Data]]
 
 **Definition & Purpose**: Occurs when observations have absent entries for some variables; must handle thoughtfully to avoid bias.

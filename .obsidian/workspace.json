@@ -8,108 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "c18c938145a976cd",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "08_ML_Methods/8.4.2.1 AdaBoost (Adaptive Boosting).md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "8.4.2.1 AdaBoost (Adaptive Boosting)"
-            }
-          },
-          {
-            "id": "13850d05130b30cc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "LIFT/未命名.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "未命名"
-            }
-          },
-          {
-            "id": "cd58a73e3b60067e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "01_LR_GLMs/1.6 Estimation Issues & Separation.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "1.6 Estimation Issues & Separation"
-            }
-          },
-          {
-            "id": "794945a74b5054b9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "03_Multicollinearity/3. Multicollinearity.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "3. Multicollinearity"
-            }
-          },
-          {
             "id": "1854949159192008",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Data Science Interview Knowledge Base.md",
+                "file": "05_Dimension_Reduction/5.2 Univariate Selection.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -124,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Data Science Interview Knowledge Base"
+              "title": "5.2 Univariate Selection"
             }
           },
           {
@@ -151,8 +55,7 @@
               "title": "Prompt"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -218,6 +121,7 @@
       {
         "id": "1a21a3cf302ed506",
         "type": "tabs",
+        "dimension": 32.22523744911804,
         "children": [
           {
             "id": "63010a9daa740201",
@@ -225,7 +129,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "08_ML_Methods/8.4.2.2 Gradient Boosting.md",
+                "file": "05_Dimension_Reduction/5.2 Univariate Selection.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -235,7 +139,7 @@
                 "unlinkedCollapsed": false
               },
               "icon": "links-coming-in",
-              "title": "8.4.2.2 Gradient Boosting 的反向链接列表"
+              "title": "5.2 Univariate Selection 的反向链接列表"
             }
           },
           {
@@ -244,12 +148,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "08_ML_Methods/8.4.2.2 Gradient Boosting.md",
+                "file": "05_Dimension_Reduction/5.2 Univariate Selection.md",
                 "linksCollapsed": false,
-                "unlinkedCollapsed": true
+                "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
-              "title": "8.4.2.2 Gradient Boosting 的出链列表"
+              "title": "5.2 Univariate Selection 的出链列表"
             }
           },
           {
@@ -283,18 +187,6 @@
             }
           },
           {
-            "id": "145be600a7ec5579",
-            "type": "leaf",
-            "pinned": true,
-            "state": {
-              "type": "graph",
-              "state": {},
-              "pinned": true,
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
-            }
-          },
-          {
             "id": "2a057212be5dd849",
             "type": "leaf",
             "state": {
@@ -305,11 +197,30 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 4
+      },
+      {
+        "id": "e57ab2e526b696c1",
+        "type": "tabs",
+        "dimension": 67.77476255088195,
+        "children": [
+          {
+            "id": "145be600a7ec5579",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "graph",
+              "state": {},
+              "pinned": true,
+              "icon": "lucide-git-fork",
+              "title": "关系图谱"
+            }
+          }
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 1348.5
+    "width": 1333.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -324,32 +235,32 @@
   },
   "active": "2a057212be5dd849",
   "lastOpenFiles": [
-    "03_Multicollinearity/3. Multicollinearity.md",
-    "03_Multicollinearity/3.5.2 SAS VARCLUS.md",
+    "05_Dimension_Reduction/5. Dimension Reduction.md",
+    "05_Dimension_Reduction/5.2 Univariate Selection.md",
     "Data Science Interview Knowledge Base.md",
+    "Prompt.md",
+    "03_Multicollinearity/3. Multicollinearity.md",
+    "05_Dimension_Reduction/Clustering.md",
+    "05_Dimension_Reduction/Feature selection.md",
+    "05_Dimension_Reduction/Univariate Methods.md",
+    "05_Dimension_Reduction/RF_GBM.md",
+    "LIFT/3　同义折叠 → Canonical 叶标签（❸❹）.md",
+    "04_Missing_Data/4. Missing Data.md",
+    "03_Multicollinearity/3.5.2 SAS VARCLUS.md",
+    "08_ML_Methods/8.4.2.1 AdaBoost (Adaptive Boosting).md",
+    "LIFT/未命名.md",
+    "03_Multicollinearity/3.5.4 PCA.md",
+    "01_LR_GLMs/1.6 Estimation Issues & Separation.md",
     "03_Multicollinearity/3.4.2 Variance Inflation Factor (VIF).md",
     "03_Multicollinearity/近似多重共线性.md",
     "03_Multicollinearity/Perfect Colinearity.md",
     "03_Multicollinearity/Effect.md",
-    "03_Multicollinearity/3.5.4 PCA.md",
     "03_Multicollinearity/Detect.md",
     "03_Multicollinearity/Near Multicolinearity.md",
     "03_Multicollinearity/Solutions.md",
-    "Prompt.md",
     "03_Multicollinearity/PCA/PCA数学推导/0 PCA 数学推导.md",
     "06_Model_Assessment/6. Model Assessment.md",
     "06_Model_Assessment/6.3 Performance Metrics.md",
-    "01_LR_GLMs/1.6 Estimation Issues & Separation.md",
-    "05_Dimension_Reduction/Clustering.md",
-    "05_Dimension_Reduction/Feature selection.md",
-    "04_Missing_Data/4. Missing Data.md",
-    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
-    "01_LR_GLMs/1.4 Model Fitting.md",
-    "02_Transformations/2. Transformations.md",
-    "02_Transformations/2.3.1 WOE & IV.md",
-    "07_Random_Forest/7.5 CART Algorithm.md",
-    "01_LR_GLMs/1.6.3 Regularization.md",
-    "1.6.3 Penalized MLE (Ridge / Lasso).md",
     "1.6.3 Penalized MLE (Ridge ",
     "LIFT",
     "Logistic Regression Template.canvas",

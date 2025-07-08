@@ -1,9 +1,9 @@
 {
-  "collapse-filter": false,
+  "collapse-filter": true,
   "search": "",
   "showTags": false,
   "showAttachments": false,
-  "hideUnresolved": false,
+  "hideUnresolved": true,
   "showOrphans": true,
   "collapse-color-groups": true,
   "colorGroups": [
@@ -39,7 +39,7 @@
       "query": "path:05_Dimension_Reduction  ",
       "color": {
         "a": 1,
-        "rgb": 5431473
+        "rgb": 5729669
       }
     },
     {
@@ -74,6 +74,6 @@
   "repelStrength": 12.34130859375,
   "linkStrength": 1,
   "linkDistance": 173,
-  "scale": 1.1968329966207445,
-  "close": false
+  "scale": 1.3245134329258836,
+  "close": true
 }
