@@ -133,7 +133,7 @@ Multicollinearity occurs when predictor variables are highly correlated, making 
    - VIF > 5: Concerning
    - VIF > 10: Severe problem
 
-## **Solutions
+## **Solutions**
 
 | **Method** | **Approach** | **Pros** | **Cons** |
 |:---|:---|:---|:---|
@@ -216,6 +216,40 @@ Multicollinearity occurs when predictor variables are highly correlated, making 
 | **Dimension reduction (feature selection)**   | **Filter**: correlation, ANOVA, IV <br>**Wrapper**: RFE, forward/backward stepwise <br>**Embedded**: LASSO, tree importances | **Filter**: variance threshold, mutual info <br>**Wrapper**: k-NN with CV <br>**Embedded**: unsupervised feature importance |
 | **Dimension projection (feature extraction)** | PCA supervised variants, supervised autoencoders                                                                             | PCA, ICA, t-SNE, unsupervised autoencoders                                                                                  |
 
+### **1. Univariate Selection (First Pass)**
+| Method              | Use Case                  | Best For                    |
+| ------------------- | ------------------------- | --------------------------- |
+| **Variance Filter** | Drop near-constants       | Lightning fast cleanup      |
+| **Chi-Squared**     | Categorical → Categorical | Non-linear relationships    |
+| **ANOVA F-test**    | Numeric → Categorical     | Linear relationships        |
+| **AUC Ranking**     | Direct predictive power   | Scale-independent screening |
+
+### **2. Multivariate Selection**
+| Method | Core Idea | Best For |
+|--------|-----------|----------|
+| **Correlation/VIF Filter** | Remove highly correlated pairs | Linear redundancy |
+| **Mutual Information** | High MI with target, low with selected | Non-linear dependencies |
+| **RFE** | Knockout tournament | Model-aware selection |
+
+### **3. Specialized Methods**
+- **VARCLUS:** Groups similar features into themes
+- **PCA:** Transform to orthogonal components (keep 95% variance)
+- **Tree-Based:** Use Gini/permutation importance from RF/GBM
+- **LASSO/Elastic Net:** L1 penalty shrinks coefficients to zero
+## **Strategic Workflow**
+1. **Quick Cleanup:** Remove zero-variance & duplicates
+2. **First Pass:** Univariate filters (AUC, Chi-Squared)
+3. **Choose Method:**
+   - **< 100 features:** RFE with CV
+   - **p ≫ n:** LASSO
+   - **Need interpretable groups:** VARCLUS
+   - **Using RF/GBM anyway:** Built-in importance
+## **Key Rules**
+- **Golden Rule:** Feature selection INSIDE CV loop (prevent leakage)
+- **Standardize:** Always for penalized methods
+- **Document:** Record process & parameters
+
+**Quick Decision:** Variance filter → AUC ranking → LASSO for most problems.
 # [[6. Model Assessment]]
 
 **Definition & Purpose**: Framework for evaluating model performance and generalization on unseen data.
