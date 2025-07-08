@@ -51,18 +51,68 @@ Primary evaluation is done using a **confusion matrix** and its derived metrics:
 - **F1-Score**: Harmonic mean of Precision and Recall.
 - **AUROC**: Ability of the model to rank a random positive case higher than a random negative one.
 # [[2. Transformations]]
+## 🎯 Why Transform Variables?
+- **Improve Linearity**: Help linear models fit better.
+- **Stabilize Variance**: Fix funnel shapes in residual plots (heteroscedasticity).
+- **Normalize Distributions**: Make skewed data more symmetric for better inference.
+- **Control Outliers**: Reduce the influence of extreme values.
+- **Encode Categories**: Convert non-numeric data for algorithms.
 
-**Definition & Purpose**: Mathematical operations applied to input variables to improve model assumptions (linearity, normality, variance stability).
-**When & How to Identify**: Use when predictor distributions are skewed or residuals show non-linearity. Identify via residual plots, skewness/kurtosis metrics, Q-Q plots.
+## 🔍 When to Transform? (Key Signals)
+- **Residual Plots**: Show curvature (non-linearity) or a funnel shape (variance issues).
+- **Histograms / Q-Q Plots**: Show significant skew or heavy tails.
 
-| Transformation         | Purpose                                   | Use Case Example                       |
-| ---------------------- | ----------------------------------------- | -------------------------------------- |
-| Winsorisation          | Cap/floor outliers to reduce influence    | Handling salary outliers               |
-| Box-Cox                | Normalize skewed positive-only data       | Right-skewed income values             |
-| Yeo-Johnson            | Normalize skewed data including negatives | Net gain/loss columns                  |
-| Polynomial Terms       | Model non-linearity explicitly            | U-shaped relationship in age vs. churn |
-| Splines                | Piecewise smooth fitting                  | Non-linear patterns in time series     |
-| GAM (Generalized Add.) | Flexible smoothing with regularization    | Continuous predictors with curvature   |
+---
+
+## 🛠️ Core Transformation Techniques Overview
+
+| Technique | Applies to | Target-Aware? | Primary Goal |
+| :--- | :--- | :--- | :--- |
+| **Dummy / One-Hot Encoding** | Categorical | No | Convert categories to numeric format. |
+| **Winsorization (Capping)** | Continuous | No | Reduce outlier impact. |
+| **Binning (Unsupervised)** | Continuous | No | Simplify, handle non-linearity. |
+| **Box-Cox / Power Transform** | Continuous | No | Normalize skew, stabilize variance. |
+| **Polynomials / Splines** | Continuous | No | Model complex non-linear relationships. |
+| **Weight of Evidence (WOE)** | Categorical | Yes (Binary) | Create a monotonic, predictive numeric score for categories. |
+| **Supervised Binning** | Continuous | Yes | Create bins that best separate the target classes. |
+| **GAM Smoothing** | Continuous | Yes | Automatically find and apply a smooth non-linear transformation. |
+
+---
+
+## ✨ Key Techniques Explained
+
+### 1. Categorical Encoding
+
+#### One-Hot / Dummy Coding
+- **Goal**: Convert a category into binary (0/1) columns.
+- **Dummy Coding**: Creates `k-1` columns, with one category as the baseline (intercept). Interpretable coefficients.
+- **One-Hot Encoding**: Creates `k` columns. Can cause multicollinearity if all are used in a linear model.
+
+#### Weight of Evidence (WOE) & Information Value (IV)
+- **Goal**: Transform categories into a single numeric score based on their relationship with a binary target.
+- **WOE Formula**: `WOE = ln(%Goods / %Bads)`
+  - Positive WOE: Category is associated with higher odds of the event (Y=1).
+  - Negative WOE: Category is associated with lower odds.
+- **Information Value (IV)**: Measures the predictive power of the variable based on its WOE.
+  - **Rule of Thumb**: `IV < 0.02` (useless), `0.1 - 0.3` (medium), `> 0.3` (strong).
+
+### 2. Continuous Transformations
+
+#### Binning
+- **Unsupervised**: Bins based only on the feature's distribution.
+  - **Equal-Width**: Simple, but sensitive to outliers.
+  - **Quantile**: Each bin has the same number of observations; robust to outliers.
+- **Supervised**: Bins are created to maximize the separation between target classes (e.g., using Chi-Square or Entropy).
+
+#### Power Transforms (Box-Cox)
+- **Goal**: Find the best power `λ` (lambda) to make data more normal.
+- **Formula**: `(x^λ - 1) / λ`
+- **Key Lambdas**: `λ=0` is log, `λ=0.5` is square root, `λ=-1` is reciprocal.
+- **Requirement**: Data must be positive.
+
+#### Polynomials & Splines (for non-linearity)
+- **Polynomials**: Add powers of the feature (e.g., `x²`, `x³`) to the model to capture curves. Prone to overfitting and wild extrapolation.
+- **Splines / GAMs**: Fit flexible, piecewise curves to the data. More stable and powerful than polynomials for capturing complex relationships without overfitting. A **GAM** automates this by fitting a smooth function `f(x)` for each predictor.
 
 # [[3. Multicollinearity]]
 
@@ -76,26 +126,57 @@ Primary evaluation is done using a **confusion matrix** and its derived metrics:
 # [[4. Missing Data]]
 
 **Definition & Purpose**: Occurs when observations have absent entries for some variables; must handle thoughtfully to avoid bias.
-**When & How to Identify**: Use when dataset contains NA values. Identify via missing-value counts, patterns (MCAR/MAR/MNAR), visualizations (heatmaps).
 
-| Mechanism | Description                                        | Example                                      |
-| --------- | -------------------------------------------------- | -------------------------------------------- |
-| MCAR      | Missing completely at random                       | Sensor failed randomly                       |
-| MAR       | Missing at random, dependent on observed variables | Income missing more often for younger people |
-| MNAR      | Missing not at random, depends on unobserved data  | People with high income skip salary question |
+### **🎲 MCAR (Missing Completely At Random)**
 
-**Common Imputation Methods**:
+#### **Diagnosis: Pure Bad Luck**
 
-| Method                | Description                               | Pros                     | Cons                         |
-| --------------------- | ----------------------------------------- | ------------------------ | ---------------------------- |
-| Mean/Mode Imputation  | Replace missing with column mean or mode  | Simple, fast             | Underestimates variance      |
-| Hot-deck              | Impute from similar observed record       | Preserves distribution   | May introduce bias           |
-| Regression Imputation | Predict missing using other features      | Leverages relationships  | Assumes linear relationships |
-| k-NN Imputation       | Use nearest neighbors to impute           | Handles non-linearity    | Computationally expensive    |
-| Multiple Imputation   | Generates multiple estimates and averages | Accounts for uncertainty | Complex implementation       |
+| **What it is**                                                               | **How to Spot It**                                                                  | **Implication**                                                                 |
+| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| The probability of a value being missing is **unrelated to everything**. It's a purely random event. | Gaps appear scattered with no pattern. Formal check: **Little's MCAR test** (p > 0.05). | The observed data is an **unbiased** (but smaller) subsample. The main risk is losing statistical power. |
 
-**Considerations**: Bias risk from wrong assumptions, underestimation of variance, and impact on model interpretability.
+#### **Fixes for MCAR**
 
+| **Method**                        | **Core Idea**                                                   | **Pros**                                       | **Cons**                                                                                                     |
+| --------------------------------- | --------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Complete Case Analysis (Dropping)** | Delete any row containing a missing value.                      | Simple, fast, and unbiased *if* data is truly MCAR. | Wastes data, reduces statistical power, widens confidence intervals. **Only recommended for <5% missingness.** |
+| **Mean / Mode Imputation**        | Replace missing values with the column's average or most frequent category. | Keeps sample size intact, very easy to implement. | 🚨 **Destroys variance** and **distorts correlations**. Makes you overconfident in results.                  |
+
+---
+
+### **🔗 MAR (Missing At Random)**
+
+#### **Diagnosis: Systematically Explainable**
+
+| **What it is**                                                               | **How to Spot It**                                                                              | **Implication**                                                                                                   |
+| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| The probability of a value being missing is explainable by **other observed variables**. | Patterns emerge in visualizations (e.g., missing `Income` correlates with `Age`). The cause is *in your data*. | **This is good!** You can use the relationships in your data to make an intelligent, unbiased estimate of the missing value. |
+
+#### **Fixes for MAR**
+
+| **Method**                   | **Core Idea**                                                                  | **Pros**                                                                      | **Cons**                                                                                                        |
+| ---------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Regression Imputation**    | Predict the missing value using other columns as features in a regression model. | Preserves relationships between variables; more intelligent than mean imputation. | Assumes a specific model form (e.g., linearity). Underestimates variance unless random noise is added.         |
+| **k-NN Imputation**          | Fill the gap using an average of the `k` most similar complete rows ("neighbors"). | Captures complex, non-linear relationships without needing a model.           | Can be slow on large datasets. Sensitive to feature scaling and the choice of `k`.                            |
+| **Multiple Imputation (MICE)** | ✨ **Gold Standard** ✨ <br> Create `m` plausible completed datasets, analyze each, and pool the results. | **Properly accounts for uncertainty**, providing valid p-values and confidence intervals. | The most complex method to implement and understand. Computationally intensive.                              |
+
+---
+
+### **❓ MNAR (Missing Not At Random)**
+
+#### **Diagnosis: The Unseen Cause**
+
+| **What it is**                                                               | **How to Spot It**                                                                         | **Implication**                                                                                                           |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| The probability of a value being missing depends on the **missing value itself**. | Usually requires **domain knowledge**. You can't see it in the data alone (e.g., people with very high incomes hide them). | **This is the hardest case.** Standard imputation methods will introduce **bias**. The information needed to fix the gap is missing. |
+
+#### **Fixes for MNAR**
+
+| **Approach**              | **Core Idea**                                                                                                          | **Key Consideration**                                                                                       |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Model the Missingness** | Use advanced statistical techniques (e.g., Selection Models) that explicitly make an assumption about the missingness. | Requires strong statistical knowledge and justifiable assumptions about why the data is missing.            |
+| **Sensitivity Analysis**  | Impute data under different "what-if" scenarios (e.g., all missing values are high, then all are low).                 | Doesn't give you one answer, but tests if your conclusion is robust under various plausible assumptions.    |
+| **Collect More Data**     | Go back to the source and try to acquire the missing information through follow-up surveys or other means.             | Often impractical, but it is the only way to truly solve the problem without making untestable assumptions. |
 # [[5. Dimension Reduction]]
 
 **Definition & Purpose**: Techniques to reduce the number of variables while retaining most information, improving interpretability and performance.

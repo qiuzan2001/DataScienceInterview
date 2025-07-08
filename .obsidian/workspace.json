@@ -85,7 +85,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01_LR_GLMs/1.4 Model Fitting.md",
+                "file": "03_Multicollinearity/3. Multicollinearity.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -100,7 +100,31 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "1.4 Model Fitting"
+              "title": "3. Multicollinearity"
+            }
+          },
+          {
+            "id": "b0f409b200370529",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "03_Multicollinearity/3.4.2 Variance Inflation Factor (VIF).md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "3.4.2 Variance Inflation Factor (VIF)"
             }
           },
           {
@@ -109,7 +133,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02_Transformations/2. Transformations.md",
+                "file": "Prompt.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -124,11 +148,11 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2. Transformations"
+              "title": "Prompt"
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -249,13 +273,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "08_ML_Methods/8.4.2.1 AdaBoost (Adaptive Boosting).md",
+                "file": "03_Multicollinearity/3. Multicollinearity.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "8.4.2.1 AdaBoost (Adaptive Boosting) 的大纲"
+              "title": "3. Multicollinearity 的大纲"
             }
           },
           {
@@ -285,7 +309,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 1026.5
+    "width": 834.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -298,22 +322,28 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "6a83513de892b240",
+  "active": "2a057212be5dd849",
   "lastOpenFiles": [
-    "Data Science Interview Knowledge Base.md",
-    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
+    "03_Multicollinearity/3.4.2 Variance Inflation Factor (VIF).md",
     "03_Multicollinearity/3. Multicollinearity.md",
+    "05_Dimension_Reduction/Clustering.md",
+    "03_Multicollinearity/PCA/PCA.md",
+    "03_Multicollinearity/Effect.md",
+    "05_Dimension_Reduction/Feature selection.md",
+    "03_Multicollinearity/Near Multicolinearity.md",
+    "Data Science Interview Knowledge Base.md",
     "04_Missing_Data/4. Missing Data.md",
+    "Prompt.md",
+    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
+    "01_LR_GLMs/1.4 Model Fitting.md",
     "02_Transformations/2. Transformations.md",
     "02_Transformations/2.3.1 WOE & IV.md",
     "07_Random_Forest/7.5 CART Algorithm.md",
     "01_LR_GLMs/1.6.3 Regularization.md",
-    "01_LR_GLMs/1.4 Model Fitting.md",
     "01_LR_GLMs/1.6 Estimation Issues & Separation.md",
     "1.6.3 Penalized MLE (Ridge / Lasso).md",
     "1.6.3 Penalized MLE (Ridge ",
     "01_LR_GLMs/1.5 Dealing with Unbalanced Samples.md",
-    "Prompt.md",
     "01_LR_GLMs/1.7 Assumptions.md",
     "01_LR_GLMs/1.2 Generalized Linear Models (GLMs).md",
     "06_Model_Assessment/6.3 Performance Metrics.md",
@@ -321,13 +351,7 @@
     "01_LR_GLMs/1.4.2 GLM Assumptions Diagnostic.md",
     "01_LR_GLMs/1.4.1 Assumptions Explained.md",
     "LIFT/白名单软约束.md",
-    "LIFT/3　同义折叠 → Canonical 叶标签（❸❹）.md",
-    "LIFT/未命名.md",
-    "LIFT/1 Data model (RDB-plus-vector hybrid).md",
     "LIFT",
-    "08_ML_Methods/8.4.2.1 AdaBoost (Adaptive Boosting).md",
-    "08_ML_Methods/8.4.2.2 Gradient Boosting.md",
-    "08_ML_Methods/8.4.2.1.4 AdaBoost Formulas.md",
     "Logistic Regression Template.canvas",
     "08_ML_Methods",
     "07_Random_Forest",

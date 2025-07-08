@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "08_ML_Methods/8.3. Bagging (Bootstrap Aggregating).md",
+                "file": "Data Science Interview Knowledge Base.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "8.3. Bagging (Bootstrap Aggregating)"
+              "title": "Data Science Interview Knowledge Base"
             }
           }
         ]
@@ -108,11 +108,11 @@
         "state": {
           "type": "backlink",
           "state": {
-            "file": "08_ML_Methods/8.3. Bagging (Bootstrap Aggregating).md",
-            "collapseAll": false,
+            "file": "Data Science Interview Knowledge Base.md",
+            "collapseAll": true,
             "extraContext": false,
             "sortOrder": "alphabetical",
-            "showSearch": false,
+            "showSearch": true,
             "searchQuery": "",
             "backlinkCollapsed": false,
             "unlinkedCollapsed": true
@@ -164,5 +164,8 @@
     }
   },
   "active": "e8e4af50e854b65b",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "03_Multicollinearity/3. Multicollinearity.md",
+    "08_ML_Methods/8.3. Bagging (Bootstrap Aggregating).md"
+  ]
 }
