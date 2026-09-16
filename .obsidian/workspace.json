@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_保险风控实务/10. 保险风控考点总览.md",
+                "file": "01. 面试画像与考点分布.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -52,7 +52,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "10. 保险风控考点总览"
+              "title": "01. 面试画像与考点分布"
             }
           }
         ],
@@ -202,7 +202,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "10_保险风控实务/10. 保险风控考点总览.md",
+                "file": "01. 面试画像与考点分布.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -314,7 +314,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 636.35888671875
+    "width": 636.35888671875,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -331,6 +332,11 @@
   },
   "active": "db30d89f1a493400",
   "lastOpenFiles": [
+    "99_QuestionBank/99.9 GLM 进阶题库.md",
+    "_meta/Vault 优化方案.md",
+    "_meta/SAS 代码规范.md",
+    "_meta/优先级矩阵.md",
+    "10_保险风控实务/10. 保险风控考点总览.md",
     "09_统计基础/9.8 统计面试题精练.md",
     "09_统计基础/9.7 多重比较与选择偏差.md",
     "09_统计基础/9.6 贝叶斯基础与基础率谬误.md",
@@ -344,20 +350,15 @@
     "09_统计基础/9. 统计基础总览.md",
     "09_统计基础",
     "10_保险风控实务/10.8 Tweedie GLM 专章.md",
-    "_meta/优先级矩阵.md",
     "01_LR_GLMs/1. Logistic Regression & GLMs.md",
     "00 Index.md",
     "05. 高频追问 TOP 30.md",
     "04. 公式速查卡.md",
     "03. 答题模板与追问应对.md",
-    "10_保险风控实务/10. 保险风控考点总览.md",
     "01_LR_GLMs/1.4 Model Fitting.md",
     "02. 三条学习路径.md",
     "01. 面试画像与考点分布.md",
     "07_Random_Forest/7.2. Building the Forest.md",
-    "07_Random_Forest/7.2.2 Decision Tree.md",
-    "07_Random_Forest/7.2.2.3.1 ID3 Algorithm.md",
-    "07_Random_Forest/7.2.3.3 C4.5 Algorithm.md",
     "01_LR_GLMs/Logistic Regression Template.canvas",
     "1.6.3 Penalized MLE (Ridge ",
     "LIFT",
