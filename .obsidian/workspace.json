@@ -11,24 +11,12 @@
             "id": "18452ebf8f5c8fe8",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Data Science Interview Knowledge Base.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
+                "file": "ISLP_website (2).pdf"
               },
-              "icon": "lucide-file",
-              "title": "Data Science Interview Knowledge Base"
+              "icon": "lucide-file-text",
+              "title": "ISLP_website (2)"
             }
           },
           {
@@ -54,8 +42,33 @@
               "icon": "lucide-file",
               "title": "01. 面试画像与考点分布"
             }
+          },
+          {
+            "id": "db62bc9496c4affe",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "00_SF真题/MAGNet 答案对照表.md",
+                "mode": "preview",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "MAGNet 答案对照表"
+            }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -201,7 +214,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "Data Science Interview Knowledge Base.md",
+                "file": "00_SF真题/MAGNet 答案对照表.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -329,19 +342,29 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "18452ebf8f5c8fe8",
+  "active": "db62bc9496c4affe",
   "lastOpenFiles": [
-    "_meta/tools/lang_audit.py",
-    "_meta/写作规范.md",
-    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
-    "Data Science Interview Knowledge Base.md",
+    "00_SF真题/MAGNet 面试真题全解.md",
     "01. 面试画像与考点分布.md",
     "00 Index.md",
-    "00_SF真题/MAGNet 面试真题全解.md",
-    "99_QuestionBank/99.10 真题补遗题库.md",
     "00_SF真题/MAGNet 答案对照表.md",
+    "01_LR_GLMs/1.8 判别分析（LDA QDA Naive Bayes）.md",
+    "_meta/sources/w9_6_NB.html.txt",
+    "_meta/sources/w9_4_LDA.html.txt",
+    "_meta/sources/w9_3_QDA.html.txt",
+    "_meta/sources/w9_2_DA.html.txt",
+    "_meta/sources/w9_1_intro_classification.html.txt",
+    "_meta/sources/w5_4_smoothing_spline.html.txt",
+    "_meta/sources/w5_2_spline.html.txt",
+    "_meta/sources/w5_1_poly.html.txt",
+    "_meta/sources/w4_3_gbm.html.txt",
+    "_meta/sources/w4_2_randomforest.html.txt",
+    "定义原文库.md",
+    "Data Science Interview Knowledge Base.md",
+    "_meta/写作规范.md",
+    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
+    "99_QuestionBank/99.10 真题补遗题库.md",
     "02. 三条学习路径.md",
-    "00_SF真题",
     "99_QuestionBank/99.9 GLM 进阶题库.md",
     "_meta/Vault 优化方案.md",
     "_meta/SAS 代码规范.md",
@@ -357,20 +380,10 @@
     "06. 中英术语对照表.md",
     "10_保险风控实务/10.9 项目实战：法语车险纯保费定价.md",
     "09_统计基础/9.1 概率分布与随机变量.md",
-    "09_统计基础/9. 统计基础总览.md",
-    "09_统计基础",
     "01_LR_GLMs/Logistic Regression Template.canvas",
-    "1.6.3 Penalized MLE (Ridge ",
-    "LIFT",
-    "08_ML_Methods",
-    "07_Random_Forest",
     "Images/Pasted image 20250602120039.png",
     "Images/Pasted image 20250605141224.png",
     "Images/Pasted image 20250605150014.png",
-    "Images/Pasted image 20250605145035.png",
-    "Images",
-    "06_Model_Assessment",
-    "03_Multicollinearity/PCA/PCA数学推导",
-    "03_Multicollinearity/PCA"
+    "Images/Pasted image 20250605145035.png"
   ]
 }

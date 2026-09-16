@@ -12,14 +12,35 @@ updated: 2026-09-16
 
 # [[1. Logistic Regression & GLMs]]
 
-## 🎯 Core Concept
-**广义线性模型（Generalized Linear Model, GLM）** 的一种，用在结局变量是**二值**（0 或 1）时。它建模的是「事件发生的概率」。
+## 📖 标准定义
 
-- **结局（Outcome）**：二值（如 Yes/No、Pass/Fail）
-- **拟合方法（Fitting Method）**：极大似然估计（Maximum Likelihood Estimation, MLE）
+> **本库规则：定义类内容必须给出教材原文，中文只作解释。** 汇总见 [[定义原文库]]。
 
-## 📈 Model & Interpretation
-模型用 **logit 连接函数（logit link function）** 把预测变量与「结局的概率」连起来。
+**① 教材原文 · PSL §10.1 "Setup"**（<https://liangfgithub.github.io/PSL/w10/w10_1_setup.html>）
+
+> "As we have learned before, in the binary case, the best classifier depends on $\eta(x)=P(Y=1 \mid X=x)$. One type of approaches for classification is to directly model or estimate $\eta(x)$. Since $\eta(x)$ is constrained to between 0 and 1, as it represents a probability. Therefore, it's challenging to model $\eta(x)$ directly with a linear model because linear models are unconstrained. Instead, we model its transformation (or referred to as a **link function**) with a linear model: $g(\eta(x)) = x^t \beta$."
+>
+> "In logistic regression, we use the so-called **logit link function**, which is equal to $\mathrm{logit}(\eta(x)) = \log \dfrac{\eta(x)}{1 - \eta(x)}$."
+
+**② GLM 框架 · Loss Data Analytics Ch8**（<https://openacttexts.github.io/Loss-Data-Analytics/ChapRiskClass.html>）
+
+> "Poisson regression is a special member of a more general regression model class known as the **generalized linear model (GLM)**. The GLM develops a unified regression framework for datasets when the response variables are continuous, binary or discrete. The classical linear regression model with a normally distributed error is also a member of the GLM."
+
+**③ 标准记法**（GLM 的通用形式，非某本教材独有）
+
+| 成分 | 记法 |
+|---|---|
+| 随机成分（random component） | $Y_i \sim \mathrm{Bernoulli}(\pi_i)$，相互独立 |
+| 系统成分（systematic component） | 线性预测子 $\eta_i = x_i^t \beta$ |
+| 联系函数（link function） | $\mathrm{logit}(\pi_i) = \log\dfrac{\pi_i}{1-\pi_i} = \eta_i$ |
+| 等价形式 | $\pi_i = E[Y_i \mid x_i] = \dfrac{1}{1+e^{-\eta_i}}$ |
+| 估计 | 极大似然估计（MLE），由 IRLS / Fisher scoring 迭代求解 |
+
+**④ 中文解释**
+
+逻辑回归是**二值响应**的广义线性模型（GLM）。要说的三件事：① 响应 $Y$ 服从 **Bernoulli** 分布；② 系统成分是**线性预测子** $x^t\beta$；③ **link 用 logit**，把落在 $(0,1)$ 的概率映到 $(-\infty,+\infty)$ —— 因为线性模型的取值不受限，而概率受限，所以不能直接建模概率。
+
+因此它**直接建模的是 $\eta(x)=P(Y=1\mid X=x)$ 的 log-odds**，概率由反变换得到，**不是直接建模概率本身**。这一点是面试常问的辨析点。
 
 #### Link Function: The Logit
 - **是什么（What it is）**：odds 的自然对数。
