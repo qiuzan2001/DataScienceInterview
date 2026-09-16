@@ -1,0 +1,97 @@
+########## vault 体检 @ 2026-09-16 11:02:27 ##########
+笔记数: 42  |  总行数: 8146
+
+== 1. 空文件 ==
+  ./07_Random_Forest/7.2.2.4. Pruning Decision Trees.md
+
+== 2. 悬空 wikilink ==
+  悬空: [[1. Regression]]
+  悬空: [[Dimensionality Reduction]]
+  悬空: [[Imbalanced Data]]
+  悬空: [[Multivariate Methods]]
+  悬空: [[Univariate Methods]]
+
+== 3. AI 对话残留 ==
+  ./03_Multicollinearity/3.5.4 PCA.md:147:Absolutely — here's an additional section that critically examines **why PCA, despite its theoretical elegance, is often less useful in real-world business or applied feature-engineering settings**.
+  ./01_LR_GLMs/1.4 Model Fitting.md:93:Let me know if you’d like a visual diagram to illustrate this!
+  ./Data Science Interview Knowledge Base.md:394:Let me know if you'd like this adapted for a slide deck, blog, or technical report format.
+  ./02_Transformations/2.3.1 WOE & IV.md:175:>  Let me know if you want this in Excel-friendly format or with graphs for visual intuition!
+  ./07_Random_Forest/7.2.2.3.1.9 ID3 Build Example.md:1:Here is a detailed, organized version of your notes in English, matching the original detail level:
+  ./07_Random_Forest/7.2.2.3.1.9 ID3 Build Example.md:230:Let me know if you'd like a graphical version or Python implementation of this tree!
+  ./07_Random_Forest/7.2.3.3 C4.5 Algorithm.md:151:Got it — you're looking for a **more structured, technical transition** that matches the tone of your ID3 → C4.5 upgrade note: precise, educational, and clean. Here’s a revised transition from **C4.5 to CART** that follows that same pattern:
+  ./06_Model_Assessment/6.3 Performance Metrics.md:111:Great idea! Including the **Confusion Matrix** helps visualize how classification metrics relate to actual predictions. Here's an updated, detailed explanation of the 🟩 **Classification Metrics** with the **Confusion Matrix** for clarity:
+  ./06_Model_Assessment/6.4 Diagnostic & Visualization Tools.md:74:Let me know if you’d like **visual examples**, Python code to generate these plots, or help turning this into documentation or presentation slides.
+
+== 4. 缺 frontmatter ==
+  ./03_Multicollinearity/3.4.2 Variance Inflation Factor (VIF).md
+  ./03_Multicollinearity/3. Multicollinearity.md
+  ./03_Multicollinearity/3.5.2 SAS VARCLUS.md
+  ./03_Multicollinearity/3.5.4 PCA.md
+  ./05_Dimension_Reduction/5.2 Univariate Selection.md
+  ./05_Dimension_Reduction/5. Dimension Reduction.md
+  ./05_Dimension_Reduction/5.3 Multivariate Selection.md
+  ./01_LR_GLMs/1.7 Assumptions.md
+  ./01_LR_GLMs/1.4 Model Fitting.md
+  ./01_LR_GLMs/1.2 Generalized Linear Models (GLMs).md
+  ./01_LR_GLMs/1.1 Ordinary Least Squares (OLS).md
+  ./01_LR_GLMs/1.6.3 Regularization.md
+  ./01_LR_GLMs/1.6 Estimation Issues & Separation.md
+  ./01_LR_GLMs/1. Logistic Regression & GLMs.md
+  ./01_LR_GLMs/1.5 Dealing with Unbalanced Samples.md
+  ./01_LR_GLMs/1.3 Introducing Logistic Regression.md
+  ./08_ML_Methods/8.6 Bagging VS Boosting.md
+  ./08_ML_Methods/8.3. Bagging (Bootstrap Aggregating).md
+  ./08_ML_Methods/8.4.2.1 AdaBoost (Adaptive Boosting).md
+  ./08_ML_Methods/8. Ensemble Learning.md
+  ./08_ML_Methods/8.4. Boosting.md
+  ./08_ML_Methods/8.4.2.1.4 AdaBoost Formulas.md
+  ./08_ML_Methods/8.4.2.2 Gradient Boosting.md
+  ./Data Science Interview Knowledge Base.md
+  ./04_Missing_Data/4. Missing Data.md
+  ./02_Transformations/2. Transformations.md
+  ./02_Transformations/2.3.1 WOE & IV.md
+  ./07_Random_Forest/7.2. Building the Forest.md
+  ./07_Random_Forest/7. Random Forest.md
+  ./07_Random_Forest/7.2.2 Decision Tree.md
+  ./07_Random_Forest/7.2.2.4. Pruning Decision Trees.md
+  ./07_Random_Forest/7.2.2.3.1.9 ID3 Build Example.md
+  ./07_Random_Forest/7.4. Quantifying Feature Importance.md
+  ./07_Random_Forest/7.2.2.3.1.4 ID3 Complete Code.md
+  ./07_Random_Forest/7.5 CART Algorithm.md
+  ./07_Random_Forest/7.2.2.3.1 ID3 Algorithm.md
+  ./07_Random_Forest/7.2.3.3 C4.5 Algorithm.md
+  ./06_Model_Assessment/6.2 Model Diagnosis_Bias-Variance Tradeoff.md
+  ./06_Model_Assessment/6.3 Performance Metrics.md
+  ./06_Model_Assessment/6.4 Diagnostic & Visualization Tools.md
+  ./06_Model_Assessment/6. Model Assessment.md
+  ./06_Model_Assessment/6.1 Data Preparation & Validation.md
+
+== 5. 双井号标题 (=# ## x) ==
+  ./01_LR_GLMs/1.7 Assumptions.md:40:### ## 2. Generalized Linear Models (GLMs): The Flexible Successor
+  ./01_LR_GLMs/1.7 Assumptions.md:61:### ## 3. Logistic Regression: The Premier Model for Binary Outcomes
+
+== 6. 转义残留 ($ \lambda) ==
+  ./01_LR_GLMs/1.6.3 Regularization.md:6:> *“If the door is beige and the nearest oak tree is 27.4 feet away, add \$15,312 to the price.”*
+  ./01_LR_GLMs/1.6.3 Regularization.md:147:* **Coefficient Path Plot:** Visualize how coefficients shrink as \$\lambda\$ increases. Key for feature importance.
+  ./01_LR_GLMs/1.6.3 Regularization.md:148:* **Final Validation:** Train on full training set using optimal \$\lambda\$, then evaluate on a **held-out test set**.
+  ./07_Random_Forest/7.5 CART Algorithm.md:63:>  | House | Size (sqm) | Price (\$1000s) ||
+
+== 7. 编号跳号 / 同章文件数 ==
+  第2章 缺: 2.1, 2.2
+  第3章 缺: 3.1, 3.2, 3.3
+  第5章 缺: 5.1
+  第7章 缺: 7.1, 7.3
+  第8章 缺: 8.1, 8.2, 8.5
+  第1章 9 个文件
+  第2章 2 个文件
+  第3章 4 个文件
+  第4章 1 个文件
+  第5章 3 个文件
+  第6章 5 个文件
+  第7章 10 个文件
+  第8章 7 个文件
+
+== 8. 统计 ==
+  悬空链接: 5
+  AI 残留:  8
+########## 完 ##########

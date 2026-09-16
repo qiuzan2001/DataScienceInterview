@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Data Science Interview Knowledge Base.md",
+                "file": "02_Transformations/2. Transformations.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Data Science Interview Knowledge Base"
+              "title": "2. Transformations"
             }
           }
         ]
@@ -155,6 +155,9 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
+      "publish:Publish changes...": false,
+      "obsidian-git:Open Git source control": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -165,6 +168,8 @@
   },
   "active": "e8e4af50e854b65b",
   "lastOpenFiles": [
+    "Data Science Interview Knowledge Base.md",
+    "01_LR_GLMs/Logistic Regression Template.canvas",
     "03_Multicollinearity/3. Multicollinearity.md",
     "08_ML_Methods/8.3. Bagging (Bootstrap Aggregating).md"
   ]
