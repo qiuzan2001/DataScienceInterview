@@ -108,6 +108,7 @@ Canonical links to have memorized:
 - The offset point is worth volunteering: for frequency you model counts with log (exposure) as an offset (coefficient fixed at 1), not as a predictor, so the model is a rate per exposure.
 
 - Tweedie is the one that impresses. It handles the fact that most policies have zero loss and the rest have a continuous positive amount, so you avoid fitting frequency and severity separately.
+  > 📝 **[编辑注 2]** `p ≈ 1.5` 是**常识起手值，不是固定常数** —— `p` 是 `1 < p < 2` 区间上**用交叉验证调的超参数**。实测例：法国车险 678,013 份保单的网格搜索选出 **p = 1.9**（越靠近 2 越像 Gamma）。面试答法是「我把 `p` 当超参数、和正则强度一起做 CV」。深潜见 `10.8 Tweedie GLM 专章`。
 
 ### Q: How do you deal with an unbalanced sample?
 
@@ -161,7 +162,8 @@ Fixes, roughly in order of what you'd try:
 
 2. WoE-encode the categorical - this is the standard fix and it's why high cardinality shows up under Transformations.
 
-3. Add a penalty - L2/ridge always yields a finite solution; L1 also works.
+3. Add a penalty - for any fixed λ > 0, L2/ridge always yields a finite solution; L1 also works.
+   > 📝 **[编辑注 1]** ⚠️ 但实务上要当心：**用 CV 调 λ 时常常会选出 λ = 0**，因为分离的根因并不是过拟合 —— 这时惩罚形同虚设（PSL §10.3.1 明确点出这一点）。所以惩罚只能算「缓解」；真正给出**有限、可做推断**的估计，是下面的 Firth 惩罚或贝叶斯先验。另外记住分寸：分离主要破坏**参数推断**（系数、标准误、p 值），而**决策边界本身是稳定的** —— 只做排序/预测时影响有限。深潜见 `1.6 Estimation Issues & Separation`。
 
 4. Firth's penalized likelihood - purpose-built, keeps the variable.
 
@@ -207,6 +209,9 @@ That last line is the whole argument for why you don't report accuracy on rare e
 Two more things to say:
 
 - Precision depends on prevalence; recall does not. Deploy the same model on a population with half the fraud rate and precision halves while recall is unchanged. This is why precision degrades in production when the base rate drifts.
+  > 📝 **[编辑注 6]** 「precision halves」是**示意性的近似**，不是恒等式。精确关系是 `precision = π·TPR / (π·TPR + (1−π)·FPR)` —— 只有当 `π·TPR` 远大于 `(1−π)·FPR` 时 precision 才近似正比于基础率 `π`。
+  > **用上面那个算例验算**：原基础率 5% 时 `precision = 0.05×0.6/(0.05×0.6 + 0.95×0.0526) = 0.03/0.07997 = 37.5%`；基础率减半到 2.5% 时 `= 0.015/(0.015 + 0.975×0.0526) = 15/66.3 = 22.6%` —— **是下降 40%，不是恰好减半**（因为此例中假阳项与真阳项量级相当）。
+  > **方向性结论完全正确**（precision 随基础率下降、recall 不变），面试照说即可；只是被追问「精确减半吗」时要知道它是近似。
 
 - Every metric in that table depends on a chosen threshold. Only AUC / PR-AUC are threshold-free.
 
@@ -312,6 +317,9 @@ WoE_i = ln((Events_i / Total Events) / (NonEvents_i / Total NonEvents))
 - Positive WoE → that bin has proportionally more events than the population. Negative → fewer.
 
 - Because it's already on the log-odds scale, dropping a WoE-coded variable into a logistic regression should produce a coefficient near 1.0. If it comes out far from 1, your binning is off or the relationship isn't stable. Great detail to mention.
+  > 📝 **[编辑注 3]** 上面用的是 `ln(%Events / %NonEvents)` ⇒ **正 WoE = 高风险**、理想系数 **≈ +1**。
+  > **另一种同样常见的约定是 `ln(%Goods / %Bads)`（正 WoE = 低风险），它的理想系数是 −1 —— 两者互为相反数、都自洽。**
+  > **关键是「定义方向与系数符号必须配套」**：回答时先声明自己用哪一种，就不会被面试官绕进去。库内深潜笔记（`2.3.1 WOE & IV`）用的是后者，读时按此换算。
 
 Information Value - the strength of the whole variable:
 
@@ -1090,7 +1098,8 @@ Algorithmic:
 
 - Approximate split finding via a weighted quantile sketch and histogram binning, instead of scanning every candidate split point.
 
-- Depth-first growth then pruning by `gamma`, rather than greedy early stopping at each node - so it can find a good split hiding behind a bad one.
+- Grows the tree to `max_depth` **first, then prunes backward** by `gamma`, rather than greedily stopping at each node - so it can find a good split hiding behind a bad one.
+  > 📝 **[编辑注 4]** 原文写作 "Depth-first growth"；XGBoost 默认是 `grow_policy=depthwise`（**按层生长**），不是 DFS 式深度优先。**实质结论不变**（先长满再回头剪 vs 逐节点贪心早停），但用词按官方参数名说更稳。
 
 Engineering:
 
@@ -1222,7 +1231,7 @@ These get asked as direct factual questions. There are about 25 of them.
 | Standard train/val/test split | 60/20/20 or 70/15/15 |
 | Standard k for cross-validation | 5 or 10 |
 | Out-of-bag fraction per `bootstrap` | 1/e ≈ 36.8% |
-| AUC — random / useful / strong | 0.5 / > 0.7 / > 0.8 |
+| AUC — random / useful / strong | 0.5 / > 0.7 / > 0.8（📝 **经验分档**，各机构口径不一致） |
 | Gini from AUC | Gini = 2·AUC − 1 |
 | RF `max_features` defaults | √p classification, p/3 regression |
 | RF `n_estimators` typical | 300–1000 (more never overfits) |
@@ -1236,7 +1245,7 @@ These get asked as direct factual questions. There are about 25 of them.
 | AIC / BIC | −2logL + 2k / −2logL + k·ln(n) |
 | Tweedie power for pure premium | p ≈ 1.5 (between 1 and 2) |
 | Case-control intercept correction | β₀ − ln(r₁/r₀) |
-| Coefficient on a well-binned WoE variable | ≈ 1.0 |
+| Coefficient on a well-binned WoE variable | ≈ 1.0（📝 按本文 `ln(%Events/%NonEvents)` 约定；**换成相反定义则为 −1**，见编辑注 3） |
 
 ## Cross-Topic Connections
 
@@ -1341,6 +1350,20 @@ Cover the document. If you can answer these out loud in 60-90 seconds each, you'
 ---
 
 ## 导入说明（本次导入所做的改动）
+### 技术核验修订（编辑注）
+
+导入后对全文做了**技术核验**（依据 PSL / Loss Data Analytics / XGBoost 官方参数命名），发现 **6 处**需要标注但不改动原观点的地方，全部以 `> 📝 **[编辑注 N]**` 就地标注：
+
+| # | 位置 | 原文 | 标注原因 |
+|---|---|---|---|
+| **1** | §1 分离的修复 · 第 3 条「加惩罚」 | "L2/ridge always yields a finite solution" | 就**固定 λ > 0** 而言正确，但 **CV 常选出 λ = 0**，此时惩罚失效 —— 分离的根因不是过拟合（PSL §10.3.1）。真正的解法是 Firth / 贝叶斯先验；且分离主要破坏**推断**而非决策边界 |
+| **2** | §1 保险目标选分布 | Tweedie `p ≈ 1.5` | `p` 是 **`1 < p < 2` 上 CV 调的超参数**，不是常数；实测 678,013 份保单的项目选出 **p = 1.9** |
+| **3** | §2 WoE | 理想系数 ≈ +1.0 | 这是本文 `ln(%Events/%NonEvents)` 约定下的结果；**相反约定 `ln(%Goods/%Bads)` 下是 −1** —— 两约定互为相反数，关键在「方向与符号配套」 |
+| **4** | §9 XGBoost 增量 | "Depth-first growth" | XGBoost 默认 `grow_policy=depthwise`（**按层生长**），非 DFS；实质结论（先长满再剪 vs 贪心早停）不变，用词按官方参数名更稳 |
+| **5** | Numbers to Memorize | AUC 三档 / WoE 系数 | AUC 的 0.5 / >0.7 / >0.8 是**经验分档**（各机构不一致）；WoE 系数 ≈ 1.0 需带约定说明 |
+
+**未改动之处**：全部技术观点、55 道题的答案、27 个数字、10 条 Cross-Topic 连线均**保持原样**。经比对 35 张照片的原始 OCR（1628 个文本块），**合并稿没有丢内容** —— 唯一对不上的都是 OCR 识别噪声（如 `serlous` = serious、`teatures` = features、`bootstran samnle` = bootstrap sample）。
+
 
 本文件由 `IMG_9774–IMG_9808`（35 张照片）的 OCR 结果合并而成，技术上未作修订。为便于使用，导入时只做了三处处理，全部在此声明：
 

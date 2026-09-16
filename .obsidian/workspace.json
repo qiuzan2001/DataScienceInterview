@@ -37,8 +37,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01. 面试画像与考点分布.md",
-                "mode": "source",
+                "file": "00_SF真题/MAGNet 面试真题全解.md",
+                "mode": "preview",
                 "source": false,
                 "backlinks": true,
                 "backlinkOpts": {
@@ -52,7 +52,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "01. 面试画像与考点分布"
+              "title": "MAGNet 面试真题全解"
             }
           }
         ],
@@ -202,7 +202,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "01. 面试画像与考点分布.md",
+                "file": "00_SF真题/MAGNet 面试真题全解.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -332,7 +332,10 @@
   },
   "active": "db30d89f1a493400",
   "lastOpenFiles": [
+    "99_QuestionBank/99.10 真题补遗题库.md",
     "00_SF真题/MAGNet 答案对照表.md",
+    "01. 面试画像与考点分布.md",
+    "02. 三条学习路径.md",
     "00_SF真题/MAGNet 面试真题全解.md",
     "00_SF真题",
     "99_QuestionBank/99.9 GLM 进阶题库.md",
@@ -357,9 +360,6 @@
     "00 Index.md",
     "05. 高频追问 TOP 30.md",
     "04. 公式速查卡.md",
-    "03. 答题模板与追问应对.md",
-    "01_LR_GLMs/1.4 Model Fitting.md",
-    "02. 三条学习路径.md",
     "01_LR_GLMs/Logistic Regression Template.canvas",
     "1.6.3 Penalized MLE (Ridge ",
     "LIFT",
