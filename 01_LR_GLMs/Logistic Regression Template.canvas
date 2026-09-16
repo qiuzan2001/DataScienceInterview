@@ -5,11 +5,11 @@
 		{"id":"9b8716802f5673bb","type":"text","text":"**Chapter 3. Discovery Work**","x":240,"y":-80,"width":250,"height":60},
 		{"id":"56d78f2db828c6ec","type":"text","text":"**Chapter 4. Measuring Classifier Performance**","x":540,"y":-80,"width":250,"height":60},
 		{"id":"612833469162611f","type":"text","text":"[[6.1 Data Preparation & Validation]]","x":-360,"y":81,"width":250,"height":60},
-		{"id":"f712129891b4e25a","type":"text","text":"[[1. Regression]]","x":-60,"y":81,"width":250,"height":60},
-		{"id":"5b0163f5fa1df517","type":"text","text":"[[Imbalanced Data]]","x":-60,"y":220,"width":250,"height":60},
+		{"id":"f712129891b4e25a","type":"text","text":"[[1. Logistic Regression & GLMs]]","x":-60,"y":81,"width":250,"height":60},
+		{"id":"5b0163f5fa1df517","type":"text","text":"[[1.5 Dealing with Unbalanced Samples]]","x":-60,"y":220,"width":250,"height":60},
 		{"id":"62ba07049cee5059","type":"text","text":"[[4. Missing Data]]","x":240,"y":81,"width":250,"height":63},
-		{"id":"e8679be280ff72bf","type":"text","text":"[[Dimensionality Reduction]]","x":240,"y":220,"width":250,"height":60},
-		{"id":"ad6827ea99e82391","type":"text","text":"**Variable Screening**\n\t[[Univariate Methods]]\n\t[[Multivariate Methods]]\n\t","x":240,"y":360,"width":250,"height":109},
+		{"id":"e8679be280ff72bf","type":"text","text":"[[5. Dimension Reduction]]","x":240,"y":220,"width":250,"height":60},
+		{"id":"ad6827ea99e82391","type":"text","text":"**Variable Screening**\n\t[[5.2 Univariate Selection]]\n\t[[5.3 Multivariate Selection]]\n\t","x":240,"y":360,"width":250,"height":109},
 		{"id":"25f9ef27e854a221","x":540,"y":81,"width":250,"height":60,"type":"text","text":"[[6. Model Assessment]]"}
 	],
 	"edges":[

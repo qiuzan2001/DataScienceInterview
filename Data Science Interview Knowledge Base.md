@@ -1,3 +1,15 @@
+---
+title: "Data Science Interview Knowledge Base"
+tags: [meta, cheatsheet]
+status: 完成
+updated: 2026-09-16
+---
+
+<!-- priority-banner -->
+> [!info] 本页是**一页速查卡**（原总纲）。
+> 👉 面试准备请从 **[[00 Index]]** 进入：那里有考点权重、三条学习路径、公式速查与题库。
+> 🚀 [[02. 三条学习路径]] ・ 📋 [[04. 公式速查卡]] ・ ✅ [[99.1 题库总览]] ・ 🏢 [[10. 保险风控考点总览]]
+
 # [[1. Logistic Regression & GLMs]]
 
 ## 🎯 Core Concept
@@ -91,8 +103,10 @@ Primary evaluation is done using a **confusion matrix** and its derived metrics:
 #### Weight of Evidence (WOE) & Information Value (IV)
 - **Goal**: Transform categories into a single numeric score based on their relationship with a binary target.
 - **WOE Formula**: `WOE = ln(%Goods / %Bads)`
-  - Positive WOE: Category is associated with higher odds of the event (Y=1).
-  - Negative WOE: Category is associated with lower odds.
+  - **Good = 非事件 (Y=0)**，**Bad = 事件 (Y=1)**（学分卡主流约定）。
+  - **Positive WOE: 该组好人占比更高 ⇒ 低风险（事件 Y=1 的 odds 更低）。**
+  - **Negative WOE: 高风险。**
+  - 全库统一约定，详见 [[2. Transformations]]、[[2.3.1 WOE & IV]]、[[5.2 Univariate Selection]]。
 - **Information Value (IV)**: Measures the predictive power of the variable based on its WOE.
   - **Rule of Thumb**: `IV < 0.02` (useless), `0.1 - 0.3` (medium), `> 0.3` (strong).
 
@@ -391,4 +405,4 @@ Here's your formatted content using `###` for the main title ("Ensemble Learning
 
 ---
 
-Let me know if you'd like this adapted for a slide deck, blog, or technical report format.
+> **收尾**：以上是整库的面试速查主线——先讲清概念与假设，再讲指标与诊断，最后落到风控/保险的业务口径（WOE/IV、评分刻度、PSI）。复习顺序建议从 [[00 Index]] 的分层入口进入，公式只背 [[04. 公式速查卡]]。

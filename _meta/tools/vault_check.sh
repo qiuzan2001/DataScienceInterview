@@ -26,8 +26,8 @@ find . \( -name '*.md' -o -name '*.canvas' \) "${SRC[@]}" -print0 \
   | sed -e 's/^\[\[//' -e 's/\\*$//' -e 's/ *$//' \
         -e 's/\.png$//' -e 's/\.jpg$//' -e 's/\.jpeg$//' -e 's/\.canvas$//' \
   | sort -u > "$TMP/targets.txt"
-
-find . \( -name '*.md' -o -name '*.png' -o -name '*.jpg' -o -name '*.canvas' \) "${SRC[@]}" -print0 \
+find . \( -name '*.md' -o -name '*.png' -o -name '*.jpg' -o -name '*.canvas' \) \
+     -not -path './.git/*' -not -path './.obsidian/*' -print0 \
   | xargs -0 -n1 basename | sed 's/\.[^.]*$//' | sort -u > "$TMP/names.txt"
 
 comm -23 "$TMP/targets.txt" "$TMP/names.txt" | sed -e 's/^/  悬空: [[/' -e 's/$/]]/'
