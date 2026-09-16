@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "00_SF真题/MAGNet 面试真题全解.md",
+                "file": "01. 面试画像与考点分布.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -52,11 +52,10 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "MAGNet 面试真题全解"
+              "title": "01. 面试画像与考点分布"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -202,7 +201,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "00_SF真题/MAGNet 面试真题全解.md",
+                "file": "Data Science Interview Knowledge Base.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
@@ -330,13 +329,18 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "db30d89f1a493400",
+  "active": "18452ebf8f5c8fe8",
   "lastOpenFiles": [
+    "_meta/tools/lang_audit.py",
+    "_meta/写作规范.md",
+    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
+    "Data Science Interview Knowledge Base.md",
+    "01. 面试画像与考点分布.md",
+    "00 Index.md",
+    "00_SF真题/MAGNet 面试真题全解.md",
     "99_QuestionBank/99.10 真题补遗题库.md",
     "00_SF真题/MAGNet 答案对照表.md",
-    "01. 面试画像与考点分布.md",
     "02. 三条学习路径.md",
-    "00_SF真题/MAGNet 面试真题全解.md",
     "00_SF真题",
     "99_QuestionBank/99.9 GLM 进阶题库.md",
     "_meta/Vault 优化方案.md",
@@ -355,11 +359,6 @@
     "09_统计基础/9.1 概率分布与随机变量.md",
     "09_统计基础/9. 统计基础总览.md",
     "09_统计基础",
-    "10_保险风控实务/10.8 Tweedie GLM 专章.md",
-    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
-    "00 Index.md",
-    "05. 高频追问 TOP 30.md",
-    "04. 公式速查卡.md",
     "01_LR_GLMs/Logistic Regression Template.canvas",
     "1.6.3 Penalized MLE (Ridge ",
     "LIFT",
