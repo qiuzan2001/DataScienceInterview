@@ -332,6 +332,9 @@
   },
   "active": "db30d89f1a493400",
   "lastOpenFiles": [
+    "00_SF真题/MAGNet 答案对照表.md",
+    "00_SF真题/MAGNet 面试真题全解.md",
+    "00_SF真题",
     "99_QuestionBank/99.9 GLM 进阶题库.md",
     "_meta/Vault 优化方案.md",
     "_meta/SAS 代码规范.md",
@@ -357,8 +360,6 @@
     "03. 答题模板与追问应对.md",
     "01_LR_GLMs/1.4 Model Fitting.md",
     "02. 三条学习路径.md",
-    "01. 面试画像与考点分布.md",
-    "07_Random_Forest/7.2. Building the Forest.md",
     "01_LR_GLMs/Logistic Regression Template.canvas",
     "1.6.3 Penalized MLE (Ridge ",
     "LIFT",
@@ -371,7 +372,6 @@
     "Images",
     "06_Model_Assessment",
     "03_Multicollinearity/PCA/PCA数学推导",
-    "03_Multicollinearity/PCA",
-    "05_Dimension_Reduction"
+    "03_Multicollinearity/PCA"
   ]
 }
