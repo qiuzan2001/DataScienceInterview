@@ -54,6 +54,8 @@ Then: [Numbers to memorize](#numbers-to-memorize) · [Cross-topic connections](#
 
 ### Q: What is a logit?
 
+> 📖 **对应讲解**：[[1.3 Introducing Logistic Regression]]
+
 > The logit is the natural log of the odds, and it's the transformation that lets us model a bounded probability with an unbounded linear predictor.
 
 > 💬 **中文精讲**：这题看着像考定义，其实是在考**「为什么需要变换」这个动机**。答案骨架是三步：`p → odds → log-odds`，每一步都把取值范围放大一次，最后落到 `(−∞, +∞)`，正好与线性预测子 `Xβ` 的值域对齐。
@@ -67,6 +69,8 @@ Then: [Numbers to memorize](#numbers-to-memorize) · [Cross-topic connections](#
 
 ### Q: Write the logistic regression equation and interpret a coefficient.
 
+> 📖 **对应讲解**：[[1.3 Introducing Logistic Regression]]
+
 > `ln(p/(1-p)) = β₀ + β₁x₁ + ... + βₖxₖ`. A one-unit increase in xⱼ adds βⱼ to the log-odds, which means it multiplies the odds by exp(βⱼ), holding everything else fixed.
 
 > 💬 **中文精讲**：这题不是让你推公式，而是考「系数怎么念给业务听」。骨架：先写 `ln(p/(1-p)) = Xβ`，再说 xⱼ 加一个单位 → log-odds 加 βⱼ → odds 乘 exp(βⱼ)，收尾必须补上「其他变量不变」这一句。
@@ -79,6 +83,8 @@ Then: [Numbers to memorize](#numbers-to-memorize) · [Cross-topic connections](#
 - **TRAP:** saying "βⱼ is the change in probability." It is not. The change in probability depends on where you sit on the S-curve - the same β moves p a lot near 0.5 and almost nothing near 0.02. If they want a probability effect, quote a marginal effect at a stated base rate, or just show two predicted probabilities.
 
 ### Q: What is a link function and why do we need one?
+
+> 📖 **对应讲解**：[[1.2 Generalized Linear Models (GLMs)]]
 
 > A GLM has three pieces - a response distribution from the exponential family, a linear predictor η = Xβ, and a link function g that connects them via g(E[Y]) = η. The link is what keeps predictions in the valid range while letting the predictors act linearly.
 
@@ -106,6 +112,8 @@ Canonical links to have memorized:
 
 ### Q: Which distribution would you pick for an insurance target?
 
+> 📖 **对应讲解**：[[1.2 Generalized Linear Models (GLMs)]] ・ [[10.1 频率-严重度与纯保费]] ・ [[10.8 Tweedie GLM 专章]]
+
 > 💬 **中文精讲**：纯对号题，考的是「目标形状 → 分布」的映射熟不熟：频率 → Poisson + offset、过散布 → 负二项（negative binomial, NB）、严重度 → Gamma + log、纯保费 → Tweedie + log、二值 → Binomial + logit。逐行念、每行给一句形状理由（计数、方差大于均值、正偏、零点质量加连续正尾、0/1）就够。
 > 最该主动送出去的是 offset 那句：频率模型把 `log(exposure)` 当 offset（系数固定为 1）而不是预测子，模型才是「每单位暴露的费率」。被追问 Tweedie 的 p 时，要说是 `1 < p < 2` 上 CV 调的超参数而不是常数（见本题的编辑注）。→ 深潜：`10.8 Tweedie GLM 专章`
 
@@ -123,6 +131,8 @@ Canonical links to have memorized:
   > 📝 **[编辑注 2]** `p ≈ 1.5` 是**常识起手值，不是固定常数** —— `p` 是 `1 < p < 2` 区间上**用交叉验证调的超参数**。实测例：法国车险 678,013 份保单的网格搜索选出 **p = 1.9**（越靠近 2 越像 Gamma）。面试答法是「我把 `p` 当超参数、和正则强度一起做 CV」。深潜见 `10.8 Tweedie GLM 专章`。
 
 ### Q: How do you deal with an unbalanced sample?
+
+> 📖 **对应讲解**：[[1.5 Dealing with Unbalanced Samples]]
 
 > My default is to not rebalance the data - I fix the decision threshold instead. What matters isn't the ratio, it's the absolute number of events.
 
@@ -152,6 +162,8 @@ The framing that wins the question:
 **TRAP:** reporting accuracy on an imbalanced problem. See the worked example below.
 
 ### Q: What is separation? How do you detect and fix it?
+
+> 📖 **对应讲解**：[[1.6 Estimation Issues & Separation]]
 
 > Separation means a predictor (or combination) perfectly predicts the outcome, so the maximum likelihood estimate doesn't exist - the likelihood keeps improving as the coefficient runs to infinity.
 
@@ -192,6 +204,8 @@ Fixes, roughly in order of what you'd try:
 7. Exact logistic regression for very small samples.
 
 ### Q: Explain a confusion matrix.
+
+> 📖 **对应讲解**：[[6.3 Performance Metrics]]
 
 > 💬 **中文精讲**：不是背四格，是要你现场手算并说清「该信哪个指标」。骨架：四格（TP / FP 是 Type I 误报 / FN 是 Type II 漏报 / TN）→ 六条公式 → 那个 1,000 份保单的算例（precision 37.5%、recall 60%、accuracy 93%、特异度 94.7%）。
 > 胜负手是收尾那一句：**什么都不标的基线准确率 95%，比模型还高** —— 它一次性解释了稀有事件为什么不能报准确率，这句必须有备而来。追问两个方向：precision 随基础率漂移而 recall 不动（本题的编辑注给了精确式），以及除 AUC / PR-AUC 外的指标全部依赖你选的阈值。
@@ -238,6 +252,8 @@ Two more things to say:
 
 ### Q: How do a linear model and a GLM differ?
 
+> 📖 **对应讲解**：[[1.1 Ordinary Least Squares (OLS)]] ・ [[1.2 Generalized Linear Models (GLMs)]]
+
 > 💬 **中文精讲**：考「GLM 到底把线性模型的什么泛化了」。骨架按表念五条：独立性一样；Y 从正态放宽到任意指数族；线性对象从「均值」换成「均值的某个函数（link）」；估计从最小二乘或 ML 变成**只能 ML**（IRLS / Fisher scoring）；方差从常数变成均值的函数 `Var(Y) = φ·V(μ)`。
 > 两处点题最能加分：「线性」指对参数线性而不是对预测子线性（`β₁x + β₂x²` 仍然是线性模型）；GLM 不需要对方差做稳定化变换，因为异方差已经写进分布假设里了。追问几乎必来「为什么只能 ML」——非正态响应下最小二乘不是 ML 估计、会损失效率，而且没有闭式解，只能迭代求解。
 
@@ -256,6 +272,8 @@ Two more things to say:
 - The variance-function row is the most under-used answer here. A GLM doesn't need a variance-stabilizing transform of Y because heteroscedasticity is built into the distribution choice.
 
 ### Q: What are the GLM assumptions and how do you check each?
+
+> 📖 **对应讲解**：[[1.7 Assumptions]]
 
 > 💬 **中文精讲**：考「一条假设配一条诊断」的成对能力——说得出诊断才算真用过。骨架就是这张表：响应分布 → deviance 残差 Q-Q 图加 deviance/df 看过散布；独立 → 研究设计、查重复保单与聚簇；link 正确 / link 尺度线性 → 残差 LOESS、分箱、empirical logit 图、偏残差图；无严重共线 → VIF、条件指数；无强影响点 → 杠杆值和 Cook 距离；同方差 → 残差图与 scale-location；设定正确 → 残差里还剩结构 + 模型没见过数据上的 actual-vs-expected。
 > 最容易失分的是同方差那一行：它只属于线性模型，GLM 里方差本来就该随均值变，说反了等于当场露怯。追问常到 deviance/df ≈ 1 判过散布、VIF 的 > 5 / > 10，以及「怎么证明设定正确」——只有样本外 lift 加业务符号复核这两条路最实在。
@@ -276,6 +294,8 @@ Two more things to say:
 
 ### Q: Compare GLM to RF/GBM.
 
+> 📖 **对应讲解**：[[1. Logistic Regression & GLMs]] ・ [[10.1 频率-严重度与纯保费]]
+
 > 💬 **中文精讲**：考取舍意识，尤其是保险语境下的取舍。骨架按表念，主角是三条：非线性和交互要不要自己造、能不能外推到训练范围之外、监管报备能不能接受；单调性、精度、可解释性都是围绕这三条的细节。
 > 最容易被忽略的是单调性那一行：GLM 对连续变量的效应按构造单调，监管和精算喜欢；树集成会给出波动的非单调形状，你必须解释它或者加约束。追问一般落到「费率模型你选哪个」——答案与 §7 第三题同一套：树做发现、把形状编码进要报备的 GLM。
 
@@ -294,6 +314,8 @@ The monotonicity row is the one people miss. A GLM's effect for a continuous var
 ## 2. Transformations
 
 ### Q: When do you need a transformation?
+
+> 📖 **对应讲解**：[[2. Transformations]]
 
 > On the predictor side, whenever the relationship isn't linear on the link scale, or the variable is too skewed/high-cardinality/outlier-prone to use raw. On the response side - in a GLM, almost never, because you choose the distribution and link instead.
 
@@ -320,6 +342,8 @@ Response side:
 
 ### Q: How do you identify which transformation you need?
 
+> 📖 **对应讲解**：[[2. Transformations]]
+
 > I let the data show me the shape first, then pick the simplest parametric form that reproduces it.
 
 > 💬 **中文精讲**：考流程感而不是知识点：「你先看什么」。骨架正是引用句那两步——先让数据露出形状，再挑能复现它的最简参数形式；工具按顺序：empirical logit plot（二值目标的主力）→ 分箱均值响应图 / 残差 LOESS → Spearman 与 Hoeffding's D 一起看 → 先拟合 GAM 看平滑曲线再参数化 → 先拟合 GBM 读 PDP / SHAP 依赖图。
@@ -340,6 +364,8 @@ Response side:
 7. Box-Cox / Yeo-Johnson to let ML pick a power transform for you.
 
 ### Q: Explain Weight of Evidence coding.
+
+> 📖 **对应讲解**：[[2.3.1 WOE & IV]]
 
 > WoE replaces each bin of a predictor with the log-odds contribution of that bin, so a high-cardinality or non-linear variable becomes a single numeric column that is already on the logit scale.
 
@@ -388,6 +414,8 @@ Cons - and these are the follow-ups:
 
 ### Q: Dummy coding - how, and what goes wrong?
 
+> 📖 **对应讲解**：[[2. Transformations]]
+
 > k levels become k-1 indicator columns plus a reference level; each coefficient is the contrast against that reference.
 
 > 💬 **中文精讲**：考陷阱意识。骨架：k 个水平变成 k−1 个指示列 + 一个参照水平，每个系数都是对参照的对比；然后是四个坑——用满 k 个再加截距就是 dummy variable trap（完全共线、设计矩阵奇异）、参照水平要挑最大最稳的那一层、高基数下设计矩阵爆炸且稀疏水平估计不稳、空单元直接给出准完全分离。
@@ -404,6 +432,8 @@ Cons - and these are the follow-ups:
 - Alternatives: WoE, target/mean encoding (same leakage caveat, needs smoothing and out-of-fold computation), ordinal coding if the levels really are ordered, hashing for very high cardinality, and native categorical handling in LightGBM/CatBoost.
 
 ### Q: Polynomials and Box-Cox.
+
+> 📖 **对应讲解**：[[2. Transformations]]
 
 > 💬 **中文精讲**：两个话题拼成一题。骨架：多项式——简单、还留在 GLM 里，但项间严重共线（要中心化或用正交多项式）、外推极差、尾端为了拟合中段乱摆，超过 2 次优先用样条；Box-Cox——`(y^λ − 1)/λ`，λ 由极大似然选到「最接近正态且方差最稳」，λ = 1 不变换、0.5 平方根、0 取对数、−1 取倒数，且要求 y > 0（有 0 或负值改用 Yeo-Johnson）。
 > 这题的杀手锏是反变换偏差：`E[g(Y)] ≠ g(E[Y])`，对 `log(y)` 的预测取指数得到的是**中位数**而不是均值，要用 smearing / Duan 校正才回得到均值；而 log link 的 GLM 直接建模 `log(E[Y])`，没有这个问题——这正是 GLM 在保险里取代「先变换再 OLS」的核心原因。
@@ -424,6 +454,8 @@ Box-Cox — `y^(λ) = (y^λ − 1)/λ` for `λ ≠ 0`, and `ln(y)` for `λ = 0`;
 
 ### Q: What is capping/flooring and why do it?
 
+> 📖 **对应讲解**：[[2. Transformations]]
+
 > Winsorizing - replace values above a high percentile with that percentile's value, and below a low one likewise. You keep the record but limit how much a single extreme value can move the fit.
 
 > 💬 **中文精讲**：考工程细节加泄漏意识。骨架：先给定义（Winsorizing——把高低分位之外的取值换成该分位的值，记录保留、单个极端值的影响力被限住），再说常用切点（1/99 或 5/95 分位、或拟合关系明显走平处、或业务定义的上限），最后三条理由：限制杠杆与影响力、不必删行、打分时不会遇到训练里没见过的取值范围。
@@ -438,6 +470,8 @@ Box-Cox — `y^(λ) = (y^λ − 1)/λ` for `λ ≠ 0`, and `ln(y)` for `λ = 0`;
 - **TRAP:** the caps are parameters learned from the training data. Deriving caps from the full dataset, or recomputing them on the test set, is leakage. Fit on train, apply everywhere.
 
 ### Q: Splines and GAMs - what are they and when do you reach for them?
+
+> 📖 **对应讲解**：[[2. Transformations]]
 
 > A spline is a piecewise polynomial joined smoothly at knots; a GAM is a GLM where each predictor gets its own smooth function instead of a single coefficient.
 
@@ -460,6 +494,8 @@ Box-Cox — `y^(λ) = (y^λ − 1)/λ` for `λ ≠ 0`, and `ln(y)` for `λ = 0`;
 
 ### Q: What are the missing-data mechanisms?
 
+> 📖 **对应讲解**：[[4. Missing Data]]
+
 > 💬 **中文精讲**：考三层定义，但真正的考点是那句结论——只有 MAR 下插补才站得住。骨架逐行念：MCAR 与任何数据都无关（后果是完整个案分析无偏、只是损失功效）、MAR 只依赖已观测变量（条件在已观测数据之后缺失机制可忽略，这是所有正经插补方法的假设）、MNAR 依赖没观测到的值本身（没有任何插补能修，只能加缺失指示、对机制建模、做敏感性分析）。
 > 实务判断法比定义更常被追问：拿缺失指示变量去预测（能被已观测变量预测出来的，就不是 MCAR），再拿它去解释目标（能预测目标，这个标志本身就是特征，留下）。保险现实那句很加分：空白常常意味着「新司机没历史」「第三方数据没匹配上」「这个险种不适用」，所以默认答案是「missing 自成一层」，而不是插补。
 
@@ -480,6 +516,8 @@ How do you tell which you have?
 - Insurance reality worth volunteering: missing is usually informative. A blank field often means "new driver with no history," "third-party data didn't match," or "this coverage doesn't apply." So the default is frequently "missing is its own category/bin," not imputation.
 
 ### Q: What are the imputation methods and when do you use each?
+
+> 📖 **对应讲解**：[[4. Missing Data]]
 
 > 💬 **中文精讲**：考菜单广度与每条代价。骨架从最粗暴到最讲理念一遍：完整个案删行（只在 MCAR 且缺失很少时站得住）、删列（缺失约 50–70% 以上可考虑，但先看缺失指示有没有信号）、均值 / 中位数、众数或「Missing」单独一类、缺失指示 + 插补值（实战主力）、回归与随机回归插补、kNN、MICE 多重插补 + Rubin 规则（MAR 下唯一能把标准误算对的，代价是重、且在打分流水线里别扭）、树模型原生处理、hot-deck。
 > 两条会扣分的红线：插补一定在拆分之后、只在训练集上学参数，在 CV 里属于 pipeline、每折重算；生产必须有一条确定的打分规则——「训练时我们把这些行删了」不是规则。追问常到「均值插补错在哪」：方差塌成尖峰、与其他变量的相关被稀释、标准误偏小、关系被衰减，还把「曾经缺失」这个信号抹掉了。
@@ -510,6 +548,8 @@ The two things that get you dinged
 
 ### Q: Define it.
 
+> 📖 **对应讲解**：[[3. Multicollinearity]]
+
 > Two or more predictors are close to being a linear combination of each other. Collinearity is the pairwise case; multicollinearity includes relationships among three or more variables that no pairwise correlation will reveal.
 
 > 💬 **中文精讲**：考定义精度：两个及以上预测变量彼此近似互为线性组合；两两的叫做共线性（collinearity），三个以上变量之间的关系常常连相关矩阵都看不出来，那才是多重共线性（multicollinearity）。
@@ -520,6 +560,8 @@ The two things that get you dinged
 - Near multicollinearity is the practical problem, and it’s a matter of degree.
 
 ### Q: What are its effects? Does it hurt predictions?
+
+> 📖 **对应讲解**：[[3. Multicollinearity]]
 
 > Estimates stay unbiased, but their variances blow up - so inference and interpretation break while predictive performance is essentially unaffected within the range of the training data.
 
@@ -548,6 +590,8 @@ For non-GLM models (the sheet calls this out specifically):
 
 ### Q: How do you detect it?
 
+> 📖 **对应讲解**：[[3.4.2 Variance Inflation Factor (VIF)]] ・ [[3. Multicollinearity]]
+
 > 💬 **中文精讲**：考工具与阈值，重点在「相关矩阵抓不到三个以上的关系」。骨架按表念：相关矩阵 → VIF = 1/(1−R²ⱼ)（1 表示不相关、> 5 关注、> 10 严重，√VIF 就是标准误被放大的倍数）→ 容差 = 1/VIF（< 0.1 等价于 VIF > 10）→ X′X 特征值算出的条件指数（> 10 中度、> 30 严重，方差分解比例告诉你哪几个变量共享那个坏维度）→ 症状检查（符号不稳、标准误巨大、F 显著而 t 不显著）。
 > 顺序 VIF 流程要强调「删掉一个之后必须重新算」，VIF 会变；追问常到「VIF 高就一定要删吗」——如果模型只用于预测而不是解释费率，共线本身不致命，这是与 §5 相连的分寸感。
 
@@ -562,6 +606,8 @@ For non-GLM models (the sheet calls this out specifically):
 The sequential VIF procedure: compute VIFs → drop or combine the worst offender → recompute → repeat until all are under threshold. Emphasize the recompute; VIFs change once you remove a variable.
 
 ### Q: How do you fix it?
+
+> 📖 **对应讲解**：[[3. Multicollinearity]] ・ [[3.5.2 SAS VARCLUS]] ・ [[1.6.3 Regularization]]
 
 > 💬 **中文精讲**：考方案阶梯与每条的代价，而不是背名字。骨架四条加零散项：按 VIF 顺序删变量（最简单、最可解释、还省采集成本，但丢信息且「删哪个」常常说不清）、变量聚类 VARCLUS（保留原始可解释变量、能扩到上千个候选，但无监督、代表变量未必最会预测）、PCA 回归（成分正交、顺带降维，但完全没有可解释性、还照样要采集维护全部原始变量）、惩罚回归（ridge 稳、lasso 选、elastic net 兼顾相关群）。
 > 两个细节最显功力：VARCLUS 的代表变量按 `(1−R²_own)/(1−R²_next)` 最小来挑，即最像自己簇、最不像别的簇；ridge 的本质是给 X′X 加 λI 让它可逆——它就是这个问题的发明物。追问常问「PCR 和 PLS 差别」：PCA 无监督，最大方差方向未必最会预测。
@@ -602,6 +648,8 @@ The sequential VIF procedure: compute VIFs → drop or combine the worst offende
 
 ### Q: Explain PCA.
 
+> 📖 **对应讲解**：[[3.5.4 PCA]]
+
 > PCA finds a new orthogonal basis ordered by how much variance each direction explains, so you can keep a few components instead of many correlated variables.
 
 > 💬 **中文精讲**：考机制顺序，外加能不能一句话说清它和 VarClus 的差别。骨架四步：标准化（强制，否则量纲最大的变量主导）→ 算相关阵做特征分解（或直接对 X 做 SVD）→ 特征向量是载荷（方向）、特征值是各方向解释的方差，PC1 是最大方差方向、之后每个都与前面正交 → 选 k（碎石图拐点、累计 80–95%、Kaiser 特征值 > 1、或 CV）。
@@ -627,6 +675,8 @@ The one-line distinction to have ready:
 
 ### Q: Why do feature selection at all?
 
+> 📖 **对应讲解**：[[5. Dimension Reduction]]
+
 > Five reasons, and only one of them is about accuracy.
 
 > 💬 **中文精讲**：考「除了精度还有别的理由」这个视角。骨架：五条理由，**只有一条与精度有关**——采集 / 购买 / 维护成本（第三方数据是真钱）、计算时间（训练、打分、刷新）、可解释性（400 个变量的模型没人审得动，报备要逐个解释）、过拟合（变量越多越有机会学到样本噪声）、参数精度下降（每加一个变量都抬高其他变量的标准误，这就是 §4 那条链）。
@@ -645,6 +695,8 @@ The one-line distinction to have ready:
 Add the operational ones: fewer variables means less exposure to a data-source outage, easier documentation and filing, and a smaller surface for fairness/disparate-impact review.
 
 ### Q: Walk me through your variable reduction workflow on a wide dataset.
+
+> 📖 **对应讲解**：[[5. Dimension Reduction]] ・ [[5.2 Univariate Selection]] ・ [[5.3 Multivariate Selection]]
 
 > 💬 **中文精讲**：这是几乎必考的「走一遍流程」，考顺序感，尤其是**先拆数据必须排在所有监督步骤之前**。骨架九步：业务与合规先筛（最便宜的一刀，砍掉禁用变量、打分时拿不到的、以及任何泄了目标信息的）→ 数据质量筛（近零方差、缺失过多、ID、重复、结果之后才填的变量）→ 先拆数据 → 单变量粗筛（放宽，只是让问题可处理，不是做决定）→ 无监督去冗余（VarClus 或相关聚类，每簇取一个代表）→ 多变量选择（elastic net 或前向 / 后向，用 CV 打分而不是样本内 p 值）→ 树模型重要性交叉校验 → 业务复核每个变量的符号与形状 → 在没动过的 holdout 上验证，并确认跨时段、跨群稳定。
 > 第 3 步的位置是这题的暗礁：单变量筛选、WoE、插补、封顶全都是学参数的监督步骤，一旦发生在拆分之前，测试集就在替你选变量（§6 的泄漏）。追问常到「被单变量筛掉的变量就永远丢了吗」——树模型那一步就是专门捞回只在非线性或交互里才有用的变量。
@@ -670,6 +722,8 @@ This is a near-certain "walk me through" question. Have the ordered answer ready
 9. Validate on the untouched holdout, and confirm the selection is stable across time periods and major segments.
 
 ### Q: Univariate methods - pros, cons, and what you actually use.
+
+> 📖 **对应讲解**：[[5.2 Univariate Selection]]
 
 > 💬 **中文精讲**：考你能不能张口说出单变量筛选的四个缺陷，以及会不会把 Spearman 与 Hoeffding 配对用。骨架：优点四条（快、能扩展到上千变量、与模型无关、好解释）；缺点四条（忽略联合效应，会丢掉只在交互里有用、或作为抑制变量才有用的变量；留冗余；看不见只在条件下出现的关系；多重检验——筛 2,000 个变量在 α = 0.05 下会白捡约 100 个假阳性）。
 > 得分点是那两张配对表：**低 Spearman + 高 Hoeffding's D** 说明「有信号但非单调」，处理是分箱、样条或变换，**不是删掉**——这就是两个统计量要一起看的理由。追问常到 IV / 单变量 AUC / 卡方的分档口径。
@@ -709,6 +763,8 @@ The low-Spearman/high-D cell is the one that earns you credit: a naive correlati
 
 ### Q: Multivariate methods and subset selection.
 
+> 📖 **对应讲解**：[[5.3 Multivariate Selection]]
+
 > 💬 **中文精讲**：方法本身是次要的，这题真正考的是「逐步法为什么不能交差」。骨架先给四条机制与限制：前向（贪心、不能撤销，可能永远加不进只在组合里才有用的变量，但 p > n 时仍可用）、后向（整体起步、更会抓联合效应，要求 n > p，而且贵）、逐步（继承前两者的问题）、最优子集（精确，但 2^p，靠 leaps-and-bounds 也就到 30–40 个变量）。
 > 逐步法的批评要能主动交付六条：p 值与 R² 都乐观偏（同一份数据既选又测）、标准误偏小、置信区间覆盖不足、没有为成百上千次隐式比较做校正、bootstrap 一下选出来的变量就变、最后却被当成事先指定的模型。替代方案：惩罚回归（选择是单次优化的一部分、λ 由 CV 定），或把整个选择过程包进交叉验证。
 
@@ -737,6 +793,8 @@ The criticism of stepwise you should be able to deliver unprompted:
 
 ### Q: How does L1 do selection? Why L1 and not L2?
 
+> 📖 **对应讲解**：[[1.6.3 Regularization]]
+
 > L1 produces exact zeros; L2 shrinks toward zero but never reaches it.
 
 > 💬 **中文精讲**：考你能不能把同一件事用两种语言讲清楚，至少熟一种。骨架：先给结论句「L1 产生精确的 0，L2 只把系数往 0 压、永远到不了 0」，再二选一展开——几何：L1 的约束区是有角的菱形，椭圆的损失等高线通常先碰到角，角就意味着某些系数正好为 0；L2 是光滑球面，接触点几乎不会落在坐标轴上。微积分：L1 的导数是常数 `λ·sign(β)`，无论系数多小都有一份固定拉力、足以把它钉在 0；L2 的导数 `2λβ` 在 β → 0 时自己也消失了。
@@ -762,6 +820,8 @@ Two ways to explain it - know at least one cold:
 
 ### Q: Would you use a GBM's feature importance to pick features for a GLM?
 
+> 📖 **对应讲解**：[[7.4. Quantifying Feature Importance]]
+
 > Yes - as a discovery tool, not as the selection rule.
 
 > 💬 **中文精讲**：考分寸感：能不能既用它又不被它带走。骨架：引用句先定调——会，但只当**发现工具**，不当选择规则。为什么有用：它抓非线性和交互、不需要分布假设，能捞出被线性筛子丢掉的好变量。为什么不能直接取前 N：重要性不是统计显著性、更不是因果；头几名的排序本身不稳；相关变量会互相分走功劳；而且一个对 GBM 重要的变量，在 GLM 里可能要找到对的变换才起作用。
@@ -774,6 +834,8 @@ Two ways to explain it - know at least one cold:
 - The right use: read the partial dependence / SHAP dependence plots to learn the shape and the interactions, then encode those explicitly as transforms and interaction terms in the GLM. The tree model tells you what to build; the GLM is what you file.
 
 ### Q: Selection vs. projection, supervised vs. unsupervised.
+
+> 📖 **对应讲解**：[[5. Dimension Reduction]]
 
 > 💬 **中文精讲**：考你能不能把六个东西装进一张 2×2。骨架：无监督的选择（VarClus、相关过滤、低方差过滤）、有监督的选择（单变量筛查、多变量 / 子集选择、树重要性、惩罚回归）、无监督的投影（PCA）、有监督的投影（LDA）；一句话记住「选择保留原变量，投影造新变量」。
 > 再叠一层 filter / embedded / wrapper 三族的代价对比：filter 最便宜但与模型无关、看不见联合效应；embedded 高效但绑死在该模型族上；wrapper 最贴近最终模型，也最贵、最容易把「搜索」本身过拟合。追问常到「你实际怎么组合」——filter 粗筛 → 无监督去冗余 → embedded 精挑，全程在 CV 里。
@@ -794,6 +856,8 @@ And the standard taxonomy of selection methods, which is the other way this gets
 ## 6. Model Assessment
 
 ### Q: How do you split your data, and why three sets?
+
+> 📖 **对应讲解**：[[6.1 Data Preparation & Validation]]
 
 > Train fits the parameters, validation makes the choices, and test gives one unbiased read on generalization.
 
@@ -818,6 +882,8 @@ And the standard taxonomy of selection methods, which is the other way this gets
 
 ### Q: What is cross-validation? Which flavor for which data?
 
+> 📖 **对应讲解**：[[6.1 Data Preparation & Validation]]
+
 > Rotate the validation role through k folds and average, so every record is used for both fitting and validating - you get a lower-variance performance estimate without sacrificing training data.
 
 > 💬 **中文精讲**：考对号入座，「哪种数据用哪种折」比定义值钱。骨架：定义一句（让验证角色在 k 折之间轮换再平均，每条记录既参与拟合又参与验证，换来方差更低的性能估计），再逐个对号：k 折 5 或 10 是默认；分类尤其不平衡用分层；样本极少用 LOOCV（几乎无偏但方差高又贵）；想压掉折分配的运气用重复 k 折；有聚簇（同一保单多行）用 GroupKFold；时序用滚动起点、永远不 shuffle；既要调参又要报数用嵌套 CV。
@@ -839,6 +905,8 @@ And the standard taxonomy of selection methods, which is the other way this gets
 
 ### Q: How do you detect overfitting and underfitting?
 
+> 📖 **对应讲解**：[[6.2 Model Diagnosis_Bias-Variance Tradeoff]]
+
 > 💬 **中文精讲**：考诊断能力：看的是训练误差与验证误差之间的**差距**，不是任何单一数字。骨架按表念三行——欠拟合（两头都高、差距小，修法是更多 / 更好的特征、变换与交互、更弹性的模型、减正则）、合适（都低、差距小）、过拟合（训练低验证高、差距大，修法是更多数据、更少变量、正则、更简单的模型、早停、bagging、用 CV 调参）；再看三张曲线：学习曲线、验证曲线、boosting 的逐轮训练 / 验证跟踪。
 > 学习曲线要能读出结论：两条曲线在高误差处收敛就是偏差问题、加数据没用；差距明显但随数据增大而收窄就是方差问题、加数据有用。验证曲线找的是那个 U 形的最低点；boosting 里验证误差拐上去的那一轮就是早停点。
 
@@ -857,6 +925,8 @@ Tools:
 - Per-iteration train/validation tracking for boosting — the iteration where validation error turns up is your early-stopping point.
 
 ### Q: What is data leakage? Give me examples.
+
+> 📖 **对应讲解**：[[6.1 Data Preparation & Validation]]
 
 > Leakage is any information in the training features that wouldn't be available at the moment you actually need to score - including information that leaked in through your own preprocessing.
 
@@ -907,6 +977,8 @@ How you catch it:
 
 ### Q: Define the metrics and tell me when you'd use each.
 
+> 📖 **对应讲解**：[[6.3 Performance Metrics]]
+
 > 💬 **中文精讲**：考广度，但真正评分的是收尾那句总结：**区分度与校准是两件事**——区分度看排序（AUC、Gini、lift），校准看水平对不对（log-loss、Brier、实际 vs 预期十分位），定价模型两样都要，分诊模型只要排序。骨架就是两张表：连续型（RMSE / MAE / MAPE / R² / deviance·AIC·BIC）与二值型（accuracy、precision-recall-F1-特异度、AUC、Gini、PR-AUC、log-loss / Brier、校准图、lift / gain）。
 > 几条边界必须能解释：R² 加变量只会不降所以要看调整 R²，而且对 GLM 没意义（用 pseudo-R² 或 deviance）；MAPE 在 y → 0 时炸掉、y = 0 无定义，所以零多的目标（索赔次数）根本不能用；AUC 对类别比例不敏感既是优点也是陷阱——它可能看着体面，而在你真正的工作点上毫无用处。Gini = 2·AUC − 1 是保险惯例，0.75 → 0.50。
 
@@ -936,6 +1008,8 @@ Binary targets:
 The distinction to state explicitly: discrimination (can the model rank? AUC, Gini, lift) versus calibration (are the predicted levels right? log-loss, Brier, A-vs-E plots). A pricing model needs both. A triage model only needs the first.
 
 ### Q: Explain a lift chart and a gain chart. How do you read one?
+
+> 📖 **对应讲解**：[[6.4 Diagnostic & Visualization Tools]] ・ [[6.3 Performance Metrics]]
 
 > 💬 **中文精讲**：考「模型怎么翻译成业务语言」，以及你会不会批判地读图。骨架：构造四步（打分 → 按预测降序 → 切十分位 → 算每箱实际响应率）；gain（累计响应）图的 x 轴是累计触达比例、y 轴是累计捕获的事件比例，45° 线是随机基线，曲线越往左上角弓越好；lift = 箱内响应率 ÷ 整体响应率，顶部十分位 lift 是标准的一个数字总结。
 > 三个批判性读法最值钱：lift 应从顶部往下单调衰减，非单调（第 3 箱压过第 2 箱）是稳定性或过拟合的红旗而不是噪声；必须按运营产能读图（SIU 只能查 2% 的案子，10% 处的 lift 无关）；连续型目标同样构造，顶箱与底箱实际损失成本之比就是定价里「多分出了多少段」的统计量。再加一句「箱内补上实际 vs 预期，顺带变成校准检查」就更完整。
@@ -974,6 +1048,8 @@ Related charts to name: Lorenz/concentration curve, and the double lift chart fo
 
 ### Q: Explain the bias-variance tradeoff. Write the decomposition.
 
+> 📖 **对应讲解**：[[6.2 Model Diagnosis_Bias-Variance Tradeoff]]
+
 > `E[(y − f̂(x))²] = Bias[f̂]² + Var[f̂] + σ²`
 
 > 💬 **中文精讲**：考能不能默写分解式并逐项解释，而不是背「高偏差欠拟合、高方差过拟合」。骨架：写出 `E[(y − f̂(x))²] = Bias² + Var + σ²`，然后逐项念——偏差是模型太简单或结构错，系统性的、加数据不会消失；方差是「换一个训练样本，拟合结果会变多少」；σ² 是不可约噪声，是地板。
@@ -990,6 +1066,8 @@ Related charts to name: Lorenz/concentration curve, and the double lift chart fo
 - What moves you along the curve: model flexibility, regularization strength, feature count, and training-set size (more data lowers variance, not bias).
 
 ### Q: Bagging vs. boosting vs. stacking.
+
+> 📖 **对应讲解**：[[8.3. Bagging (Bootstrap Aggregating)]] ・ [[8.4. Boosting]] ・ [[8.6 Bagging VS Boosting]]
 
 > 💬 **中文精讲**：考三族对照加两段「为什么」。骨架先按表念六行（基学习器：强 / 低偏差高方差 vs 弱 / 高偏差 vs 异质模型；训练方式：并行独立 vs 顺序拟合前面集成的误差 vs 基模型并行再叠元模型；每个学习器看到的数据；主要降什么；加成员会不会过拟合；代表算法），再分别解释 bagging 为什么降方差、boosting 为什么降偏差（形式上是函数空间里的梯度下降）。
 > 公式 `Var(平均) = ρσ² + (1−ρ)σ²/B` 是本题的枢纽：`1/B` 项随树数消失，但 `ρσ²` 是地板——这是随机森林必须做特征子采样的**唯一**理由（一句话同时答了三道题）。另两个必答细节：stacking 的元模型必须用折外预测训练，否则基模型的过拟合会直接泄进元模型；每个 bootstrap 约留下 1/e ≈ 36.8% 的行，就是免费的 OOB 验证。
@@ -1017,6 +1095,8 @@ Bonus stat: each `bootstrap` sample omits about 1/e ≈ 36.8% of the rows. Those
 
 ### Q: You work at an insurance company. GLM or GBM?
 
+> 📖 **对应讲解**：[[10.1 频率-严重度与纯保费]] ・ [[1. Logistic Regression & GLMs]]
+
 > It depends on whether the deliverable is a decision or a filed rate. For anything that goes into a rate, the GLM's interpretability and monotonicity usually win; for internal triage and targeting, the GBM's accuracy wins.
 
 > 💬 **中文精讲**：考「你会不会按交付物选工具」，而且面试官在等你提监管。骨架：引用句先定调（看交付物是一个决策，还是一张要报备的费率表），再两栏算账——GLM：系数可解释、乘法结构直接映射成费率表、报备与精算复核有传统、按构造单调、稳定、标准误清楚；代价是每个非线性与交互都要手工造，精度上要放弃一些。GBM：精度更高、自动抓非线性与交互、对异常值和单调变换稳健、原生处理缺失；代价是黑箱、难报备、可能给出非单调甚至反直觉的形状（要靠单调约束压住）、要调参、不能外推、需要一整套可解释性材料。
@@ -1031,6 +1111,8 @@ The answer that lands: use the GBM to discover which variables matter and what s
 ## 8. Random Forest
 
 ### Q: Walk me through the algorithm.
+
+> 📖 **对应讲解**：[[7.2. Building the Forest]] ・ [[7. Random Forest]]
 
 > Bagged deep decision trees, with an extra trick: at every split, each tree only gets to consider a random subset of the features.
 
@@ -1055,6 +1137,8 @@ Split criteria: Gini impurity `1 − Σpₖ²` or entropy `−Σp·log p` for cl
 
 ### Q: What is OOB error?
 
+> 📖 **对应讲解**：[[7. Random Forest]]
+
 > Each `bootstrap` sample leaves out about 36.8% of the rows. Predict each row using only the trees that never saw it, aggregate, and you have a validation estimate for free.
 
 > 💬 **中文精讲**：考 36.8% 从哪来，以及它的边界在哪。骨架：每个 bootstrap 样本约漏掉 36.8%（1/e）的行 → 用「从没见过这一行的那些树」去预测它再聚合 → 就得到一份免费的验证估计；用途是快速调参，以及判断 `n_estimators` 够不够（盯 OOB 误差趋平）。
@@ -1065,6 +1149,8 @@ Split criteria: Gini impurity `1 − Σpₖ²` or entropy `−Σp·log p` for cl
 - Not a substitute for a proper out-of-time holdout - OOB is still in-period and in-sample in the temporal sense.
 
 ### Q: Key hyperparameters - what they do and how they trade off.
+
+> 📖 **对应讲解**：[[7. Random Forest]]
 
 > 💬 **中文精讲**：考你调过没有——每一行都要给出「往哪边调、换来什么」。骨架按表念，重点四处：`n_estimators`（单调变好直到趋平、不会过拟合、成本线性，常用 300–1000，看 OOB 趋平就停）、`min_samples_leaf`（最直接的噪声控制，叶子小到一行就是在背答案，噪声大或不平衡时抬到 5 / 20 / 50 或 n 的某个比例）、`max_features`（RF 的招牌旋钮：低 → 树间更去相关但单树更弱，高 → 更强但更相关、退化成普通 bagging；默认分类 √p、回归 p/3）、`bootstrap`（留着——它同时是 OOB 的前提）。
 > 能顺口说出「更多树不会过拟合是因为预测是平均，往平均里加项只降方差、不改期望」就接住了 §7；追问几乎必然是 `max_features` 与 `n_estimators` 要成对调（下一题）。
@@ -1083,6 +1169,8 @@ Split criteria: Gini impurity `1 − Σpₖ²` or entropy `−Σp·log p` for cl
 
 ### Q: How do those hyperparameters interact?
 
+> 📖 **对应讲解**：[[7. Random Forest]]
+
 > 💬 **中文精讲**：这题在源表里被明确要求，考的是「你真调过还是只背过默认值」。骨架五组，每组都要说机制：`max_features` × `n_estimators`（低 max_features 让单树更弱更去相关，多出来的那部分噪声要靠更多树平均掉，两者成对调）；`max_depth` × `min_samples_leaf`（一个从上面压复杂度、一个从下面压，同调基本冗余，定一个调另一个）；树复杂度 × `n_estimators`（深而高方差的树从加树里获益更多）；`class_weight` × `min_samples_leaf`（重类权重配极小叶子是过拟合稀有类最快的路，一旦加权就要抬高叶子下限）；`bootstrap`=False × `max_features`=p（得到 B 棵一模一样的树、集成收益为 0）。
 > 最后那条是「你到底懂不懂」的题眼——它证明两处随机性一个都不能少，能顺口说出来等于证明你不是在背参数表。
 
@@ -1100,6 +1188,8 @@ The source sheet asks for this explicitly, so have real answers:
 
 ### Q: What tuning strategies do you use?
 
+> 📖 **对应讲解**：[[7. Random Forest]]
+
 > 💬 **中文精讲**：考方法选择与预算意识。骨架按表念四种「怎么工作 / 什么时候用」：网格搜索（参数少且已定位粗范围；成本是各维网格的乘积，超过 3–4 个参数就死）；随机搜索（第一轮默认；同样预算下通常赢过网格，因为真正重要的参数没几个，而随机采样能给每个参数更多不同的取值，而不是几个重复值）；贝叶斯优化（TPE / GP；每次拟合都贵、预算紧时用，缺点是串行不好并行、在便宜模型上开销不值）；逐次减半 / Hyperband（搜索空间大、早期信号便宜时：先便宜地跑一批、杀掉差的、把预算转给好的）。
 > 收尾三句必须说：在验证 / CV 折上调、在没动过的测试集上报数、调得很狠就上嵌套 CV。
 
@@ -1113,6 +1203,8 @@ The source sheet asks for this explicitly, so have real answers:
 Always: tune on validation/CV folds, report on the untouched test set, and consider nested CV if the tuning is extensive.
 
 ### Q: How does RF compute feature importance?
+
+> 📖 **对应讲解**：[[7.4. Quantifying Feature Importance]]
 
 > 💬 **中文精讲**：考四种重要性的差别，重点在每种偏差来自哪里。骨架按表念：MDI / Gini 重要性（训练时免费算出来，但偏向高基数与连续变量，而且是在训练数据上算的）；置换重要性（模型无关、在留出数据上测，但相关特征下不可靠、更贵）；drop-column（最忠实、最贵）；SHAP（博弈论加性归因，一致、给方向和大小、局部与全局都能用，现代默认）。
 > 那句 caveat 要主动说、不用人问：重要性不是统计显著性、也不是因果，相关特征还会互相分走功劳——这一句在 §8 与 §9 通用。追问常到「MDI 为什么偏向高基数」：因为可选的切分点更多，就有更多机会降低不纯度。→ 深潜：`7.4. Quantifying Feature Importance`
@@ -1128,6 +1220,8 @@ Say the caveat unprompted: importance is not statistical significance and is not
 
 ### Q: Pros and cons.
 
+> 📖 **对应讲解**：[[7. Random Forest]]
+
 > 💬 **中文精讲**：考平衡感，也是 §7「GLM 还是 GBM」的素材库。骨架：优点一口气说完（开箱精度高、调参少、自动抓非线性与交互、对 X 里的异常值和无关变量稳健、不用缩放、对预测子的单调变换不变、可并行、免费 OOB、内置重要性、支持混合类型）；缺点（相对 GLM 是黑箱、模型大打分慢、**不能外推**——每个预测都是已观测 y 的加权平均，延续不了趋势，这在有趋势的保险数据上是真问题、重要性偏向高基数、在稀疏高维如文本上不如线性模型、严重不平衡时被多数类淹没、预测概率常需要校准）。
 > 隐藏收尾是那条 FOLLOW-UP：为什么加树不会过拟合——预测是独立拟合的树的平均，往平均里加项只降方差、不动期望，它是收敛而不是退化；对比 boosting 每棵新树都在追当前残差，会把拟合函数一路推向训练数据。
 
@@ -1140,6 +1234,8 @@ Cons: a black box relative to a GLM; large model size and slower scoring; cannot
 ## 9. GBM & XGBoost
 
 ### Q: Walk me through gradient boosting.
+
+> 📖 **对应讲解**：[[8.4.2.2 Gradient Boosting]]
 
 > Fit a sequence of shallow trees, where each one is fit to the errors the current ensemble is still making, and add it in at a small learning rate.
 
@@ -1164,6 +1260,8 @@ Prediction is the initial constant plus ν times every tree's output - an additi
 
 ### Q: How is GBM different from random forest?
 
+> 📖 **对应讲解**：[[8.6 Bagging VS Boosting]]
+
 > 💬 **中文精讲**：考结构性对照，不是背差异清单。骨架按表念八行：树的形状（深、独立 vs 浅 2–8、每棵拟合前面集成的误差）、组合方式（平均 / 投票 vs 加权加性求和）、主要攻什么（方差 vs 偏差）、加树（趋平、不降 vs 会过拟合、M 必须调或早停）、并行性（跨树可并行 vs 天生顺序，只有树内的分裂搜索可并行）、超参数敏感度（低 vs 高）、表格数据上的精度（很好 vs 通常更好）、随机性（必需 vs 可选但有用）。
 > 一句话根因是「**平均 vs 累加**」：平均让加成员只降方差、不改期望，所以 RF 的树数是单调的；累加让每棵树都在追上一轮的误差，错误会累积，所以 GBM 的树数有内部最优、早停是必需品。把这条根因说出来，这张表就不用死记了。
 
@@ -1179,6 +1277,8 @@ Prediction is the initial constant plus ν times every tree's output - an additi
 | Randomness | essential (`bootstrap` + feature subset) | optional (`subsample`, colsample) but helps |
 
 ### Q: What are the important hyperparameters?
+
+> 📖 **对应讲解**：[[8.4.2.2 Gradient Boosting]]
 
 > 💬 **中文精讲**：考参数的分组与优先级。骨架按三组念：核心一对——`learning_rate`（ν，典型 0.01–0.3）与 `n_estimators` 直接互换，学习率减半大致要把树数翻倍，低学习率加多树泛化更好、代价是时间线性增长（所以把树数设高、让早停替你选）；树本身——`max_depth` 典型 3–8，最重要的一句是「深度 d 允许最多 d 阶交互，depth 1 就是纯加性模型」，`min_child_weight` / `min_data_in_leaf` 是叶子噪声的主要控制（LightGBM 用 `num_leaves` 顶替深度），`gamma` / `min_split_loss` 剪掉弱分裂；正则与随机性——`subsample`、`colsample_bytree`、`reg_lambda` / `reg_alpha`、`scale_pos_weight`、`monotone_constraints`、`max_delta_step`。
 > 两个加分点：`monotone_constraints` 要单独讲一句——它是让 GBM 能被监管和信贷报备接受的旋钮；「深度就是交互阶数」这个说法一句话就证明你理解树模型在表达什么。
@@ -1212,6 +1312,8 @@ Regularization and stochasticity:
 
 ### Q: What's your tuning strategy?
 
+> 📖 **对应讲解**：[[8.4.2.2 Gradient Boosting]]
+
 > 💬 **中文精讲**：考你有没有真跑过——要的是**有序配方**而不是清单。骨架六步：固定 `learning_rate` = 0.1，用验证集早停定一个合理的树数（快基线）→ 一起调树复杂度（`max_depth` 或 `num_leaves` 与 `min_child_weight`，这是偏差 / 方差的主旋钮）→ 调随机性（`subsample`、`colsample_bytree`）→ 调正则（`gamma`、`reg_lambda`、`reg_alpha`）→ 最后把学习率降到 0.01–0.05、加树加早停去榨最后几个点 → 第 2–4 步用随机搜索或贝叶斯优化代替全网格，全程配 CV 与早停。
 > 顺序本身就是答案：先定树数，再复杂度、再随机性、最后正则与低学习率——低学习率放最后做，前面的搜索才便宜。被追问「为什么不用全网格」：维度爆炸，而且大量参数组合的收益可以忽略。
 
@@ -1231,6 +1333,8 @@ Give an ordered recipe, not a list - it shows you've actually done this:
 
 ### Q: Why is GBM more sensitive to hyperparameters than RF?
 
+> 📖 **对应讲解**：[[8.6 Bagging VS Boosting]]
+
 > Because in a random forest the trees are fit independently and averaged, so mistakes are self-correcting - but in a GBM every tree is fit to the previous ensemble's errors, so mistakes compound.
 
 > 💬 **中文精讲**：这一问其实在考「你理解 bagging 与 boosting 的本质差异吗」。骨架：引用句先给根因（RF 的树独立拟合再平均，错误会互相抵消；GBM 每棵树都拟合前面集成的误差，错误会累积），再三点展开——学习率过高或树太深就开始拟合噪声，之后每一棵树都在这层噪声上继续搭；`n_estimators` 有内部最优（少了欠拟合、多了过拟合），而 RF 里它是单调的，所以「树多加就完了」是免费的；因此早停对 GBM 必需、对 RF 无关，「更多树不会有坏处」的直觉不能照搬。
@@ -1243,6 +1347,8 @@ Give an ordered recipe, not a list - it shows you've actually done this:
 - Which is why early stopping is mandatory for GBM and irrelevant for RF, and why RF’s “more trees can’t hurt” intuition does not transfer.
 
 ### Q: What does XGBoost add over traditional GBM?
+
+> 📖 **对应讲解**：[[8.4.2.2 Gradient Boosting]]
 
 > 💬 **中文精讲**：考增量知识，至少要能报出四件事。骨架三层：算法上——正则化目标（L1/L2 惩罚写进损失函数内部，正则成为优化的一部分而不是事后附加）、二阶（牛顿）优化（用梯度与 Hessian，叶值和分裂增益算得更准、迭代更少）、原生稀疏 / 缺失处理（每个分裂学一个默认方向，不必先插补）、加权分位草图的近似分裂查找、先长到 `max_depth` 再按 `gamma` 回头剪（能捞出藏在坏分裂后面的好分裂）；工程上——并行分裂查找、缓存友好的访存、out-of-core、分布式、GPU；实用上——内置 CV 与早停、单调与交互约束、含 Poisson / Gamma / Tweedie 的宽目标库。
 > 措辞注意本题的编辑注：默认是 `grow_policy=depthwise`（按层生长）而不是 DFS 深度优先，实质结论（先长满再回头剪 vs 逐节点贪心早停）不变，但按官方参数名说更稳。收尾用一句对比 LightGBM（leaf-wise 生长、GOSS 采样、原生类别变量）与 CatBoost（ordered boosting 对抗编码泄漏、最强的类别处理）。
@@ -1272,6 +1378,8 @@ Worth one sentence: LightGBM adds leaf-wise growth, GOSS sampling, and native ca
 
 ### Q: How does GBM compute variable importance?
 
+> 📖 **对应讲解**：[[7.4. Quantifying Feature Importance]]
+
 > 💬 **中文精讲**：考你会不会挑对那个指标。骨架按表念：`gain`（该特征所有分裂带来的损失总下降）是默认、也是最该引用的一个；`cover`（被该特征的分裂覆盖的样本数）次要；`weight` / `frequency`（被用来分裂的次数）偏向高基数的连续变量，**不要引用**；外部校验用置换重要性（模型无关、相关下不可靠）与 SHAP。
 > 这题真正要讲的是 gain 与 SHAP 的分工：gain 只说贡献多少、不说方向；SHAP 给大小和方向、能落到单条记录（所以能解释某一次拒保、或某一张保单的费率），还支持依赖图与交互图。要给监管或客户解释树模型，答案就是 SHAP 加单调约束；RF 那三条 caveat 在这里同样成立。
 
@@ -1288,6 +1396,8 @@ The distinction to draw: gain tells you how much a feature contributed, but not 
 Same caveats as RF: correlated features share credit, importance isn't significance, and none of it is causal.
 
 ### Q: How do you keep a GBM from overfitting?
+
+> 📖 **对应讲解**：[[8.4.2.2 Gradient Boosting]]
 
 > 💬 **中文精讲**：考清单的优先级，第一项必须是早停。骨架按影响力排序念八条：验证集早停（单条最重要）→ 低学习率配更多树 → 浅树（`max_depth` 3–6）→ `min_child_weight`，别让叶子太小 → `subsample` 与 `colsample_bytree` 注入随机性 → 叶权重的 L1 / L2 与 `gamma` 剪枝 → 每个调参决定都走 CV 而不是单次划分 → 单调约束（注入真先验知识，几乎零可信度代价）。
 > 最后一条在保险语境下最值钱——它同时是正则和「让监管 / 客户接受」的手段，别只当技术项。被追问「哪一条最有效」就直接答早停，其余都是配合它工作的。
@@ -1311,6 +1421,8 @@ The checklist, roughly in order of impact:
 8. Monotone constraints - injecting real prior knowledge is regularization that costs you nothing in credibility.
 
 ## 10. STAR Answers
+
+> 📖 **对应讲解**：[[03. 答题模板与追问应对]]
 
 ### 10a. STAR adapted to technical questions
 
@@ -1380,6 +1492,8 @@ Self-practice prompt:
 
 ## Numbers to Memorize
 
+> 📖 **对应讲解**：[[04. 公式速查卡]]
+
 These get asked as direct factual questions. There are about 25 of them.
 
 | Quantity | Value |
@@ -1417,6 +1531,8 @@ These get asked as direct factual questions. There are about 25 of them.
 
 ## Cross-Topic Connections
 
+> 📖 **对应讲解**：[[00 Index]]
+
 The interview will test whether you see these as one subject rather than ten. Each line below is a place where two topics are the same idea:
 
 - Quasi-complete separation (§1) and undefined WoE (§2) are the same problem — a categorical level with zero events. One shows up as an infinite coefficient, the other as a log of zero. Both are fixed by merging bins or adding a penalty.
@@ -1443,6 +1559,8 @@ The interview will test whether you see these as one subject rather than ten. Ea
 > 用法上：把这张表当「追问的出口」而不是背诵清单——每题被追到第二层、第三层时，接一条连线就是加分区。逐题的深潜落点见 `[[MAGNet 答案对照表]]`，本表只讲「为什么它们本质上是一件事」。
 
 ## Self-Test (No Answers)
+
+> 📖 **对应讲解**：[[99.1 题库总览]]
 
 Cover the document. If you can answer these out loud in 60-90 seconds each, you're ready.
 

@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02. 三条学习路径.md",
+                "file": "01_LR_GLMs/1. Logistic Regression & GLMs.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -40,7 +40,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "02. 三条学习路径"
+              "title": "1. Logistic Regression & GLMs"
             }
           },
           {
@@ -49,7 +49,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01_LR_GLMs/1.1 Ordinary Least Squares (OLS).md",
+                "file": "00_SF真题/MAGNet 面试真题全解.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -64,7 +64,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "1.1 Ordinary Least Squares (OLS)"
+              "title": "MAGNet 面试真题全解"
             }
           },
           {
@@ -102,7 +102,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -248,14 +248,14 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "01_LR_GLMs/1.1 Ordinary Least Squares (OLS).md",
+                "file": "01_LR_GLMs/1. Logistic Regression & GLMs.md",
                 "options": {
                   "collapse-filter": false,
                   "search": "",
                   "localJumps": 1,
-                  "localBacklinks": true,
+                  "localBacklinks": false,
                   "localForelinks": true,
-                  "localInterlinks": true,
+                  "localInterlinks": false,
                   "showTags": false,
                   "showAttachments": false,
                   "hideUnresolved": false,
@@ -328,8 +328,8 @@
                   "repelStrength": 8.67787301940703,
                   "linkStrength": 0.283461352925897,
                   "linkDistance": 447,
-                  "scale": 1.608410888114215,
-                  "close": true
+                  "scale": 1.7089225290057344,
+                  "close": false
                 }
               },
               "icon": "lucide-git-fork",
@@ -375,45 +375,44 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "557e3279c14356e0",
+  "active": "db30d89f1a493400",
   "lastOpenFiles": [
-    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
-    "01_LR_GLMs/1.2 Generalized Linear Models (GLMs).md",
-    "00_SF真题/MAGNet 答案对照表.md",
-    "05. 高频追问 TOP 30.md",
-    "_meta/教程写作规范.md",
-    "01. 面试画像与考点分布.md",
-    "04. 公式速查卡.md",
     "01_LR_GLMs/1.1 Ordinary Least Squares (OLS).md",
+    "01_LR_GLMs/1. Logistic Regression & GLMs.md",
+    "_meta/tools/test_widget_embed_view.js",
+    "_meta/tools/test_widgets.py",
+    "_widgets/看板.html",
+    "_widgets/Index.md",
+    "_widgets/10.8 Tweedie GLM 专章-tweedie-zero-mass-surface.html",
+    "_widgets/10.8 Tweedie GLM 专章-tweedie-zero-mass-surface.json",
+    "_widgets/8.4.2.2 Gradient Boosting-gradient-boosting-prediction-surface.html",
+    "_widgets/8.4.2.2 Gradient Boosting-gradient-boosting-prediction-surface.json",
+    "_widgets/8.4.2.1 AdaBoost (Adaptive Boosting)-adaboost-weight-surface.html",
+    "_widgets/8.4.2.1 AdaBoost (Adaptive Boosting)-adaboost-weight-surface.json",
+    "_widgets/7.2. Building the Forest-rho-floor-surface.html",
+    "_widgets/_archive/v1/README.md",
+    "_widgets/_archive/v1/Index.md",
+    "01_LR_GLMs/1.2 Generalized Linear Models (GLMs).md",
+    "10_保险风控实务/10.1 频率-严重度与纯保费.md",
+    "10_保险风控实务/10. 保险风控考点总览.md",
+    "00_SF真题/MAGNet 答案对照表.md",
+    "00_SF真题/MAGNet 面试真题全解.md",
+    "01_LR_GLMs/Logistic Regression Template.canvas",
+    "06_Model_Assessment/6.1 Data Preparation & Validation.md",
+    "01_LR_GLMs/1.8 判别分析（LDA QDA Naive Bayes）.md",
+    "01_LR_GLMs/1.7 Assumptions.md",
+    "01_LR_GLMs/1.6.3 Regularization.md",
+    "01_LR_GLMs/1.6 Estimation Issues & Separation.md",
+    "01_LR_GLMs/1.5 Dealing with Unbalanced Samples.md",
+    "01_LR_GLMs/1.4 Model Fitting.md",
     "01_LR_GLMs/1.3 Introducing Logistic Regression.md",
     "02. 三条学习路径.md",
+    "_meta/tools/KNOWLEDGE-WIDGETS.md",
+    "_meta/tools/vendor/README.md",
+    "_meta/tools/widget-embed/README.md",
+    "_meta/tools/INTERACTIVE-AUTHORING.md",
     "00 Index.md",
-    "00_SF真题/MAGNet 面试真题全解.md",
-    "01_LR_GLMs/1.8 判别分析（LDA QDA Naive Bayes）.md",
-    "_meta/sources/w9_6_NB.html.txt",
-    "_meta/sources/w9_4_LDA.html.txt",
-    "_meta/sources/w9_3_QDA.html.txt",
-    "_meta/sources/w9_2_DA.html.txt",
-    "_meta/sources/w9_1_intro_classification.html.txt",
-    "_meta/sources/w5_4_smoothing_spline.html.txt",
-    "_meta/sources/w5_2_spline.html.txt",
-    "_meta/sources/w5_1_poly.html.txt",
-    "_meta/sources/w4_3_gbm.html.txt",
-    "_meta/sources/w4_2_randomforest.html.txt",
-    "定义原文库.md",
-    "Data Science Interview Knowledge Base.md",
-    "_meta/写作规范.md",
-    "99_QuestionBank/99.10 真题补遗题库.md",
-    "99_QuestionBank/99.9 GLM 进阶题库.md",
-    "_meta/Vault 优化方案.md",
-    "_meta/SAS 代码规范.md",
-    "_meta/优先级矩阵.md",
-    "10_保险风控实务/10. 保险风控考点总览.md",
-    "09_统计基础/9.8 统计面试题精练.md",
-    "09_统计基础/9.7 多重比较与选择偏差.md",
-    "09_统计基础/9.6 贝叶斯基础与基础率谬误.md",
-    "09_统计基础/9.5 相关、协方差与相关不等于因果.md",
-    "01_LR_GLMs/Logistic Regression Template.canvas",
+    "05. 高频追问 TOP 30.md",
     "Images/Pasted image 20250602120039.png",
     "Images/Pasted image 20250605141224.png",
     "Images/Pasted image 20250605150014.png",
