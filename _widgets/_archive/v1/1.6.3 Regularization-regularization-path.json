@@ -1,0 +1,120 @@
+{
+ "schema": "widget/v1",
+ "kind": "plot",
+ "uid": "",
+ "title": "正则化的两条路：Ridge 等比收缩，Lasso 逐个归零",
+ "subtitle": "正交设计 n=100、d²=100、OLS β̂=(1.60, −0.80, 0.40)；横轴按 log₁₀ λ（0.1 → 320），数字取自笔记 §四「算一遍」",
+ "vars": {
+  "b1": 1.6,
+  "b2": -0.8,
+  "b3": 0.4,
+  "d2": 100,
+  "np": 3
+ },
+ "x": {
+  "min": -1,
+  "max": 2.50515,
+  "points": 241,
+  "label": "log₁₀ λ（−1 = λ 0.1；1 = 10；2.505 = 320）",
+  "fmt": "0.00"
+ },
+ "controls": [
+  {
+   "key": "loglam",
+   "type": "slider",
+   "label": "惩罚强度 λ（对数刻度：0.1 → 320，显示 log₁₀ λ）",
+   "min": -1,
+   "max": 2.50515,
+   "step": 0.0025,
+   "value": 1,
+   "fmt": "0.000",
+   "animate": {
+    "seconds": 10,
+    "pingpong": true,
+    "autostart": true
+   }
+  }
+ ],
+ "series": [
+  {
+   "label": "Ridge β₁（实线 · L2）",
+   "expr": "b1/(1 + pow(10, x))",
+   "color": "#1f6fb2"
+  },
+  {
+   "label": "Ridge β₂（实线 · L2）",
+   "expr": "b2/(1 + pow(10, x))",
+   "color": "#4a90c4"
+  },
+  {
+   "label": "Ridge β₃（实线 · L2）",
+   "expr": "b3/(1 + pow(10, x))",
+   "color": "#8ab6d6"
+  },
+  {
+   "label": "Lasso β₁（虚线 · L1 软阈值）",
+   "expr": "ifelse(b1 > 0, 1, -1)*max(abs(b1) - pow(10, x)/200, 0)",
+   "color": "#1f6fb2",
+   "dash": true
+  },
+  {
+   "label": "Lasso β₂（虚线 · L1 软阈值）",
+   "expr": "ifelse(b2 > 0, 1, -1)*max(abs(b2) - pow(10, x)/200, 0)",
+   "color": "#4a90c4",
+   "dash": true
+  },
+  {
+   "label": "Lasso β₃（虚线 · L1 软阈值）",
+   "expr": "ifelse(b3 > 0, 1, -1)*max(abs(b3) - pow(10, x)/200, 0)",
+   "color": "#8ab6d6",
+   "dash": true
+  }
+ ],
+ "markers": [
+  {
+   "x": "loglam",
+   "label": "当前 λ",
+   "color": "#c0392b"
+  },
+  {
+   "x": 1.90309,
+   "label": "λ=80",
+   "color": "#8a8a8a"
+  },
+  {
+   "x": 2.50515,
+   "label": "λ=320",
+   "color": "#8a8a8a"
+  }
+ ],
+ "readouts": [
+  {
+   "label": "λ（当前）",
+   "expr": "pow(10, loglam)",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "Ridge 系数保留比例 1/(1+λ)",
+   "expr": "1/(1 + pow(10, loglam))",
+   "fmt": "0.0%"
+  },
+  {
+   "label": "Ridge 有效自由度 Σ d²/(d²+λ)",
+   "expr": "np*d2/(d2 + pow(10, loglam))",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "Lasso 非零系数个数（= 自由度）",
+   "expr": "ifelse(abs(b1) > pow(10, loglam)/200, 1, 0) + ifelse(abs(b2) > pow(10, loglam)/200, 1, 0) + ifelse(abs(b3) > pow(10, loglam)/200, 1, 0)",
+   "fmt": "0"
+  }
+ ],
+ "notes": [
+  "数字出处：锚点＝笔记 §四「算一遍」（正交设计 n=100、XᵗX=100I、OLS β̂=(1.60, −0.80, 0.40)）—— λ=0.1/1/10 的 Ridge 系数 1.4545 / 0.8000 / 0.1455 与有效自由度 2.9970 / 2.9703 / 2.7273；λ=80/160/320 的 Lasso 依次归零：(1.20, −0.40, 0) / (0.80, 0, 0) / (0, 0, 0)。曲线是同一口径的连续复算（python3 + numpy 1.23.5：β/(1+λ)、soft-threshold λ/200），笔记表里的每一行都落在曲线上。",
+  "口径/公式：Ridge 用笔记「标准记法」的 β̂_j(λ)=β̂_j^OLS/(1+λ) 与 df(λ)=Σ_j d_j²/(d_j²+λ)（d_j²=100）；Lasso 用 §四 的软阈值 sign(b)·max(|b| − λ/200, 0)，阈值 λ/(2n)、n=100。曲线、标记与读数框用的是同一组 vars 和同一个 λ，拖到边界也不会对不上。",
+  "边界：横轴是 log₁₀ λ，λ=0（纯 OLS 那一行）取不到，最左边是 λ=0.1；只有正交设计（d_j² 全相等）才有这两条闭式路径，一般设计要坐标下降或数值解。λ 本身没有绝对量纲：把惩罚写成 ½‖β‖² 时同一个解要 λ 差一倍（笔记 §3.3①），跨库比较 λ 前先对齐写法。",
+  "Ridge 的自由度在 λ=80 已掉到 1.6667、λ=320 是 0.7143（本节复算，笔记只给到 λ=10 的 2.7273）：系数早缩到一成以下，自由度的台阶却是缓的——这正是「ridge 不省变量」的量化版本，与 Lasso 在 λ=80 就归零一个形成对照。"
+ ],
+ "note": "01_LR_GLMs/1.6.3 Regularization.md",
+ "slug": "regularization-path"
+}

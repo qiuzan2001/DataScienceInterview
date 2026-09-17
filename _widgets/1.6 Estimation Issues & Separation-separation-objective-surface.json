@@ -1,0 +1,111 @@
+{
+ "schema": "widget/v1",
+ "kind": "surface3d",
+ "uid": "",
+ "note": "01_LR_GLMs/1.6 Estimation Issues & Separation.md",
+ "title": "分离时 MLE 没有山顶：切到 Firth，发散方向变成有限目标面",
+ "subtitle": "4 点数据 xᵢ=1,2,3,4、yᵢ=0,0,1,1；x=β₀、y=β₁，z 在 MLE 与 Firth 负目标之间切换",
+ "vars": {
+  "b0_firth": -3.2748,
+  "b1_firth": 1.3099,
+  "b1_mle_iter20": 38.67,
+  "nll_at_firth": 1.0991,
+  "firth_loss_at_firth": 1.5599
+ },
+ "x": {
+  "min": -12,
+  "max": 4,
+  "points": 41,
+  "label": "截距 β₀（−12–4；安全绘图区）",
+  "fmt": "0.0"
+ },
+ "y": {
+  "min": -1,
+  "max": 8,
+  "points": 37,
+  "label": "斜率 β₁（−1–8；安全绘图区）",
+  "fmt": "0.0"
+ },
+ "controls": [
+  {
+   "key": "objective",
+   "type": "select",
+   "label": "主图目标（MLE 或 Firth）",
+   "options": [
+    [
+     0,
+     "MLE：−log-likelihood"
+    ],
+    [
+     1,
+     "Firth：−penalized log-likelihood"
+    ]
+   ],
+   "value": 0
+  },
+  {
+   "key": "azimuth",
+   "type": "slider",
+   "label": "方位角（0°–355°，只改变视角）",
+   "min": 0,
+   "max": 355,
+   "step": 5,
+   "value": 35,
+   "fmt": "0"
+  },
+  {
+   "key": "elevation",
+   "type": "slider",
+   "label": "仰角（0°–89°，只改变视角）",
+   "min": 0,
+   "max": 89,
+   "step": 1,
+   "value": 25,
+   "fmt": "0"
+  }
+ ],
+ "surface": {
+  "expr": "ifelse(objective==0,log(1+exp(x+y))+log(1+exp(x+2*y))+log(1+exp(-(x+3*y)))+log(1+exp(-(x+4*y))), (log(1+exp(x+y))+log(1+exp(x+2*y))+log(1+exp(-(x+3*y)))+log(1+exp(-(x+4*y)))) - 0.5*log((exp(-(x+y))/pow(1+exp(-(x+y)),2))*(exp(-(x+2*y))/pow(1+exp(-(x+2*y)),2)) + 4*(exp(-(x+y))/pow(1+exp(-(x+y)),2))*(exp(-(x+3*y))/pow(1+exp(-(x+3*y)),2)) + 9*(exp(-(x+y))/pow(1+exp(-(x+y)),2))*(exp(-(x+4*y))/pow(1+exp(-(x+4*y)),2)) + (exp(-(x+2*y))/pow(1+exp(-(x+2*y)),2))*(exp(-(x+3*y))/pow(1+exp(-(x+3*y)),2)) + 4*(exp(-(x+2*y))/pow(1+exp(-(x+2*y)),2))*(exp(-(x+4*y))/pow(1+exp(-(x+4*y)),2)) + (exp(-(x+3*y))/pow(1+exp(-(x+3*y)),2))*(exp(-(x+4*y))/pow(1+exp(-(x+4*y)),2))))",
+  "mode": "surface",
+  "fmt": "0.0000"
+ },
+ "view": {
+  "azimuthKey": "azimuth",
+  "elevationKey": "elevation"
+ },
+ "readouts": [
+  {
+   "label": "MLE 第20轮 β₁（仍在发散）",
+   "expr": "b1_mle_iter20",
+   "fmt": "0.00"
+  },
+  {
+   "label": "Firth 有限解 β₀",
+   "expr": "b0_firth",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "Firth 有限解 β₁",
+   "expr": "b1_firth",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "Firth 解处的当前目标损失",
+   "expr": "ifelse(objective==0,nll_at_firth,firth_loss_at_firth)",
+   "fmt": "0.0000"
+  }
+ ],
+ "teaching": {
+  "question": "为什么完全分离不是‘多跑几轮就能收敛’，以及 Firth 的惩罚如何把无穷远的 MLE 变成有限目标？",
+  "sourceSection": "《01_LR_GLMs/1.6 Estimation Issues & Separation.md》§四「算一遍」例一（第239–289行）及§三.1–3.2 的机制说明",
+  "controlEffect": "objective 在 surface.expr 中切换四点数据的 −ℓ 与 −[ℓ+0.5·log det I]；它改变每一个 β₀、β₁ 网格点的 z，Firth 不是只给发散点加一个 marker。",
+  "visualEvidence": "MLE 面沿着能把 1、2 判为 0 且把 3、4 判为 1 的方向持续下坡，没有有限山顶；Firth 面在同一方向因 det I→0 而上升，并在笔记有限解 (β₀,β₁)=(-3.2748,1.3099) 附近形成有限盆地。读数保留 β₁=38.67 的第20轮发散锚点和 Firth 的有限系数。"
+ },
+ "notes": [
+  "数字出处：笔记§四例一原文四点为 (x,y)=(1,0),(2,0),(3,1),(4,1)；从 (0,0) 出发第20轮 β₁=38.67、ℓ≈−8×10⁻⁹；Firth 解 β₀=−3.2748、β₁=1.3099；Firth 解处 ℓ=−1.0991、惩罚项=−0.4608、目标函数=−1.5599；发散点 (−96.67,38.67) 的惩罚项=−19.335。",
+  "口径：对四点数据 pᵢ=sigmoid(β₀+β₁xᵢ)，MLE 的负对数似然用稳定等价式 log(1+exp(η₁))+log(1+exp(η₂))+log(1+exp(−η₃))+log(1+exp(−η₄))；Firth 主图为 −ℓ−0.5·log det I。四个权重 wᵢ=pᵢ(1−pᵢ)，固定 xᵢ=1,2,3,4 时 det I= w₁w₂+4w₁w₃+9w₁w₄+w₂w₃+4w₂w₄+w₃w₄。",
+  "复算核对：按上述四点、稳定 softplus 形式计算，Firth 系数锚点处 −ℓ≈1.0991、−ℓ_Firth≈1.5599；发散锚点处 −ℓ≈8.016×10⁻⁹、−0.5·log det I≈19.335，与笔记原文四舍五入数字一致。",
+  "边界：objective 是唯一语义控件；没有加入连续‘重叠程度’控件，因为笔记给的是固定完全分离四点，未提供足够数据定义一条可核验的重叠路径。β₀∈[−12,4]、β₁∈[−1,8] 是为保证每个 z 有限且仍能看见下降方向的安全绘图区，发散锚点放在读数而非曲面边界；稳定式避免直接计算 log(1−p) 的溢出/舍入。azimuth/elevation 只改变投影。"
+ ],
+ "slug": "separation-objective-surface"
+}

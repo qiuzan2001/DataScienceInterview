@@ -1,0 +1,111 @@
+{
+ "schema": "widget/v1",
+ "kind": "plot",
+ "title": "拖基础率 π：折级命中率被切分拉开多少（分层折是中间那条）",
+ "subtitle": "10,000 行、2% 正类的切分实验（6.1 第四节第 1–5 步）；模型固定 TPR=60%、FPR=5%，折间上下界取 ±1.96σ",
+ "vars": {
+  "Npop": 10000,
+  "tpr": 0.6,
+  "fpr": 0.05,
+  "zq": 1.96
+ },
+ "x": {
+  "min": 0.002,
+  "max": 0.03,
+  "points": 121,
+  "label": "基础率 π（正类占总体比例）",
+  "fmt": "0.00%"
+ },
+ "controls": [
+  {
+   "key": "base",
+   "type": "slider",
+   "label": "读数用的基础率 π（0.2%–3%；笔记算例是 2%）",
+   "min": 0.002,
+   "max": 0.03,
+   "step": 0.001,
+   "value": 0.02,
+   "fmt": "0.00%"
+  },
+  {
+   "key": "fold",
+   "type": "slider",
+   "label": "折大小 n（行；N = 10,000，笔记算例是 2,000）",
+   "min": 1000,
+   "max": 4000,
+   "step": 100,
+   "value": 2000,
+   "fmt": "0"
+  }
+ ],
+ "series": [
+  {
+   "label": "下界折（正类数 = n·π − 1.96σ）：命中率",
+   "expr": "tpr*max(0, round(x*base - zq*sqrt(x*base*(1-base)*(Npop-x)/(Npop-1))))/(fpr*x + (tpr-fpr)*max(0, round(x*base - zq*sqrt(x*base*(1-base)*(Npop-x)/(Npop-1)))))",
+   "color": "#e0a15a",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "分层折（正类数 = n·π）：命中率",
+   "expr": "tpr*x*base/(fpr*x + (tpr-fpr)*x*base)",
+   "color": "#4ec27a",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "上界折（正类数 = n·π + 1.96σ）：命中率",
+   "expr": "tpr*round(x*base + zq*sqrt(x*base*(1-base)*(Npop-x)/(Npop-1)))/(fpr*x + (tpr-fpr)*round(x*base + zq*sqrt(x*base*(1-base)*(Npop-x)/(Npop-1))))",
+   "color": "#7fb8e6",
+   "fmt": "0.00%"
+  }
+ ],
+ "markers": [
+  {
+   "x": "base",
+   "label": "读数位置 π",
+   "color": "#d1655e"
+  },
+  {
+   "x": 0.02,
+   "label": "笔记算例 2%",
+   "color": "#8a8f98"
+  },
+  {
+   "x": 0.005,
+   "label": "条件检验 0.5%",
+   "color": "#8a8f98"
+  }
+ ],
+ "readouts": [
+  {
+   "label": "折内正类数的折间 SD（超几何，含有限总体修正）",
+   "expr": "sqrt(fold*base*(1-base)*(Npop-fold)/(Npop-1))",
+   "fmt": "0.00"
+  },
+  {
+   "label": "折级命中率的折间 SD（Δ 法，百分点）",
+   "expr": "100*tpr*fpr*fold/pow(fpr*fold + (tpr-fpr)*fold*base, 2)*sqrt(fold*base*(1-base)*(Npop-fold)/(Npop-1))",
+   "fmt": "0.00"
+  },
+  {
+   "label": "下界折命中率（−1.96σ 后取整）",
+   "expr": "tpr*max(0, round(fold*base - zq*sqrt(fold*base*(1-base)*(Npop-fold)/(Npop-1))))/(fpr*fold + (tpr-fpr)*max(0, round(fold*base - zq*sqrt(fold*base*(1-base)*(Npop-fold)/(Npop-1)))))",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "上界折命中率（+1.96σ 后取整）",
+   "expr": "tpr*round(fold*base + zq*sqrt(fold*base*(1-base)*(Npop-fold)/(Npop-1)))/(fpr*fold + (tpr-fpr)*round(fold*base + zq*sqrt(fold*base*(1-base)*(Npop-fold)/(Npop-1))))",
+   "fmt": "0.00%"
+  }
+ ],
+ "notes": [
+  "数字出处：n=2,000、π=2%、N=10,000 时折内正类数的 SD=5.60、下界折（29 个正类）命中率 15.01%、上界折（51 个正类）23.90%（23.90/15.01 = 1.59 倍），以及折级命中率的折间标准差 2.26 个百分点，都取自 6.1 第四节第 2–4 步；基础率 0.5% 时 SD=2.82 取自第 5 步。两个滑块停在默认值（n=2,000、π=2.00%）时，四条读数是 5.60/2.26/15.01%/23.90%，与笔记逐条对上；π 拖到 0.50% 时 SD 读数变成 2.82。",
+  "两个滑块的分工：横轴扫的是基础率 π 的全区间（曲线不动），红色竖线是「读数位置 π」滑块的当前值，四条读数都取在那一点上；折大小 n 那个滑块会改三条曲线的形状——折越小，上下界拉得越开（第 5 步的「分层在基础率越低、折越小的时候越值钱」）。",
+  "口径：折内正类数服从超几何分布，SD = √(n·π(1−π)·(N−n)/(N−1))（笔记第 2 步的公式，最后一项是有限总体修正）；折级命中率按折内比例算 Precision = TPR·p/(TPR·p + FPR·(1−p))，TPR=0.60、FPR=0.05 就是笔记里那版固定模型；上下界取均值 ±1.96σ 后取整——笔记把 29 与 51 就叫作「随机最差折 / 最好折」，正是 40±1.96×5.60 取整的结果。",
+  "折级命中率的折间标准差用 Δ 法（一阶近似）：SD_Prec = TPR·FPR·n/(TPR·P + FPR·(n−P))² · SD_P，再乘 100 换成百分点；n=2,000、π=2% 时算出 2.2576pp，与笔记的 2.26 个百分点一致（按超几何分布精确求标准差得 2.2574pp，笔记没写它用的是哪个口径，本节按 Δ 法复算）。",
+  "构造部分：下界在极端情形会落到 0 个正类以下，按 0 处理（笔记第 5 步给过「某折一个正类都没有」的概率 0.0014%）；除此之外没有插值，三条曲线在 π 上都是连续函数，只有 ±1.96σ 的两条取了整——正类个数是整数，所以它们是阶梯。",
+  "边界：这张图只回答「折级命中率会因为切分跳动多少」，不是折级 precision 的完整分布；分层折那条永远是中间的，因为每折恰好 n·π 个正类（笔记：分层下永远 19.67%）。换成非线性指标（PR-AUC、F1、top-decile lift）时，折平均会带系统性偏移，不能用这张图外推；而且它的前提是「同一个模型、同一个阈值」，换了模型这条带宽还在、位置会变。"
+ ],
+ "note": "06_Model_Assessment/6.1 Data Preparation & Validation.md",
+ "uid": "",
+ "slug": "data-preparation"
+}

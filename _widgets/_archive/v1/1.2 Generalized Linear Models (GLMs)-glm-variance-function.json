@@ -1,0 +1,93 @@
+{
+ "schema": "widget/v1",
+ "kind": "plot",
+ "uid": "",
+ "title": "分布决定方差函数 V(μ)：同一个均值，常数 σ² 扛不住",
+ "subtitle": "Bernoulli / Poisson / Gamma（φ=0.8）/ Normal 的 V(μ) 曲线；锚点取自笔记《1.2 Generalized Linear Models (GLMs)》§四 第 3 步",
+ "vars": {
+  "phi": 0.8
+ },
+ "x": {
+  "min": 0,
+  "max": 1.5,
+  "points": 151,
+  "label": "均值 μ",
+  "fmt": "0.00"
+ },
+ "controls": [
+  {
+   "key": "mu",
+   "type": "slider",
+   "label": "均值 μ（0.01–1.5）",
+   "min": 0.01,
+   "max": 1.5,
+   "step": 0.005,
+   "value": 0.35,
+   "fmt": "0.000",
+   "animate": {
+    "from": 0.035,
+    "to": 1.2,
+    "seconds": 12
+   }
+  }
+ ],
+ "series": [
+  {
+   "label": "Bernoulli V(μ)=μ(1−μ)",
+   "expr": "x*(1-x)",
+   "color": "#7fb8e6"
+  },
+  {
+   "label": "Poisson V(μ)=μ",
+   "expr": "x",
+   "color": "#4ec27a"
+  },
+  {
+   "label": "Gamma V(μ)=φμ²（φ=0.8）",
+   "expr": "phi*x*x",
+   "color": "#e0a15a"
+  },
+  {
+   "label": "Normal V(μ)=φ（常数）",
+   "expr": "1",
+   "color": "#8a94a6",
+   "dash": true
+  }
+ ],
+ "markers": [
+  {
+   "x": "mu",
+   "label": "当前 μ",
+   "color": "#e0a15a"
+  }
+ ],
+ "readouts": [
+  {
+   "label": "Bernoulli 方差 μ(1−μ)",
+   "expr": "mu*(1-mu)",
+   "fmt": "0.000000"
+  },
+  {
+   "label": "Poisson 方差 = μ",
+   "expr": "mu",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "Gamma 方差 φμ²",
+   "expr": "phi*mu*mu",
+   "fmt": "0.000000"
+  },
+  {
+   "label": "Poisson 标准差 √μ",
+   "expr": "sqrt(mu)",
+   "fmt": "0.0000"
+  }
+ ],
+ "notes": [
+  "数字出处：锚点=笔记《1.2 Generalized Linear Models (GLMs)》§四 第 3 步「三个目标的方差函数各算一次」——Poisson 那一行（μ=0.35 → 方差 0.35、标准差 0.5916）在默认 μ 处与两条读数逐位一致；Bernoulli 那一行（μ=0.035 → 方差 0.033775、标准差 0.1838）把 μ 拖到 0.035 即可对上；Gamma 那一行在 μ=21,000、φ=0.8（方差 3.528×10⁸、标准差 18,783）超出本图 0–1.5 的量级，图上只给同一 φ=0.8 的曲线形状。四条曲线按各分布自己的 V(μ) 公式用 python3+numpy 复算（未装包）。",
+  "口径：横轴是均值 μ，曲线是指数散布族的方差函数 Var(Y)=φV(μ)：Bernoulli V=μ(1−μ)、Poisson V=μ、Gamma V=φμ²（φ=0.8 取自笔记 Gamma 那一行）、Normal V=φ=1（水平线）。拖杆只改 μ 的位置，不改公式；读数就是当前 μ 处各曲线的高度（Gamma 读数按 φ=0.8 缩放）。",
+  "边界：三个目标的 μ 本来量纲不同（续保概率、出险次数、赔付金额），放在同一条 0–1.5 的数轴上只比较「方差随均值怎么走」的形状，不能横向比大小——Gamma 真正的战场在 μ≈2×10⁴ 那一带。Normal 的 V=φ 是常数，正是 OLS 那条「常数方差」假设，也是它在二值与计数目标上失效的原因。图上不含离散参数对推断的影响：φ≠1 时 SE 要乘 √φ（笔记 §四 第 4 步：过散布 1.8 倍 ⇒ SE 小 1.3416 倍，t 从 2.40 掉到 1.79）。"
+ ],
+ "note": "01_LR_GLMs/1.2 Generalized Linear Models (GLMs).md",
+ "slug": "glm-variance-function"
+}

@@ -1,0 +1,103 @@
+{
+ "schema": "widget/v1",
+ "kind": "plot",
+ "uid": "",
+ "title": "挪阈值：拿 precision 换 recall，F1 全程不到 7.3%",
+ "subtitle": "1000 行申请 / 10 个坏客户的三档数据（A 700/2、B 200/4、C 100/4），笔记 §四「算一遍」第 0–2 步",
+ "vars": {
+  "tA": 0.002857142857142857,
+  "tB": 0.02,
+  "tC": 0.04,
+  "kc": 4,
+  "d1": 4,
+  "d2": 2,
+  "fc": 96,
+  "fd1": 196,
+  "fd2": 698,
+  "ev": 10,
+  "tn0": 990
+ },
+ "x": {
+  "min": -2.7,
+  "max": -1.4,
+  "points": 241,
+  "label": "log₁₀ T（−2.544 = A 档 0.0029；−1.699 = B 档 0.02；−1.40 ≈ C 档 0.04）",
+  "fmt": "0.00"
+ },
+ "controls": [
+  {
+   "key": "logT",
+   "type": "slider",
+   "label": "判定阈值 T（对数刻度：0.002 → 0.04，显示 log₁₀ T）",
+   "min": -2.7,
+   "max": -1.4,
+   "step": 0.0025,
+   "value": -1.5228787452803376,
+   "fmt": "0.000"
+  }
+ ],
+ "series": [
+  {
+   "label": "precision = TP/(TP+FP)",
+   "expr": "(kc + d1*ifelse(pow(10, x) <= tB, 1, 0) + d2*ifelse(pow(10, x) <= tA, 1, 0)) / ((kc + d1*ifelse(pow(10, x) <= tB, 1, 0) + d2*ifelse(pow(10, x) <= tA, 1, 0)) + (fc + fd1*ifelse(pow(10, x) <= tB, 1, 0) + fd2*ifelse(pow(10, x) <= tA, 1, 0)))",
+   "color": "#c0392b"
+  },
+  {
+   "label": "recall = TP/10",
+   "expr": "(kc + d1*ifelse(pow(10, x) <= tB, 1, 0) + d2*ifelse(pow(10, x) <= tA, 1, 0))/ev",
+   "color": "#1f6fb2"
+  },
+  {
+   "label": "F1 = 2TP/(2TP+FP+FN)",
+   "expr": "2*(kc + d1*ifelse(pow(10, x) <= tB, 1, 0) + d2*ifelse(pow(10, x) <= tA, 1, 0)) / ((kc + d1*ifelse(pow(10, x) <= tB, 1, 0) + d2*ifelse(pow(10, x) <= tA, 1, 0)) + (fc + fd1*ifelse(pow(10, x) <= tB, 1, 0) + fd2*ifelse(pow(10, x) <= tA, 1, 0)) + ev)",
+   "color": "#2e8b57"
+  }
+ ],
+ "markers": [
+  {
+   "x": "logT",
+   "label": "当前阈值",
+   "color": "#c0392b"
+  },
+  {
+   "x": -1.52288,
+   "label": "T=0.03",
+   "color": "#8a8a8a"
+  },
+  {
+   "x": -1.69897,
+   "label": "T=0.02",
+   "color": "#8a8a8a"
+  }
+ ],
+ "readouts": [
+  {
+   "label": "precision",
+   "expr": "(kc + d1*ifelse(pow(10, logT) <= tB, 1, 0) + d2*ifelse(pow(10, logT) <= tA, 1, 0)) / ((kc + d1*ifelse(pow(10, logT) <= tB, 1, 0) + d2*ifelse(pow(10, logT) <= tA, 1, 0)) + (fc + fd1*ifelse(pow(10, logT) <= tB, 1, 0) + fd2*ifelse(pow(10, logT) <= tA, 1, 0)))",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "recall",
+   "expr": "(kc + d1*ifelse(pow(10, logT) <= tB, 1, 0) + d2*ifelse(pow(10, logT) <= tA, 1, 0))/ev",
+   "fmt": "0.0%"
+  },
+  {
+   "label": "F1",
+   "expr": "2*(kc + d1*ifelse(pow(10, logT) <= tB, 1, 0) + d2*ifelse(pow(10, logT) <= tA, 1, 0)) / ((kc + d1*ifelse(pow(10, logT) <= tB, 1, 0) + d2*ifelse(pow(10, logT) <= tA, 1, 0)) + (fc + fd1*ifelse(pow(10, logT) <= tB, 1, 0) + fd2*ifelse(pow(10, logT) <= tA, 1, 0)) + ev)",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "accuracy（会骗人的那个）",
+   "expr": "((kc + d1*ifelse(pow(10, logT) <= tB, 1, 0) + d2*ifelse(pow(10, logT) <= tA, 1, 0)) + (tn0 - (fc + fd1*ifelse(pow(10, logT) <= tB, 1, 0) + fd2*ifelse(pow(10, logT) <= tA, 1, 0))))/1000",
+   "fmt": "0.0%"
+  }
+ ],
+ "notes": [
+  "数字出处：全部来自笔记 §四「算一遍」第 0–2 步（A 700 行/2 件 = 0.2857%、B 200/4 = 2.00%、C 100/4 = 4.00%；1000 行共 10 个坏客户）。锚点：T=0.03 → precision 4.00%、recall 40%、F1 0.0727、accuracy 89.8%；T=0.015 → 2.67%/80%/0.0516/70.6%；T=0.002 → 1.00%/100%/0.0198/1.0%。曲线是同一口径的连续复算（本节按档整档纳入：TP=4+4·1(T≤0.02)+2·1(T≤0.00286)、FP=96+196·1(T≤0.02)+698·1(T≤0.00286)，FN=10−TP、TN=990−FP）。",
+  "口径：三档概率是饱和单变量模型的拟合值（每档概率 = 档内坏率），阈值落在哪一档就整档判为坏，所以三条曲线都是台阶：recall 走 40% → 80% → 100%。precision 只有 1.00%–4.00%、F1 只有 0.0198–0.0727，在这张 0–1 的图里贴着横轴 —— 精确值看读数框，鼠标在图内移动也能在图例里读到每条曲线的当前值。",
+  "边界：横轴停在 T ≈ 0.04（往右就是笔记 T=0.5 那一行：没有任何预测为正，TP=FP=0，precision 的分母是 0，笔记写作「无定义」而不是 0，画不出来）。F1 最大的点在 T=0.03 那一档（只标最高档、召回只剩 40%）—— F1 隐含 precision 与 recall 等权，业务代价不对称时应该按 FP/FN 的期望代价定阈值。",
+  "accuracy 是干扰项：T=0.5 时它 99.0%、T=0.03 时 89.8%、把阈值压到 0.002 时掉到 1.0%，三次都跟「有没有抓到坏客户」无关（recall 分别是 0%、40%、100%）。"
+ ],
+ "note": "01_LR_GLMs/1.5 Dealing with Unbalanced Samples.md",
+ "slug": "threshold-precision-recall"
+}

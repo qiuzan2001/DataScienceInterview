@@ -1,0 +1,204 @@
+{
+ "schema": "widget/v1",
+ "kind": "surface3d",
+ "uid": "",
+ "title": "GBM 的小步多轮：ν 怎样沿残差递推改变整张预测面",
+ "subtitle": "4 点平方损失算例；x=样本/特征位置、y=m、z=F_m(x)，固定 depth=1 树桩并重算每轮残差",
+ "vars": {},
+ "x": {
+  "min": 1,
+  "max": 4,
+  "points": 4,
+  "label": "样本 / 特征位置 x（1–4）",
+  "fmt": "0"
+ },
+ "y": {
+  "min": 0,
+  "max": 143,
+  "label": "轮次 m（0–143）",
+  "fmt": "0"
+ },
+ "controls": [
+  {
+   "key": "nu",
+   "type": "select",
+   "label": "学习率 ν（0.1 / 0.3 / 0.5）",
+   "options": [
+    [
+     0.1,
+     "ν=0.1"
+    ],
+    [
+     0.3,
+     "ν=0.3"
+    ],
+    [
+     0.5,
+     "ν=0.5"
+    ]
+   ],
+   "value": 0.1
+  }
+ ],
+ "boosting": {
+  "version": 1,
+  "itVar": "__gb__",
+  "surface": {
+   "mode": "surface",
+   "x": "sampleIndex",
+   "y": "round",
+   "z": "prediction",
+   "zFormula": "F_m(x_i)",
+   "rounds": "m=0 through m=143"
+  },
+  "data": {
+   "sampleIndex": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "response": [
+    5,
+    7,
+    6,
+    10
+   ]
+  },
+  "loss": {
+   "name": "squared",
+   "negativeGradient": "residual_i = response_i - F_{m-1}(x_i)"
+  },
+  "initial": {
+   "prediction": "F_0=mean(response)"
+  },
+  "baseLearner": {
+   "type": "decision-stump",
+   "depth": 1,
+   "splitCandidates": "midpoints between consecutive sampleIndex values",
+   "leafValue": "mean(residual) within each leaf",
+   "selection": "choose the candidate with minimum residual SSE"
+  },
+  "rounds": 143,
+  "nuKey": "nu",
+  "recurrence": {
+   "residual": "r_{im}=response_i-F_{m-1}(x_i)",
+   "fit": "h_m=argmin_h sum_i (r_{im}-h(x_i))^2 over the stump candidates",
+   "update": "F_m(x_i)=F_{m-1}(x_i)+nu*h_m(x_i)",
+   "mse": "mean_i((response_i-F_m(x_i))^2)"
+  },
+  "metrics": {
+   "showOnFigure": "side-panel",
+   "surfaceSeries": "F_m(x_i)",
+   "targetMSE": [
+    1,
+    0.5,
+    0.1,
+    0.01
+   ],
+   "targetRounds": "first m with mse<=targetMSE; compute from the same full recursion",
+   "readoutFields": [
+    "f0",
+    "firstMSE",
+    "mse",
+    "rounds001"
+   ]
+  },
+  "checks": {
+   "f0": 7,
+   "firstRound": [
+    {
+     "nu": 0.1,
+     "prediction": [
+      6.9,
+      6.9,
+      6.9,
+      7.3
+     ],
+     "mse": 2.93
+    },
+    {
+     "nu": 0.5,
+     "prediction": [
+      6.5,
+      6.5,
+      6.5,
+      8.5
+     ],
+     "mse": 1.25
+    }
+   ],
+   "targetRounds": {
+    "nu=0.1": {
+     "mse": [
+      1,
+      0.5,
+      0.1,
+      0.01
+     ],
+     "rounds": [
+      9,
+      15,
+      51,
+      143
+     ]
+    },
+    "nu=0.5": {
+     "mse": [
+      1,
+      0.5,
+      0.1,
+      0.01
+     ],
+     "rounds": [
+      2,
+      3,
+      8,
+      23
+     ]
+    }
+   }
+  }
+ },
+ "readouts": [
+  {
+   "label": "初始 F0",
+   "expr": "__gb__.f0",
+   "fmt": "0.000"
+  },
+  {
+   "label": "第一轮 MSE（当前 ν）",
+   "expr": "__gb__.firstMSE",
+   "fmt": "0.00"
+  },
+  {
+   "label": "当前训练 MSE（m=143）",
+   "expr": "__gb__.mse",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "达到 MSE≤0.01 的轮数",
+   "expr": "__gb__.rounds001",
+   "fmt": "0"
+  }
+ ],
+ "notes": [
+  "数字出处：笔记《8.4.2.2 Gradient Boosting.md》§四第 361–411 行给出 y=(5,7,6,10)、F0=7.0、第一轮树桩 h1=(-1,-1,-1,+3)；ν=0.1 时第一轮 F1=(6.9,6.9,6.9,7.3)、MSE=2.93，第 428–440 行给出 ν=0.5 时第一轮 F1=(6.5,6.5,6.5,8.5)、MSE=1.25。",
+  "口径：平方损失的伪残差就是 r_i=y_i-F_{m-1}(x_i)；每轮在相邻样本之间枚举 stump 切点，用左右叶残差均值组成 h_m，按残差 SSE 最小选切点，再执行 F_m=F_{m-1}+νh_m。surface 的每个 z 都来自这条递推，不是把一条静态曲线乘上 ν。",
+  "目标轮数出处：笔记 §四第 442–451 行的同一套切分规则给出目标 MSE=(1.0,0.5,0.1,0.01) 时 ν=0.1 需要 (9,15,51,143) 轮、ν=0.5 需要 (2,3,8,23) 轮；这些值写入 checks，renderer 应以完整递推复算并对照。",
+  "ν=0.3 是用户批准的敏感性档位，笔记没有列出它的目标轮数；它的 F_m、residual、MSE 和 targetRounds 必须按上述确定性 stump 递推现场计算，属于本节计算，不是笔记原文数字。",
+  "边界：本 spec 固定笔记算例的 depth=1、4 个样本和 143 个最大轮次，没有伪造 depth 控件；若后续加入 depth 或 steps 控件，必须让它改变候选树/实际递推轮数并重算整张面，不能只改标签或裁剪旧数据。该四点训练轨迹也不代表验证集泛化误差。"
+ ],
+ "note": "08_ML_Methods/8.4.2.2 Gradient Boosting.md",
+ "teaching": {
+  "question": "Gradient Boosting 的 shrinkage 为什么是“小步多轮”：nu 怎样沿残差递推改变整张预测面？",
+  "sourceSection": "08_ML_Methods/8.4.2.2 Gradient Boosting.md §三与 §四第 1–4 步",
+  "controlEffect": "nu 进入每一轮 F_m=F_{m-1}+nu*h_m 的确定性递推；它会重算每个样本、每一轮的预测值和残差，而不是只移动读数或裁剪旧曲线。",
+  "visualEvidence": "x=四个样本位置、y=轮次、z=F_m(x_i) 的曲面随 nu 改变收敛速度和形状；nu=.1 首轮 MSE=2.93、nu=.5 首轮 MSE=1.25，达到相同目标所需轮数分别是 9/15/51/143 与 2/3/8/23。",
+  "controls": [
+   "nu"
+  ],
+  "dynamicRenderer": true
+ },
+ "slug": "gradient-boosting-prediction-surface"
+}

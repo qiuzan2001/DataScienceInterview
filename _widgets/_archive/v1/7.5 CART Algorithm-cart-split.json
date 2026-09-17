@@ -1,0 +1,134 @@
+{
+ "schema": "widget/v1",
+ "kind": "plot",
+ "uid": "",
+ "title": "回归树的第一刀：切点扫一遍，ΔSSE 最高那一级就是贪心选的刀",
+ "subtitle": "5 套房（笔记 §四第 2–3 步）＋ 加 F、G 后的 n=7（§四条件检验）；叶值=组内 y 均值，SSE 口径",
+ "vars": {
+  "root5": 17020,
+  "s5_40": 7118.75,
+  "s5_60": 3366.6666666666665,
+  "s5_80": 5612.5,
+  "s5_100": 9800,
+  "mL1": 100,
+  "mL2": 125,
+  "mL3": 150,
+  "mL4": 170,
+  "mL5": 189,
+  "mR1": 211.25,
+  "mR2": 231.66666666666666,
+  "mR3": 247.5,
+  "mR4": 265,
+  "root7": 34821.428571428565,
+  "s7_40": 17820.833333333332,
+  "s7_60": 9170,
+  "s7_80": 8568.75,
+  "s7_100": 10816.666666666666,
+  "s7_120": 17220,
+  "s7_140": 25520.833333333332,
+  "m7L6": 205.83333333333334,
+  "m7L7": 220.71428571428572,
+  "m7R1": 240.83333333333334,
+  "m7R2": 259,
+  "m7R3": 273.75,
+  "m7R4": 288.3333333333333,
+  "m7R5": 300,
+  "m7R6": 310
+ },
+ "x": {
+  "min": 30,
+  "max": 150,
+  "points": 481,
+  "label": "切点 t（面积，平方米）",
+  "fmt": "0"
+ },
+ "controls": [
+  {
+   "key": "t",
+   "type": "slider",
+   "label": "切点 t（平方米，30–150）",
+   "min": 30,
+   "max": 150,
+   "step": 1,
+   "value": 60,
+   "fmt": "0",
+   "animate": {
+    "from": 30,
+    "to": 150,
+    "seconds": 12
+   }
+  },
+  {
+   "key": "n7",
+   "type": "toggle",
+   "label": "加 F(130,290)、G(150,310) 两套房（n=7）",
+   "value": false
+  }
+ ],
+ "series": [
+  {
+   "label": "合计 SSE（切完后，越小越好）",
+   "expr": "ifelse(n7, ifelse(x<50,s7_40, ifelse(x<70,s7_60, ifelse(x<90,s7_80, ifelse(x<110,s7_100, ifelse(x<130,s7_120, ifelse(x<150,s7_140, root7)))))), ifelse(x<50,s5_40, ifelse(x<70,s5_60, ifelse(x<90,s5_80, ifelse(x<110,s5_100, root5)))))",
+   "color": "#7fb8e6"
+  },
+  {
+   "label": "ΔSSE = 根 SSE − 合计 SSE（这一刀的收益）",
+   "expr": "ifelse(n7, ifelse(x<50,root7-s7_40, ifelse(x<70,root7-s7_60, ifelse(x<90,root7-s7_80, ifelse(x<110,root7-s7_100, ifelse(x<130,root7-s7_120, ifelse(x<150,root7-s7_140, 0)))))), ifelse(x<50,root5-s5_40, ifelse(x<70,root5-s5_60, ifelse(x<90,root5-s5_80, ifelse(x<110,root5-s5_100, 0)))))",
+   "color": "#4ec27a"
+  },
+  {
+   "label": "根节点 SSE（不切）",
+   "expr": "ifelse(n7, root7, root5)",
+   "color": "#9aa7b4",
+   "dash": true
+  }
+ ],
+ "markers": [
+  {
+   "x": "t",
+   "label": "当前切点",
+   "color": "#e0a15a"
+  },
+  {
+   "x": "ifelse(n7, 80, 60)",
+   "label": "笔记的最优切点",
+   "color": "#4ec27a"
+  },
+  {
+   "x": "ifelse(n7, 90, 70)",
+   "label": "中位数",
+   "color": "#9aa7b4"
+  }
+ ],
+ "readouts": [
+  {
+   "label": "左叶预测值（左组 y 均值）",
+   "expr": "ifelse(n7, ifelse(t<50,mL1, ifelse(t<70,mL2, ifelse(t<90,mL3, ifelse(t<110,mL4, ifelse(t<130,mL5, ifelse(t<150,m7L6, m7L7)))))), ifelse(t<50,mL1, ifelse(t<70,mL2, ifelse(t<90,mL3, ifelse(t<110,mL4, mL5)))))",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "右叶预测值（右组为空时显示根均值）",
+   "expr": "ifelse(n7, ifelse(t<50,m7R1, ifelse(t<70,m7R2, ifelse(t<90,m7R3, ifelse(t<110,m7R4, ifelse(t<130,m7R5, ifelse(t<150,m7R6, m7L7)))))), ifelse(t<50,mR1, ifelse(t<70,mR2, ifelse(t<90,mR3, ifelse(t<110,mR4, mL5)))))",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "合计 SSE（切完后）",
+   "expr": "ifelse(n7, ifelse(t<50,s7_40, ifelse(t<70,s7_60, ifelse(t<90,s7_80, ifelse(t<110,s7_100, ifelse(t<130,s7_120, ifelse(t<150,s7_140, root7)))))), ifelse(t<50,s5_40, ifelse(t<70,s5_60, ifelse(t<90,s5_80, ifelse(t<110,s5_100, root5)))))",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "ΔSSE（相对根节点）",
+   "expr": "ifelse(n7, ifelse(t<50,root7-s7_40, ifelse(t<70,root7-s7_60, ifelse(t<90,root7-s7_80, ifelse(t<110,root7-s7_100, ifelse(t<130,root7-s7_120, ifelse(t<150,root7-s7_140, 0)))))), ifelse(t<50,root5-s5_40, ifelse(t<70,root5-s5_60, ifelse(t<90,root5-s5_80, ifelse(t<110,root5-s5_100, 0)))))",
+   "fmt": "0.0000"
+  }
+ ],
+ "notes": [
+  "数字出处：阶梯的每一级直接取笔记 §四第 2–3 步（5 套房：ΔSSE 9901.2500 / 13653.3333 / 11407.5000 / 7220.0000，合计 SSE 7118.7500 / 3366.6667 / 5612.5000 / 9800.0000，根 SSE 17020）与 §四条件检验（加 F、G 后 n=7：ΔSSE 17000.5952 / 25651.4286 / 26252.6786 / 24004.7619 / 17601.4286 / 9300.5952，根 SSE 34821.4286）。锚点=原文数字；左右叶均值与每一级的高度已用 numpy 按「左组={x≤t}、右组=其余、叶值=组内 y 均值、SSE=Σ(y−叶值)²」复算一遍，t=60 得 125.0000 / 231.6667 / 3366.6667 / 13653.3333，与原文一致；中间 t 的阶梯值同属本节按同一口径复算。",
+  "口径：回归树的分裂准则是 min[SSE_L + SSE_R]，等价于最大化 ΔSSE（笔记 §3.1／§四）。图上的阶梯在相邻两行的面积之间是常数——候选切点落在相邻取值的中点，组员不变则两组的均值与 SSE 都不变；看起来的斜边只是采样点之间的连线。分组约定：左组 = {x_i ≤ t}（t 取笔记的候选中点时与「相邻取值中点」口径完全一致；t 恰好落在某个观测量上时它归左组）。SSE 与 MSE 只差一个 1/n，本图统一用 SSE（笔记 §3.3 的口径）。",
+  "互动：拖 t 能看到 ΔSSE 最高的那一级就是 CART 会选的刀（n=5 在 60；把开关打开、加两套房，冠军挪到 80），而 60 与 80 的 ΔSSE 只差 601.25（占前者的 2.3%）——两行数据就换了第一刀的位置（§四条件检验）。中位数标记用来对照：最优切点不是中位数（表里也没有「切在中间」这个候选）。",
+  "边界一：本图只算**当前这一刀**的贪心评价，不含后续分裂，所以它演示的是「贪心怎么选这一刀」，不能证明贪心一定错过全局最优。贪心失灵的形态（XOR、horizon effect：先分一刀看似没用的刀、后面才能变纯）见笔记 §五承重假设一，本图不画那种结构。",
+  "边界二：t 越过最后一行的面积后右组为空——这时合计 SSE 回到根 SSE、ΔSSE=0（这一刀什么都没切开），右叶预测值读数退回根均值只是为了不显示空值；把 t 拖到 150 就能看到这个平台。"
+ ],
+ "note": "07_Random_Forest/7.5 CART Algorithm.md",
+ "slug": "cart-split"
+}

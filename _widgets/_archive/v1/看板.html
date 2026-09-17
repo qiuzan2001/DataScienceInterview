@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>交互组件看板</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --text:#1c2330; --dim:#5b6577; --faint:#8a93a3;
+    --border:#dfe3ea; --accent:#1769aa; --badge:#eef2f7;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--bg:#0f1116; --card:#161a21; --text:#e6e9ef; --dim:#a6afc0; --faint:#7b8494;
+          --border:#262b36; --accent:#7fb8e6; --badge:#1e242e; color-scheme:dark;}
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--text);
+       font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}
+  header.top{padding:22px 22px 14px; border-bottom:1px solid var(--border); background:var(--card);}
+  h1{margin:0; font-size:19px; letter-spacing:-.01em;}
+  .sub{margin:4px 0 0; color:var(--dim); font-size:12.5px;}
+  .note-gen{margin:2px 0 0; color:var(--faint); font-size:11.5px;}
+  .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 22px;
+           border-bottom:1px solid var(--border); background:var(--card); position:sticky; top:0; z-index:5;}
+  .toolbar input[type=search]{flex:1 1 220px; min-width:180px; padding:7px 10px; font:inherit;
+      color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:8px;}
+  .toolbar label{color:var(--dim); font-size:12.5px; display:inline-flex; gap:6px; align-items:center;}
+  .toolbar select{padding:6px 8px; font:inherit; color:var(--text); background:var(--bg);
+      border:1px solid var(--border); border-radius:8px;}
+  .count{color:var(--faint); font-size:12.5px; margin-left:auto;}
+  main{display:grid; gap:16px; padding:16px 22px 40px;
+       grid-template-columns:repeat(auto-fill,minmax(340px,1fr));}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden;
+        display:flex; flex-direction:column;}
+  .card-head{padding:12px 14px 6px;}
+  .card-title{margin:0; font-size:14.5px; font-weight:600;}
+  .card-meta{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:5px;
+             color:var(--dim); font-size:12px;}
+  .k{background:var(--badge); border-radius:999px; padding:1px 8px;
+     font-family:ui-monospace,Menlo,monospace; font-size:11.5px;}
+  .uid{font-family:ui-monospace,Menlo,monospace; font-size:11.5px; color:var(--faint);}
+  .when{margin-left:auto; color:var(--faint); font-size:11.5px;}
+  .card-actions{display:flex; gap:8px; align-items:center; padding:8px 14px 10px; flex-wrap:wrap;}
+  .btn{display:inline-flex; align-items:center; padding:5px 11px; border-radius:8px; font-size:12.5px;
+       text-decoration:none; border:1px solid var(--border); color:var(--text);}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .btn.disabled{color:var(--faint); border-style:dashed;}
+  .mini{font-size:12px; color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent);}
+  .card-body{border-top:1px solid var(--border); background:var(--bg);}
+  .frame{display:block; width:100%; height:460px; border:0; background:#fff;}
+  .frame.empty{padding:14px; color:var(--faint); font-size:12.5px; height:auto;}
+  body.no-preview .frame{display:none;}
+  body.no-preview .card-body{display:none;}
+  .empty-state{color:var(--dim); padding:20px; grid-column:1/-1;}
+  code{font-family:ui-monospace,Menlo,monospace; font-size:12px; background:var(--badge);
+       padding:1px 5px; border-radius:5px;}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>交互组件看板</h1>
+  <p class="sub">StateFarm Interview · 36 个组件 · 36 篇源笔记</p>
+  <p class="note-gen">本文件由 <code>make_widget.py --board</code> 生成，不要手改；改完 spec 重跑一次即可。</p>
+</header>
+<div class="toolbar">
+  <input id="q" type="search" placeholder="按标题 / 渲染器 / 条目 / 源笔记筛选…" autocomplete="off">
+  <label>排序
+    <select id="sort">
+      <option value="title">标题</option>
+      <option value="when">更新时间 · 新 → 旧</option>
+      <option value="kind">渲染器</option>
+    </select>
+  </label>
+  <label><input id="prev" type="checkbox" checked> 显示预览</label>
+  <span class="count" id="count">共 36 个组件</span>
+</div>
+<main id="grid">
+    <article class="card" data-hay="杠杆决定谁扳得动这条线：同一个 +5，端点上涨 1.0，均值点上纹丝不动 regression — 1.1 ordinary least squares (ols)" data-kind="regression" data-title="杠杆决定谁扳得动这条线：同一个 +5，端点上涨 1.0，均值点上纹丝不动" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">杠杆决定谁扳得动这条线：同一个 +5，端点上涨 1.0，均值点上纹丝不动</h3>
+        <div class="card-meta"><span class="k">regression</span><span class="uid">—</span><span class="note">1.1 Ordinary Least Squares (OLS)</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.1%20Ordinary%20Least%20Squares%20%28OLS%29-ols-leverage.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.1%20Ordinary%20Least%20Squares%20%28OLS%29.md">源笔记</a><a class="mini" href="1.1%20Ordinary%20Least%20Squares%20%28OLS%29-ols-leverage.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：杠杆决定谁扳得动这条线：同一个 +5，端点上涨 1.0，均值点上纹丝不动" src="1.1%20Ordinary%20Least%20Squares%20%28OLS%29-ols-leverage.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="分布决定方差函数 v(μ)：同一个均值，常数 σ² 扛不住 plot — 1.2 generalized linear models (glms)" data-kind="plot" data-title="分布决定方差函数 V(μ)：同一个均值，常数 σ² 扛不住" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">分布决定方差函数 V(μ)：同一个均值，常数 σ² 扛不住</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">1.2 Generalized Linear Models (GLMs)</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.2%20Generalized%20Linear%20Models%20%28GLMs%29-glm-variance-function.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.2%20Generalized%20Linear%20Models%20%28GLMs%29.md">源笔记</a><a class="mini" href="1.2%20Generalized%20Linear%20Models%20%28GLMs%29-glm-variance-function.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：分布决定方差函数 V(μ)：同一个均值，常数 σ² 扛不住" src="1.2%20Generalized%20Linear%20Models%20%28GLMs%29-glm-variance-function.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="同一个 β₁，概率效应随基础率变化：2% 只涨 5 个百分点，34% 能涨 32 个 plot — 1.3 introducing logistic regression" data-kind="plot" data-title="同一个 β₁，概率效应随基础率变化：2% 只涨 5 个百分点，34% 能涨 32 个" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">同一个 β₁，概率效应随基础率变化：2% 只涨 5 个百分点，34% 能涨 32 个</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">1.3 Introducing Logistic Regression</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.3%20Introducing%20Logistic%20Regression-logistic-baserate.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.3%20Introducing%20Logistic%20Regression.md">源笔记</a><a class="mini" href="1.3%20Introducing%20Logistic%20Regression-logistic-baserate.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：同一个 β₁，概率效应随基础率变化：2% 只涨 5 个百分点，34% 能涨 32 个" src="1.3%20Introducing%20Logistic%20Regression-logistic-baserate.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="对数似然与平方损失：目标换一个，最优解就换一个点 descent — 1.4 model fitting" data-kind="descent" data-title="对数似然与平方损失：目标换一个，最优解就换一个点" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">对数似然与平方损失：目标换一个，最优解就换一个点</h3>
+        <div class="card-meta"><span class="k">descent</span><span class="uid">—</span><span class="note">1.4 Model Fitting</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.4%20Model%20Fitting-model-fitting-losses.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.4%20Model%20Fitting.md">源笔记</a><a class="mini" href="1.4%20Model%20Fitting-model-fitting-losses.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：对数似然与平方损失：目标换一个，最优解就换一个点" src="1.4%20Model%20Fitting-model-fitting-losses.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="挪阈值：拿 precision 换 recall，f1 全程不到 7.3% plot — 1.5 dealing with unbalanced samples" data-kind="plot" data-title="挪阈值：拿 precision 换 recall，F1 全程不到 7.3%" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">挪阈值：拿 precision 换 recall，F1 全程不到 7.3%</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">1.5 Dealing with Unbalanced Samples</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.5%20Dealing%20with%20Unbalanced%20Samples-threshold-precision-recall.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.5%20Dealing%20with%20Unbalanced%20Samples.md">源笔记</a><a class="mini" href="1.5%20Dealing%20with%20Unbalanced%20Samples-threshold-precision-recall.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：挪阈值：拿 precision 换 recall，F1 全程不到 7.3%" src="1.5%20Dealing%20with%20Unbalanced%20Samples-threshold-precision-recall.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="分离程度：无惩罚 mle 冲出去，firth 停在有限值 plot — 1.6 estimation issues &amp; separation" data-kind="plot" data-title="分离程度：无惩罚 MLE 冲出去，Firth 停在有限值" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">分离程度：无惩罚 MLE 冲出去，Firth 停在有限值</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">1.6 Estimation Issues &amp; Separation</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.6%20Estimation%20Issues%20%26%20Separation-separation-firth.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.6%20Estimation%20Issues%20%26%20Separation.md">源笔记</a><a class="mini" href="1.6%20Estimation%20Issues%20%26%20Separation-separation-firth.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：分离程度：无惩罚 MLE 冲出去，Firth 停在有限值" src="1.6%20Estimation%20Issues%20%26%20Separation-separation-firth.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="正则化的两条路：ridge 等比收缩，lasso 逐个归零 plot — 1.6.3 regularization" data-kind="plot" data-title="正则化的两条路：Ridge 等比收缩，Lasso 逐个归零" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">正则化的两条路：Ridge 等比收缩，Lasso 逐个归零</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">1.6.3 Regularization</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.6.3%20Regularization-regularization-path.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.6.3%20Regularization.md">源笔记</a><a class="mini" href="1.6.3%20Regularization-regularization-path.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：正则化的两条路：Ridge 等比收缩，Lasso 逐个归零" src="1.6.3%20Regularization-regularization-path.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="异方差的 se 错多少，取决于大噪声落在 x 的哪里 plot — 1.7 assumptions" data-kind="plot" data-title="异方差的 SE 错多少，取决于大噪声落在 X 的哪里" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">异方差的 SE 错多少，取决于大噪声落在 X 的哪里</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">1.7 Assumptions</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.7%20Assumptions-assumptions-heteroskedastic-se.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.7%20Assumptions.md">源笔记</a><a class="mini" href="1.7%20Assumptions-assumptions-heteroskedastic-se.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：异方差的 SE 错多少，取决于大噪声落在 X 的哪里" src="1.7%20Assumptions-assumptions-heteroskedastic-se.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="box-cox 的 λ：拖到 0 与拖到 1，看谁掉出 95% 似然比区间 plot — 2. transformations" data-kind="plot" data-title="Box-Cox 的 λ：拖到 0 与拖到 1，看谁掉出 95% 似然比区间" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">Box-Cox 的 λ：拖到 0 与拖到 1，看谁掉出 95% 似然比区间</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">2. Transformations</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="2.%20Transformations-boxcox-lambda-profile.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../02_Transformations/2.%20Transformations.md">源笔记</a><a class="mini" href="2.%20Transformations-boxcox-lambda-profile.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：Box-Cox 的 λ：拖到 0 与拖到 1，看谁掉出 95% 似然比区间" src="2.%20Transformations-boxcox-lambda-profile.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="把 0–2 年箱的坏人数拖到 0：单箱 iv 0.53 反超整变量 0.405 bars — 2.3.1 woe &amp; iv" data-kind="bars" data-title="把 0–2 年箱的坏人数拖到 0：单箱 IV 0.53 反超整变量 0.405" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">把 0–2 年箱的坏人数拖到 0：单箱 IV 0.53 反超整变量 0.405</h3>
+        <div class="card-meta"><span class="k">bars</span><span class="uid">—</span><span class="note">2.3.1 WOE &amp; IV</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="2.3.1%20WOE%20%26%20IV-woe-iv-zero-cell.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../02_Transformations/2.3.1%20WOE%20%26%20IV.md">源笔记</a><a class="mini" href="2.3.1%20WOE%20%26%20IV-woe-iv-zero-cell.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：把 0–2 年箱的坏人数拖到 0：单箱 IV 0.53 反超整变量 0.405" src="2.3.1%20WOE%20%26%20IV-woe-iv-zero-cell.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="共线性撑开的是区间：同一个 β̂=1200，95% ci 从 588 宽到 9800 plot — 3. multicollinearity" data-kind="plot" data-title="共线性撑开的是区间：同一个 β̂=1200，95% CI 从 588 宽到 9800" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">共线性撑开的是区间：同一个 β̂=1200，95% CI 从 588 宽到 9800</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">3. Multicollinearity</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="3.%20Multicollinearity-multicollinearity-ci-fan.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../03_Multicollinearity/3.%20Multicollinearity.md">源笔记</a><a class="mini" href="3.%20Multicollinearity-multicollinearity-ci-fan.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：共线性撑开的是区间：同一个 β̂=1200，95% CI 从 588 宽到 9800" src="3.%20Multicollinearity-multicollinearity-ci-fan.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="拖 r² 看 vif 的代价：se 只涨 √vif，显著性翻转点却由 t₀ 决定 plot — 3.4.2 variance inflation factor (vif)" data-kind="plot" data-title="拖 R² 看 VIF 的代价：SE 只涨 √VIF，显著性翻转点却由 t₀ 决定" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">拖 R² 看 VIF 的代价：SE 只涨 √VIF，显著性翻转点却由 t₀ 决定</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">3.4.2 Variance Inflation Factor (VIF)</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="3.4.2%20Variance%20Inflation%20Factor%20%28VIF%29-vif.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../03_Multicollinearity/3.4.2%20Variance%20Inflation%20Factor%20%28VIF%29.md">源笔记</a><a class="mini" href="3.4.2%20Variance%20Inflation%20Factor%20%28VIF%29-vif.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：拖 R² 看 VIF 的代价：SE 只涨 √VIF，显著性翻转点却由 t₀ 决定" src="3.4.2%20Variance%20Inflation%20Factor%20%28VIF%29-vif.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="删行 vs 插补：偏差由两组的缺失率之差决定，不由总缺失率决定 plot — 4. missing data" data-kind="plot" data-title="删行 vs 插补：偏差由两组的缺失率之差决定，不由总缺失率决定" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">删行 vs 插补：偏差由两组的缺失率之差决定，不由总缺失率决定</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">4. Missing Data</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="4.%20Missing%20Data-missing-mar-bias.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../04_Missing_Data/4.%20Missing%20Data.md">源笔记</a><a class="mini" href="4.%20Missing%20Data-missing-mar-bias.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：删行 vs 插补：偏差由两组的缺失率之差决定，不由总缺失率决定" src="4.%20Missing%20Data-missing-mar-bias.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="vif 是变量集的属性：删错对象，其余变量的 vif 一个都降不下来 bars — 5.3 multivariate selection" data-kind="bars" data-title="VIF 是变量集的属性：删错对象，其余变量的 VIF 一个都降不下来" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">VIF 是变量集的属性：删错对象，其余变量的 VIF 一个都降不下来</h3>
+        <div class="card-meta"><span class="k">bars</span><span class="uid">—</span><span class="note">5.3 Multivariate Selection</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="5.3%20Multivariate%20Selection-selection-vif.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../05_Dimension_Reduction/5.3%20Multivariate%20Selection.md">源笔记</a><a class="mini" href="5.3%20Multivariate%20Selection-selection-vif.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：VIF 是变量集的属性：删错对象，其余变量的 VIF 一个都降不下来" src="5.3%20Multivariate%20Selection-selection-vif.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="拖基础率 π：折级命中率被切分拉开多少（分层折是中间那条） plot — 6.1 data preparation &amp; validation" data-kind="plot" data-title="拖基础率 π：折级命中率被切分拉开多少（分层折是中间那条）" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">拖基础率 π：折级命中率被切分拉开多少（分层折是中间那条）</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">6.1 Data Preparation &amp; Validation</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="6.1%20Data%20Preparation%20%26%20Validation-data-preparation.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../06_Model_Assessment/6.1%20Data%20Preparation%20%26%20Validation.md">源笔记</a><a class="mini" href="6.1%20Data%20Preparation%20%26%20Validation-data-preparation.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：拖基础率 π：折级命中率被切分拉开多少（分层折是中间那条）" src="6.1%20Data%20Preparation%20%26%20Validation-data-preparation.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="拖噪声 σ：bias² 与 variance 怎么换手，最优容量落在哪一边 plot — 6.2 model diagnosis_bias-variance tradeoff" data-kind="plot" data-title="拖噪声 σ：bias² 与 variance 怎么换手，最优容量落在哪一边" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">拖噪声 σ：bias² 与 variance 怎么换手，最优容量落在哪一边</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">6.2 Model Diagnosis_Bias-Variance Tradeoff</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="6.2%20Model%20Diagnosis_Bias-Variance%20Tradeoff-bias-variance.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../06_Model_Assessment/6.2%20Model%20Diagnosis_Bias-Variance%20Tradeoff.md">源笔记</a><a class="mini" href="6.2%20Model%20Diagnosis_Bias-Variance%20Tradeoff-bias-variance.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：拖噪声 σ：bias² 与 variance 怎么换手，最优容量落在哪一边" src="6.2%20Model%20Diagnosis_Bias-Variance%20Tradeoff-bias-variance.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="拖基础率 π：命中率按人群塌下来，f1 却把两个阈值的取舍抹平了 plot — 6.3 performance metrics" data-kind="plot" data-title="拖基础率 π：命中率按人群塌下来，F1 却把两个阈值的取舍抹平了" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">拖基础率 π：命中率按人群塌下来，F1 却把两个阈值的取舍抹平了</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">6.3 Performance Metrics</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="6.3%20Performance%20Metrics-performance-metrics.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../06_Model_Assessment/6.3%20Performance%20Metrics.md">源笔记</a><a class="mini" href="6.3%20Performance%20Metrics-performance-metrics.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：拖基础率 π：命中率按人群塌下来，F1 却把两个阈值的取舍抹平了" src="6.3%20Performance%20Metrics-performance-metrics.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="拖产能点 k：两个排序 auc 同为 0.750，前 k 单的命中率却差三倍 plot — 6.4 diagnostic &amp; visualization tools" data-kind="plot" data-title="拖产能点 k：两个排序 AUC 同为 0.750，前 k 单的命中率却差三倍" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">拖产能点 k：两个排序 AUC 同为 0.750，前 k 单的命中率却差三倍</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">6.4 Diagnostic &amp; Visualization Tools</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="6.4%20Diagnostic%20%26%20Visualization%20Tools-diagnostic-tools.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../06_Model_Assessment/6.4%20Diagnostic%20%26%20Visualization%20Tools.md">源笔记</a><a class="mini" href="6.4%20Diagnostic%20%26%20Visualization%20Tools-diagnostic-tools.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：拖产能点 k：两个排序 AUC 同为 0.750，前 k 单的命中率却差三倍" src="6.4%20Diagnostic%20%26%20Visualization%20Tools-diagnostic-tools.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="ρ 是加树压不下去的地板：b 从 1 加到 1000，方差只掉到 ρσ² 附近 plot — 7.2. building the forest" data-kind="plot" data-title="ρ 是加树压不下去的地板：B 从 1 加到 1000，方差只掉到 ρσ² 附近" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">ρ 是加树压不下去的地板：B 从 1 加到 1000，方差只掉到 ρσ² 附近</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">7.2. Building the Forest</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="7.2.%20Building%20the%20Forest-rho-floor.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../07_Random_Forest/7.2.%20Building%20the%20Forest.md">源笔记</a><a class="mini" href="7.2.%20Building%20the%20Forest-rho-floor.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：ρ 是加树压不下去的地板：B 从 1 加到 1000，方差只掉到 ρσ² 附近" src="7.2.%20Building%20the%20Forest-rho-floor.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="三把不纯度尺子：同一个 p，熵、gini 与误分类率给出三个不同的数 plot — 7.2.2 decision tree" data-kind="plot" data-title="三把不纯度尺子：同一个 p，熵、Gini 与误分类率给出三个不同的数" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">三把不纯度尺子：同一个 p，熵、Gini 与误分类率给出三个不同的数</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">7.2.2 Decision Tree</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="7.2.2%20Decision%20Tree-impurity.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../07_Random_Forest/7.2.2%20Decision%20Tree.md">源笔记</a><a class="mini" href="7.2.2%20Decision%20Tree-impurity.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：三把不纯度尺子：同一个 p，熵、Gini 与误分类率给出三个不同的数" src="7.2.2%20Decision%20Tree-impurity.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="α 一个旋钮决定树多大：落在哪个区间就选哪棵树，1-se 再把答案挪到更小的树上 plot — 7.2.2.4. pruning decision trees" data-kind="plot" data-title="α 一个旋钮决定树多大：落在哪个区间就选哪棵树，1-SE 再把答案挪到更小的树上" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">α 一个旋钮决定树多大：落在哪个区间就选哪棵树，1-SE 再把答案挪到更小的树上</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">7.2.2.4. Pruning Decision Trees</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="7.2.2.4.%20Pruning%20Decision%20Trees-pruning-alpha.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../07_Random_Forest/7.2.2.4.%20Pruning%20Decision%20Trees.md">源笔记</a><a class="mini" href="7.2.2.4.%20Pruning%20Decision%20Trees-pruning-alpha.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：α 一个旋钮决定树多大：落在哪个区间就选哪棵树，1-SE 再把答案挪到更小的树上" src="7.2.2.4.%20Pruning%20Decision%20Trees-pruning-alpha.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="同一个纯噪声列：取值 2 种 → 400 种，mdi 涨 6 倍，置换重要度纹丝不动 bars — 7.4. quantifying feature importance" data-kind="bars" data-title="同一个纯噪声列：取值 2 种 → 400 种，MDI 涨 6 倍，置换重要度纹丝不动" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">同一个纯噪声列：取值 2 种 → 400 种，MDI 涨 6 倍，置换重要度纹丝不动</h3>
+        <div class="card-meta"><span class="k">bars</span><span class="uid">—</span><span class="note">7.4. Quantifying Feature Importance</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="7.4.%20Quantifying%20Feature%20Importance-mdi-vs-perm.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../07_Random_Forest/7.4.%20Quantifying%20Feature%20Importance.md">源笔记</a><a class="mini" href="7.4.%20Quantifying%20Feature%20Importance-mdi-vs-perm.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：同一个纯噪声列：取值 2 种 → 400 种，MDI 涨 6 倍，置换重要度纹丝不动" src="7.4.%20Quantifying%20Feature%20Importance-mdi-vs-perm.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="回归树的第一刀：切点扫一遍，δsse 最高那一级就是贪心选的刀 plot — 7.5 cart algorithm" data-kind="plot" data-title="回归树的第一刀：切点扫一遍，ΔSSE 最高那一级就是贪心选的刀" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">回归树的第一刀：切点扫一遍，ΔSSE 最高那一级就是贪心选的刀</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">7.5 CART Algorithm</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="7.5%20CART%20Algorithm-cart-split.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../07_Random_Forest/7.5%20CART%20Algorithm.md">源笔记</a><a class="mini" href="7.5%20CART%20Algorithm-cart-split.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：回归树的第一刀：切点扫一遍，ΔSSE 最高那一级就是贪心选的刀" src="7.5%20CART%20Algorithm-cart-split.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="基模型越准、错误越独立，多数投票才越有用：ρ=0.30 时与单模型打成平手 plot — 8. ensemble learning" data-kind="plot" data-title="基模型越准、错误越独立，多数投票才越有用：ρ=0.30 时与单模型打成平手" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">基模型越准、错误越独立，多数投票才越有用：ρ=0.30 时与单模型打成平手</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">8. Ensemble Learning</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="8.%20Ensemble%20Learning-ensemble-vote.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../08_ML_Methods/8.%20Ensemble%20Learning.md">源笔记</a><a class="mini" href="8.%20Ensemble%20Learning-ensemble-vote.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：基模型越准、错误越独立，多数投票才越有用：ρ=0.30 时与单模型打成平手" src="8.%20Ensemble%20Learning-ensemble-vote.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="自助样本漏掉多少行：n=10 时是 34.87%，小样本上写 36.8% 会差 1.9 个百分点 plot — 8.3. bagging (bootstrap aggregating)" data-kind="plot" data-title="自助样本漏掉多少行：n=10 时是 34.87%，小样本上写 36.8% 会差 1.9 个百分点" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">自助样本漏掉多少行：n=10 时是 34.87%，小样本上写 36.8% 会差 1.9 个百分点</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">8.3. Bagging (Bootstrap Aggregating)</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="8.3.%20Bagging%20%28Bootstrap%20Aggregating%29-bagging-oob.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../08_ML_Methods/8.3.%20Bagging%20%28Bootstrap%20Aggregating%29.md">源笔记</a><a class="mini" href="8.3.%20Bagging%20%28Bootstrap%20Aggregating%29-bagging-oob.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：自助样本漏掉多少行：n=10 时是 34.87%，小样本上写 36.8% 会差 1.9 个百分点" src="8.3.%20Bagging%20%28Bootstrap%20Aggregating%29-bagging-oob.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="拖单轮错误率 e：票权在 e=0.5 归零、e&gt;0.5 转负，上界越压越慢 plot — 8.4.2.1 adaboost (adaptive boosting)" data-kind="plot" data-title="拖单轮错误率 e：票权在 e=0.5 归零、e&gt;0.5 转负，上界越压越慢" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">拖单轮错误率 e：票权在 e=0.5 归零、e&gt;0.5 转负，上界越压越慢</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">8.4.2.1 AdaBoost (Adaptive Boosting)</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="8.4.2.1%20AdaBoost%20%28Adaptive%20Boosting%29-adaboost-alpha.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../08_ML_Methods/8.4.2.1%20AdaBoost%20%28Adaptive%20Boosting%29.md">源笔记</a><a class="mini" href="8.4.2.1%20AdaBoost%20%28Adaptive%20Boosting%29-adaboost-alpha.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：拖单轮错误率 e：票权在 e=0.5 归零、e&gt;0.5 转负，上界越压越慢" src="8.4.2.1%20AdaBoost%20%28Adaptive%20Boosting%29-adaboost-alpha.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="shrinkage ν 与轮数成对调：达到同一 mse，ν=0.1 要 143 轮、ν=0.5 只要 23 轮 plot — 8.4.2.2 gradient boosting" data-kind="plot" data-title="shrinkage ν 与轮数成对调：达到同一 MSE，ν=0.1 要 143 轮、ν=0.5 只要 23 轮" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">shrinkage ν 与轮数成对调：达到同一 MSE，ν=0.1 要 143 轮、ν=0.5 只要 23 轮</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">8.4.2.2 Gradient Boosting</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="8.4.2.2%20Gradient%20Boosting-gradient-boosting-shrinkage.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../08_ML_Methods/8.4.2.2%20Gradient%20Boosting.md">源笔记</a><a class="mini" href="8.4.2.2%20Gradient%20Boosting-gradient-boosting-shrinkage.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：shrinkage ν 与轮数成对调：达到同一 MSE，ν=0.1 要 143 轮、ν=0.5 只要 23 轮" src="8.4.2.2%20Gradient%20Boosting-gradient-boosting-shrinkage.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="bagging 的账本有地板：ρ 一高就输给一个停得早的 boosting plot — 8.6 bagging vs boosting" data-kind="plot" data-title="bagging 的账本有地板：ρ 一高就输给一个停得早的 boosting" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">bagging 的账本有地板：ρ 一高就输给一个停得早的 boosting</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">8.6 Bagging VS Boosting</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="8.6%20Bagging%20VS%20Boosting-bagging-vs-boosting.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../08_ML_Methods/8.6%20Bagging%20VS%20Boosting.md">源笔记</a><a class="mini" href="8.6%20Bagging%20VS%20Boosting-bagging-vs-boosting.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：bagging 的账本有地板：ρ 一高就输给一个停得早的 boosting" src="8.6%20Bagging%20VS%20Boosting-bagging-vs-boosting.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="sd 一直是 3000 元，se 才随样本量缩小 plot — 9.2 抽样分布与中心极限定理" data-kind="plot" data-title="SD 一直是 3000 元，SE 才随样本量缩小" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">SD 一直是 3000 元，SE 才随样本量缩小</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">9.2 抽样分布与中心极限定理</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="9.2%20%E6%8A%BD%E6%A0%B7%E5%88%86%E5%B8%83%E4%B8%8E%E4%B8%AD%E5%BF%83%E6%9E%81%E9%99%90%E5%AE%9A%E7%90%86-sd-vs-se.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../09_%E7%BB%9F%E8%AE%A1%E5%9F%BA%E7%A1%80/9.2%20%E6%8A%BD%E6%A0%B7%E5%88%86%E5%B8%83%E4%B8%8E%E4%B8%AD%E5%BF%83%E6%9E%81%E9%99%90%E5%AE%9A%E7%90%86.md">源笔记</a><a class="mini" href="9.2%20%E6%8A%BD%E6%A0%B7%E5%88%86%E5%B8%83%E4%B8%8E%E4%B8%AD%E5%BF%83%E6%9E%81%E9%99%90%E5%AE%9A%E7%90%86-sd-vs-se.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：SD 一直是 3000 元，SE 才随样本量缩小" src="9.2%20%E6%8A%BD%E6%A0%B7%E5%88%86%E5%B8%83%E4%B8%8E%E4%B8%AD%E5%BF%83%E6%9E%81%E9%99%90%E5%AE%9A%E7%90%86-sd-vs-se.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="小样本下 wald 区间会跌破 0：p̂=0.10 时下界 −0.0859，wilson 全程不出界 plot — 9.3 估计：点估计、mle 与区间估计" data-kind="plot" data-title="小样本下 Wald 区间会跌破 0：p̂=0.10 时下界 −0.0859，Wilson 全程不出界" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">小样本下 Wald 区间会跌破 0：p̂=0.10 时下界 −0.0859，Wilson 全程不出界</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">9.3 估计：点估计、MLE 与区间估计</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="9.3%20%E4%BC%B0%E8%AE%A1%EF%BC%9A%E7%82%B9%E4%BC%B0%E8%AE%A1%E3%80%81MLE%20%E4%B8%8E%E5%8C%BA%E9%97%B4%E4%BC%B0%E8%AE%A1-ci-wald-wilson.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../09_%E7%BB%9F%E8%AE%A1%E5%9F%BA%E7%A1%80/9.3%20%E4%BC%B0%E8%AE%A1%EF%BC%9A%E7%82%B9%E4%BC%B0%E8%AE%A1%E3%80%81MLE%20%E4%B8%8E%E5%8C%BA%E9%97%B4%E4%BC%B0%E8%AE%A1.md">源笔记</a><a class="mini" href="9.3%20%E4%BC%B0%E8%AE%A1%EF%BC%9A%E7%82%B9%E4%BC%B0%E8%AE%A1%E3%80%81MLE%20%E4%B8%8E%E5%8C%BA%E9%97%B4%E4%BC%B0%E8%AE%A1-ci-wald-wilson.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：小样本下 Wald 区间会跌破 0：p̂=0.10 时下界 −0.0859，Wilson 全程不出界" src="9.3%20%E4%BC%B0%E8%AE%A1%EF%BC%9A%E7%82%B9%E4%BC%B0%E8%AE%A1%E3%80%81MLE%20%E4%B8%8E%E5%8C%BA%E9%97%B4%E4%BC%B0%E8%AE%A1-ci-wald-wilson.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="功效的三个旋钮：把样本量拖到 400，δ=0.2 才从「一半漏掉」变成「几乎必检出」 plot — 9.4 假设检验与 p 值" data-kind="plot" data-title="功效的三个旋钮：把样本量拖到 400，δ=0.2 才从「一半漏掉」变成「几乎必检出」" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">功效的三个旋钮：把样本量拖到 400，δ=0.2 才从「一半漏掉」变成「几乎必检出」</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">9.4 假设检验与 p 值</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="9.4%20%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C%E4%B8%8E%20p%20%E5%80%BC-power.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../09_%E7%BB%9F%E8%AE%A1%E5%9F%BA%E7%A1%80/9.4%20%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C%E4%B8%8E%20p%20%E5%80%BC.md">源笔记</a><a class="mini" href="9.4%20%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C%E4%B8%8E%20p%20%E5%80%BC-power.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：功效的三个旋钮：把样本量拖到 400，δ=0.2 才从「一半漏掉」变成「几乎必检出」" src="9.4%20%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C%E4%B8%8E%20p%20%E5%80%BC-power.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="基础率把同一个检测变成两个检测：1% 时 ppv 只有 16.7%，10% 时 68.75% plot — 9.6 贝叶斯基础与基础率谬误" data-kind="plot" data-title="基础率把同一个检测变成两个检测：1% 时 PPV 只有 16.7%，10% 时 68.75%" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">基础率把同一个检测变成两个检测：1% 时 PPV 只有 16.7%，10% 时 68.75%</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">9.6 贝叶斯基础与基础率谬误</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="9.6%20%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%9F%BA%E7%A1%80%E7%8E%87%E8%B0%AC%E8%AF%AF-ppv-base-rate.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../09_%E7%BB%9F%E8%AE%A1%E5%9F%BA%E7%A1%80/9.6%20%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%9F%BA%E7%A1%80%E7%8E%87%E8%B0%AC%E8%AF%AF.md">源笔记</a><a class="mini" href="9.6%20%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%9F%BA%E7%A1%80%E7%8E%87%E8%B0%AC%E8%AF%AF-ppv-base-rate.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：基础率把同一个检测变成两个检测：1% 时 PPV 只有 16.7%，10% 时 68.75%" src="9.6%20%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%9F%BA%E7%A1%80%E7%8E%87%E8%B0%AC%E8%AF%AF-ppv-base-rate.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="offset 把暴露期除掉：费率由「总次数 ÷ 总暴露」定，不由张数平均定 plot — 10.2 计数模型与 offset" data-kind="plot" data-title="offset 把暴露期除掉：费率由「总次数 ÷ 总暴露」定，不由张数平均定" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">offset 把暴露期除掉：费率由「总次数 ÷ 总暴露」定，不由张数平均定</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">10.2 计数模型与 offset</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="10.2%20%E8%AE%A1%E6%95%B0%E6%A8%A1%E5%9E%8B%E4%B8%8E%20offset-count-offset.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../10_%E4%BF%9D%E9%99%A9%E9%A3%8E%E6%8E%A7%E5%AE%9E%E5%8A%A1/10.2%20%E8%AE%A1%E6%95%B0%E6%A8%A1%E5%9E%8B%E4%B8%8E%20offset.md">源笔记</a><a class="mini" href="10.2%20%E8%AE%A1%E6%95%B0%E6%A8%A1%E5%9E%8B%E4%B8%8E%20offset-count-offset.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：offset 把暴露期除掉：费率由「总次数 ÷ 总暴露」定，不由张数平均定" src="10.2%20%E8%AE%A1%E6%95%B0%E6%A8%A1%E5%9E%8B%E4%B8%8E%20offset-count-offset.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="pdo 是分辨率：同一段风险被换成多少分 plot — 10.4 评分卡与 woe 落地" data-kind="plot" data-title="PDO 是分辨率：同一段风险被换成多少分" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">PDO 是分辨率：同一段风险被换成多少分</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">10.4 评分卡与 WOE 落地</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="10.4%20%E8%AF%84%E5%88%86%E5%8D%A1%E4%B8%8E%20WOE%20%E8%90%BD%E5%9C%B0-scorecard-pdo.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../10_%E4%BF%9D%E9%99%A9%E9%A3%8E%E6%8E%A7%E5%AE%9E%E5%8A%A1/10.4%20%E8%AF%84%E5%88%86%E5%8D%A1%E4%B8%8E%20WOE%20%E8%90%BD%E5%9C%B0.md">源笔记</a><a class="mini" href="10.4%20%E8%AF%84%E5%88%86%E5%8D%A1%E4%B8%8E%20WOE%20%E8%90%BD%E5%9C%B0-scorecard-pdo.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：PDO 是分辨率：同一段风险被换成多少分" src="10.4%20%E8%AF%84%E5%88%86%E5%8D%A1%E4%B8%8E%20WOE%20%E8%90%BD%E5%9C%B0-scorecard-pdo.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="tweedie 的零点质量不是常数：它由 μ、φ、p 一起决定 plot — 10.8 tweedie glm 专章" data-kind="plot" data-title="Tweedie 的零点质量不是常数：它由 μ、φ、p 一起决定" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">Tweedie 的零点质量不是常数：它由 μ、φ、p 一起决定</h3>
+        <div class="card-meta"><span class="k">plot</span><span class="uid">—</span><span class="note">10.8 Tweedie GLM 专章</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="10.8%20Tweedie%20GLM%20%E4%B8%93%E7%AB%A0-tweedie-zero-mass.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../10_%E4%BF%9D%E9%99%A9%E9%A3%8E%E6%8E%A7%E5%AE%9E%E5%8A%A1/10.8%20Tweedie%20GLM%20%E4%B8%93%E7%AB%A0.md">源笔记</a><a class="mini" href="10.8%20Tweedie%20GLM%20%E4%B8%93%E7%AB%A0-tweedie-zero-mass.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：Tweedie 的零点质量不是常数：它由 μ、φ、p 一起决定" src="10.8%20Tweedie%20GLM%20%E4%B8%93%E7%AB%A0-tweedie-zero-mass.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="十分位校准：整体乘一个因子，修不好风险形状 bars — 10.9 项目实战：法语车险纯保费定价" data-kind="bars" data-title="十分位校准：整体乘一个因子，修不好风险形状" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">十分位校准：整体乘一个因子，修不好风险形状</h3>
+        <div class="card-meta"><span class="k">bars</span><span class="uid">—</span><span class="note">10.9 项目实战：法语车险纯保费定价</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="10.9%20%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%95%E8%AF%AD%E8%BD%A6%E9%99%A9%E7%BA%AF%E4%BF%9D%E8%B4%B9%E5%AE%9A%E4%BB%B7-decile-calibration.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../10_%E4%BF%9D%E9%99%A9%E9%A3%8E%E6%8E%A7%E5%AE%9E%E5%8A%A1/10.9%20%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%95%E8%AF%AD%E8%BD%A6%E9%99%A9%E7%BA%AF%E4%BF%9D%E8%B4%B9%E5%AE%9A%E4%BB%B7.md">源笔记</a><a class="mini" href="10.9%20%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%95%E8%AF%AD%E8%BD%A6%E9%99%A9%E7%BA%AF%E4%BF%9D%E8%B4%B9%E5%AE%9A%E4%BB%B7-decile-calibration.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：十分位校准：整体乘一个因子，修不好风险形状" src="10.9%20%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%95%E8%AF%AD%E8%BD%A6%E9%99%A9%E7%BA%AF%E4%BF%9D%E8%B4%B9%E5%AE%9A%E4%BB%B7-decile-calibration.html"></iframe></div>
+    </article>
+</main>
+<script>
+/* 只做筛选 / 排序 / 预览开关。卡片是生成时渲染好的，所以禁掉 JS 也照样能看、能打开。 */
+(function () {
+  var grid = document.getElementById('grid');
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+  var q = document.getElementById('q');
+  var sort = document.getElementById('sort');
+  var prev = document.getElementById('prev');
+  var count = document.getElementById('count');
+  function apply() {
+    var needle = (q.value || '').trim().toLowerCase();
+    var shown = 0;
+    cards.forEach(function (c) {
+      var hit = !needle || (c.getAttribute('data-hay') || '').indexOf(needle) >= 0;
+      c.hidden = !hit;
+      if (hit) shown++;
+    });
+    count.textContent = needle ? ('匹配 ' + shown + ' / ' + cards.length + ' 个组件')
+                               : ('共 ' + cards.length + ' 个组件');
+  }
+  function resort() {
+    var mode = sort.value;
+    var sorted = cards.slice().sort(function (a, b) {
+      var x = String(a.getAttribute('data-' + mode)), y = String(b.getAttribute('data-' + mode));
+      if (mode === 'when') return y.localeCompare(x);                 /* 新 → 旧 */
+      return x.localeCompare(y, 'zh') || String(a.getAttribute('data-title')).localeCompare(String(b.getAttribute('data-title')), 'zh');
+    });
+    sorted.forEach(function (c) { grid.appendChild(c); });
+  }
+  q.addEventListener('input', apply);
+  sort.addEventListener('change', resort);
+  prev.addEventListener('change', function () {
+    document.body.classList.toggle('no-preview', !prev.checked);
+  });
+  apply();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+{
+ "schema": "widget/v1",
+ "kind": "plot",
+ "title": "拖基础率 π：命中率按人群塌下来，F1 却把两个阈值的取舍抹平了",
+ "subtitle": "1000 单、欺诈 50 单的算例（6.3 第四节第 1–2 步与「条件检验一/二」）；严阈值标 80 单（TPR 0.60 / FPR 5.26%）、松阈值标 130 单（TPR 0.80 / FPR 9.47%）",
+ "vars": {
+  "tpr0": 0.6,
+  "fpr0": 0.0526316,
+  "tpr1": 0.8,
+  "fpr1": 0.0947368
+ },
+ "x": {
+  "min": 0.005,
+  "max": 0.1,
+  "points": 121,
+  "label": "部署人群的基础率 π（真实正类比例）",
+  "fmt": "0.00%"
+ },
+ "controls": [
+  {
+   "key": "base",
+   "type": "slider",
+   "label": "基础率 π（0.5%–10%；笔记算例是 5%）",
+   "min": 0.005,
+   "max": 0.1,
+   "step": 0.001,
+   "value": 0.05,
+   "fmt": "0.00%"
+  }
+ ],
+ "series": [
+  {
+   "label": "命中率 Precision（严阈值：标记 80 单）",
+   "expr": "tpr0*base/(tpr0*base + fpr0*(1-base))",
+   "color": "#e0a15a",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "命中率 Precision（松阈值：标记 130 单）",
+   "expr": "tpr1*base/(tpr1*base + fpr1*(1-base))",
+   "color": "#7fb8e6",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "F1（严阈值）",
+   "expr": "2*tpr0*base/(tpr0*base + fpr0*(1-base) + base)",
+   "color": "#e0a15a",
+   "dash": true,
+   "fmt": "0.0000"
+  },
+  {
+   "label": "F1（松阈值）",
+   "expr": "2*tpr1*base/(tpr1*base + fpr1*(1-base) + base)",
+   "color": "#7fb8e6",
+   "dash": true,
+   "fmt": "0.0000"
+  }
+ ],
+ "markers": [
+  {
+   "x": 0.05,
+   "label": "笔记算例 5%",
+   "color": "#d1655e"
+  },
+  {
+   "x": 0.025,
+   "label": "条件检验 2.5%",
+   "color": "#4ec27a"
+  }
+ ],
+ "readouts": [
+  {
+   "label": "命中率（严阈值：标记 80 单）",
+   "expr": "tpr0*base/(tpr0*base + fpr0*(1-base))",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "命中率（松阈值：标记 130 单）",
+   "expr": "tpr1*base/(tpr1*base + fpr1*(1-base))",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "F1（严阈值）",
+   "expr": "2*tpr0*base/(tpr0*base + fpr0*(1-base) + base)",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "F1（松阈值）",
+   "expr": "2*tpr1*base/(tpr1*base + fpr1*(1-base) + base)",
+   "fmt": "0.0000"
+  }
+ ],
+ "notes": [
+  "数字出处：严阈值（标记 80 单）Precision 37.50%、Recall 60.00%、F1 0.4615 与松阈值（标记 130 单）Precision 30.77%、Recall 80.00%、F1 0.4444 取自 6.3 第四节第 2 步与「条件检验二」；基础率减半（2.5%）后的 Precision 22.62%、F1 0.3285 取自「条件检验一」。控件停在 5% 时四条读数是 37.50%/30.77%/0.4615/0.4444，停在 2.5% 时是 22.62%/17.80%/0.3285/0.2912。",
+  "口径：两个阈值用类内不变量刻画——严阈值 TPR=0.60、FPR=50/950=5.26%，松阈值 TPR=0.80、FPR=90/950=9.47%；命中率用笔记 3.1 的同一公式 P = TPR·π/(TPR·π + FPR·(1−π))，F1 是它的代数化简 2PR/(P+R) = 2·TPR·π/(TPR·π + FPR·(1−π) + π)。π=5% 时这两个阈值对应的标记单数正好就是 80 单与 130 单（0.6×50+0.0526×950=80、0.8×50+0.0947×950=130）。",
+  "构造部分：两条 F1 曲线是把笔记的 Precision、Recall 直接代入 F1 定义算出来的，没有在锚点之间插值；四条曲线都是 π 的连续函数。两条 F1 曲线在 π≈6.9% 处交叉（本节按上面的公式复算，笔记未给这个交点）：基础率更高时松阈值的 F1 反而更大，而它的命中率始终更低——正好说明 F1 的排序会与业务关心的取舍脱钩。",
+  "边界：曲线只改人群基础率、假设类内得分分布不变（笔记条件检验用的就是这条），所以过采样 / SMOTE / 类权重 / 截距校正都不在图上——那类处理会同时改分数分布，ROC 与 FPR 都要重画。另外 AUC、KS、Gini 在这里一动不动（与阈值、基础率都无关），这张图只该用来解释 Precision、F1、Accuracy 为什么不能跨人群比。"
+ ],
+ "note": "06_Model_Assessment/6.3 Performance Metrics.md",
+ "uid": "",
+ "slug": "performance-metrics"
+}

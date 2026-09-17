@@ -1,0 +1,103 @@
+{
+ "schema": "widget/v1",
+ "kind": "surface3d",
+ "uid": "",
+ "note": "06_Model_Assessment/6.3 Performance Metrics.md",
+ "title": "基础率越低，固定 TPR 下 Precision 越容易被 FPR 拖低",
+ "subtitle": "x=基础率 π（0.5%–10%），y=FPR（0.1%–15%），z=Precision；公式为 TPR·π/[TPR·π+FPR·(1−π)]",
+ "vars": {
+  "pi5": 0.05,
+  "pi25": 0.025,
+  "fpr_note": 0.05263157894736842
+ },
+ "x": {
+  "min": 0.005,
+  "max": 0.1,
+  "points": 41,
+  "label": "基础率 π（0.5%–10%）",
+  "fmt": "0.00%"
+ },
+ "y": {
+  "min": 0.001,
+  "max": 0.15,
+  "points": 41,
+  "label": "假阳率 FPR（0.1%–15%；锚点 50/950≈5.26%）",
+  "fmt": "0.00%"
+ },
+ "controls": [
+  {
+   "key": "tpr",
+   "type": "slider",
+   "label": "TPR / Recall（10%–100%；默认 60%）",
+   "min": 0.1,
+   "max": 1,
+   "step": 0.01,
+   "value": 0.6,
+   "fmt": "0.00%"
+  },
+  {
+   "key": "azimuth",
+   "type": "slider",
+   "label": "方位角（0°–355°，只改变视角）",
+   "min": 0,
+   "max": 355,
+   "step": 5,
+   "value": 35,
+   "fmt": "0"
+  },
+  {
+   "key": "elevation",
+   "type": "slider",
+   "label": "仰角（0°–89°，只改变视角）",
+   "min": 0,
+   "max": 89,
+   "step": 1,
+   "value": 25,
+   "fmt": "0"
+  }
+ ],
+ "surface": {
+  "expr": "tpr*x/(tpr*x+y*(1-x))",
+  "mode": "surface",
+  "fmt": "0.0000"
+ },
+ "view": {
+  "azimuthKey": "azimuth",
+  "elevationKey": "elevation"
+ },
+ "readouts": [
+  {
+   "label": "π=5%、FPR=50/950 时 Precision",
+   "expr": "tpr*pi5/(tpr*pi5+fpr_note*(1-pi5))",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "π=2.5%、FPR=50/950 时 Precision",
+   "expr": "tpr*pi25/(tpr*pi25+fpr_note*(1-pi25))",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "当前 TPR / Recall",
+   "expr": "tpr",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "笔记锚点 FPR=50/950",
+   "expr": "fpr_note",
+   "fmt": "0.00%"
+  }
+ ],
+ "teaching": {
+  "question": "为什么同一个分类器在基础率减半后 Precision 会明显下降？在固定 FPR 下，提高 TPR 会怎样改变整张 Precision 面？",
+  "sourceSection": "《06_Model_Assessment/6.3 Performance Metrics.md》§三.2 分类指标与§四「算一遍」第1–2步、条件检验一（原文第165–202、206–287行）",
+  "controlEffect": "tpr 直接出现在 surface.expr 的分子和分母，拖动它会重新计算每个 (π,FPR) 网格点的 Precision；这不是只移动某个阈值 marker。",
+  "visualEvidence": "Precision 面随基础率 π 降低而向下塌、随 FPR 增大而向下；默认 TPR=60% 时，笔记锚点 π=5%、FPR=50/950 给 37.50%，π=2.5% 给 22.62%。拖高 TPR 会整体抬高曲面，但低基础率与高 FPR 区域仍最脆弱。AUC 不在这张解析面中改变。"
+ },
+ "notes": [
+  "数字出处：笔记§四第1步原文 1000 份保单、真实欺诈 50 份（π=5%）、TP=30、FP=50；第2步原文 Recall/TPR=60.00%、FPR=50/950=5.26%、Precision=37.50%。条件检验一原文把 π 降到 2.5%，TP=15、FP=51.3，Precision=22.62%，并说明模型、阈值、Recall、FPR 不变。",
+  "按笔记公式复算：Precision=TPR·π/[TPR·π+FPR·(1−π)]；代入 TPR=0.60、FPR=50/950、π=0.05 得 0.3750，代入 π=0.025 得 0.2262，与原文两个锚点一致。",
+  "口径澄清：任务描述中的“FPR=5%”是约数；若要复现笔记的 37.50% 与 22.62%，主图/读数必须使用原文精算值 50/950=5.2632%，而不是把 y 恰好设成 0.05。x、y 的 0.5%–10% 与 0.1%–15% 是为观察曲面设置的教学探索窗；TPR 的 10%–100% 也是参数化范围，不是笔记的置信区间。",
+  "边界：这是一张固定类条件率下的点态 Precision 解析面，适合解释基础率与误报的代价；阈值改变时 TPR/FPR 会联动，需重新估计。AUC 只描述全阈值排序能力，笔记还特别说明它与基础率、当前阈值无关，因此不在此面内随 tpr 改变；azimuth/elevation 只改变投影。"
+ ],
+ "slug": "precision-surface"
+}

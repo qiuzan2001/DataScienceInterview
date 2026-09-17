@@ -1,0 +1,112 @@
+{
+ "schema": "widget/v1",
+ "kind": "surface3d",
+ "uid": "",
+ "title": "树数与相关性共同决定方差：加树会撞上 ρσ² 地板",
+ "subtitle": "x=log₁₀(B)、y=ρ、z=ρσ²+(1−ρ)σ²/B；σ²=1、ρ=0.2 的四个 B 锚点取自笔记 §四第 4 步",
+ "vars": {
+  "rhoRef": 0.2,
+  "sigma2Ref": 1,
+  "B1": 1,
+  "B10": 10,
+  "B100": 100,
+  "B1000": 1000,
+  "floorRef": 0.2
+ },
+ "x": {
+  "min": 0,
+  "max": 3,
+  "points": 41,
+  "label": "log₁₀(B)（B=10ˣ：1 → 1000 棵）",
+  "fmt": "0.0"
+ },
+ "y": {
+  "min": 0,
+  "max": 0.9,
+  "points": 41,
+  "label": "树间平均相关系数 ρ（0–0.9）",
+  "fmt": "0.0"
+ },
+ "controls": [
+  {
+   "key": "sigma2",
+   "type": "slider",
+   "label": "单棵树方差 σ²（0.5–2.0）",
+   "min": 0.5,
+   "max": 2,
+   "step": 0.05,
+   "value": 1,
+   "fmt": "0.00"
+  },
+  {
+   "key": "azimuth",
+   "type": "slider",
+   "label": "方位角（0–355°）",
+   "min": 0,
+   "max": 355,
+   "step": 5,
+   "value": 35,
+   "fmt": "0"
+  },
+  {
+   "key": "elevation",
+   "type": "slider",
+   "label": "仰角（0–89°；0°平视，90°俯视）",
+   "min": 0,
+   "max": 89,
+   "step": 1,
+   "value": 25,
+   "fmt": "0"
+  }
+ ],
+ "surface": {
+  "expr": "sigma2*y + (1-y)*sigma2/pow(10,x)",
+  "mode": "surface",
+  "fmt": "0.0000"
+ },
+ "view": {
+  "azimuthKey": "azimuth",
+  "elevationKey": "elevation",
+  "zoom": 1
+ },
+ "readouts": [
+  {
+   "label": "锚点 B=1（σ²=1、ρ=0.2）",
+   "expr": "sigma2Ref*(rhoRef+(1-rhoRef)/B1)",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "锚点 B=10（σ²=1、ρ=0.2）",
+   "expr": "sigma2Ref*(rhoRef+(1-rhoRef)/B10)",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "锚点 B=100（σ²=1、ρ=0.2）",
+   "expr": "sigma2Ref*(rhoRef+(1-rhoRef)/B100)",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "锚点 B=1000（σ²=1、ρ=0.2）",
+   "expr": "sigma2Ref*(rhoRef+(1-rhoRef)/B1000)",
+   "fmt": "0.0000"
+  }
+ ],
+ "teaching": {
+  "question": "在随机森林的平均方差里，为什么 B 从 100 加到 1000 的收益会撞上由 ρ 决定的地板？",
+  "sourceSection": "07_Random_Forest/7.2. Building the Forest.md §三.3「ρ 是地板，加树压不下去」（lines 208–221）与 §四「第 4 步：ρ 地板有多硬」（lines 331–342）：方差分解、σ²=1 的表格锚点与 ρ 的取舍。",
+  "controlEffect": {
+   "sigma2": "sigma2 直接进入 surface.expr 的 z=σ²[y+(1−y)/10ˣ]；拖动会整体缩放 z 面，不是只移动一个 marker。",
+   "azimuth": "只改变三维正交投影视角，不改变曲面数值。",
+   "elevation": "只改变三维正交投影视角，不改变曲面数值。"
+  },
+  "visualEvidence": "41×41 的 surface 以 x=log₁₀(B)、y=ρ 展示平均后方差；在 ρ=0.2 截面，B=1/10/100/1000 的 z 锚点依次为 1.0000/0.2800/0.2080/0.2008，B→∞ 时逼近 ρσ²=0.2。"
+ },
+ "notes": [
+  "原文锚点：笔记 §四「第 4 步：ρ 地板有多硬」的表格取 σ²=1、ρ=0.20，B=1/10/100/1000 对应 1.0000 / 0.2800 / 0.2080 / 0.20080；同一表还给出 B→∞ 地板 0.200。B=1、10、100、1000 的四个读数在此固定为这些原文锚点。",
+  "公式复算：横轴用 x=log₁₀(B)，所以 B=10ˣ；纵轴 y 就是 ρ，surface.expr 计算 z=σ²[y+(1−y)/10ˣ]。σ² 控件明确进入 z 面；默认 σ²=1 时，ρ=0.2 的曲线经过上述四个锚点，地板是 ρσ²=0.2。锚点之间及 σ²≠1 的数值都是按笔记 §3.3 / §4 第 4 步公式连续复算，不是原文逐格数据。",
+  "本节构造：σ² 滑块范围 0.5–2.0、网格 41×41 与三维视角控件只是为了观察缩放和形状，不是笔记中的实验设置；B 只作为 log₁₀(B) 横轴，不另设一个只移动 marker 的 B 控件。",
+  "限制：方差分解假设树间平均 ρ 和单棵树方差不随 B 改变，描述的是 bagging / random forest 的平均效果；不能套到 boosting。ρ=0 才会退化成约 σ²/B，实际 ρ 不能由这张理论面直接观测，仍需用 max_features 与 OOB 误差诊断。"
+ ],
+ "note": "07_Random_Forest/7.2. Building the Forest.md",
+ "slug": "rho-floor-surface"
+}

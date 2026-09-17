@@ -1,0 +1,107 @@
+{
+ "schema": "widget/v1",
+ "kind": "bars",
+ "uid": "",
+ "title": "VIF 是变量集的属性：删错对象，其余变量的 VIF 一个都降不下来",
+ "subtitle": "10 行 4 变量（Age / Experience / Income / Education，笔记 §四第 2 步）；杆长 = 该变量对其余变量做辅助回归的 VIF = 1/(1−R²)，删除某个变量后其余三个全部重算",
+ "vars": {
+  "vage0": 13.56,
+  "vage1": 0.0,
+  "vage2": 4.57,
+  "vage3": 11.26,
+  "vage4": 12.95,
+  "vexp0": 35.72,
+  "vexp1": 12.05,
+  "vexp2": 0.0,
+  "vexp3": 10.95,
+  "vexp4": 35.33,
+  "vinc0": 14.36,
+  "vinc1": 11.92,
+  "vinc2": 4.4,
+  "vinc3": 0.0,
+  "vinc4": 14.05,
+  "vedu0": 1.47,
+  "vedu1": 1.41,
+  "vedu2": 1.46,
+  "vedu3": 1.44,
+  "vedu4": 0.0
+ },
+ "controls": [
+  {
+   "key": "sel",
+   "type": "select",
+   "label": "删掉哪个变量（切换）",
+   "options": [
+    [
+     "0",
+     "不删：4 个变量全在"
+    ],
+    [
+     "1",
+     "删 Age"
+    ],
+    [
+     "2",
+     "删 Experience（VIF 最大）"
+    ],
+    [
+     "3",
+     "删 Income"
+    ],
+    [
+     "4",
+     "删 Education（VIF 最小）"
+    ]
+   ],
+   "value": "0"
+  }
+ ],
+ "bars": [
+  {
+   "label": "Age",
+   "value": "ifelse(sel==0, vage0, ifelse(sel==1, vage1, ifelse(sel==2, vage2, ifelse(sel==3, vage3, vage4))))"
+  },
+  {
+   "label": "Experience",
+   "value": "ifelse(sel==0, vexp0, ifelse(sel==1, vexp1, ifelse(sel==2, vexp2, ifelse(sel==3, vexp3, vexp4))))"
+  },
+  {
+   "label": "Income",
+   "value": "ifelse(sel==0, vinc0, ifelse(sel==1, vinc1, ifelse(sel==2, vinc2, ifelse(sel==3, vinc3, vinc4))))"
+  },
+  {
+   "label": "Education",
+   "value": "ifelse(sel==0, vedu0, ifelse(sel==1, vedu1, ifelse(sel==2, vedu2, ifelse(sel==3, vedu3, vedu4))))"
+  }
+ ],
+ "readouts": [
+  {
+   "label": "当前最大 VIF",
+   "expr": "max(ifelse(sel==0, vage0, ifelse(sel==1, vage1, ifelse(sel==2, vage2, ifelse(sel==3, vage3, vage4)))), ifelse(sel==0, vexp0, ifelse(sel==1, vexp1, ifelse(sel==2, vexp2, ifelse(sel==3, vexp3, vexp4)))), ifelse(sel==0, vinc0, ifelse(sel==1, vinc1, ifelse(sel==2, vinc2, ifelse(sel==3, vinc3, vinc4)))), ifelse(sel==0, vedu0, ifelse(sel==1, vedu1, ifelse(sel==2, vedu2, ifelse(sel==3, vedu3, vedu4)))))",
+   "fmt": "0.00"
+  },
+  {
+   "label": "VIF>10 的变量个数",
+   "expr": "ifelse(ifelse(sel==0, vage0, ifelse(sel==1, vage1, ifelse(sel==2, vage2, ifelse(sel==3, vage3, vage4))))>10,1,0) + ifelse(ifelse(sel==0, vexp0, ifelse(sel==1, vexp1, ifelse(sel==2, vexp2, ifelse(sel==3, vexp3, vexp4))))>10,1,0) + ifelse(ifelse(sel==0, vinc0, ifelse(sel==1, vinc1, ifelse(sel==2, vinc2, ifelse(sel==3, vinc3, vinc4))))>10,1,0) + ifelse(ifelse(sel==0, vedu0, ifelse(sel==1, vedu1, ifelse(sel==2, vedu2, ifelse(sel==3, vedu3, vedu4))))>10,1,0)",
+   "fmt": "0"
+  },
+  {
+   "label": "被删变量删除前的 VIF（不删=0）",
+   "expr": "ifelse(sel==0, 0, ifelse(sel==1, vage0, ifelse(sel==2, vexp0, ifelse(sel==3, vinc0, vedu0))))",
+   "fmt": "0.00"
+  },
+  {
+   "label": "最大 VIF 相对原始 35.72 的降幅（%）",
+   "expr": "100*(1 - max(ifelse(sel==0, vage0, ifelse(sel==1, vage1, ifelse(sel==2, vage2, ifelse(sel==3, vage3, vage4)))), ifelse(sel==0, vexp0, ifelse(sel==1, vexp1, ifelse(sel==2, vexp2, ifelse(sel==3, vexp3, vexp4)))), ifelse(sel==0, vinc0, ifelse(sel==1, vinc1, ifelse(sel==2, vinc2, ifelse(sel==3, vinc3, vinc4)))), ifelse(sel==0, vedu0, ifelse(sel==1, vedu1, ifelse(sel==2, vedu2, ifelse(sel==3, vedu3, vedu4)))))/35.72)",
+   "fmt": "0.0"
+  }
+ ],
+ "notes": [
+  "数字出处：《5.3 多变量筛选》§四第 2 步的 VIF 表与「条件检验 A」。锚点＝笔记原文数字：全变量时 Age 13.56（R²=0.9263）、Experience 35.72（0.9720）、Income 14.36（0.9303）、Education 1.47（0.3220）；删 Experience 后 Age 4.57、Income 4.40、Education 1.46（全部低于 5）；删 Education 后 Age 12.95、Experience 35.33、Income 14.05（几乎没动）。「删 Age」「删 Income」两个状态笔记没算，由本节用 python3 + numpy 按同一口径（对剩余变量做最小二乘辅助回归、VIF=1/(1−R²)）复算：删 Age 后 Experience 12.05、Income 11.92、Education 1.41；删 Income 后 Age 11.26、Experience 10.95、Education 1.44——四个状态里有两个与笔记数字逐一对上。",
+  "口径：VIF 是变量**集合**的属性，不是变量的属性——所以切换「删谁」时，四个杆全部重算一次；被删掉的变量杆长为 0。阈值线取笔记的经验线 VIF>10（也可以看 5）。",
+  "边界：这里只演示线性冗余（辅助回归的 R²），抓不到非单调依赖 —— 笔记的反例 `YearsSinceGrad = Age − Education − 6` 与 Age、Education 两两相关看起来温和（r(Age,YSG)=0.981、r(Edu,YSG)=0.384），三个变量的辅助 R² 却全是 1.000000、VIF 全是 ∞，光看相关矩阵看不出来；另外 VIF 只说明「怎么删」，不说明「能删掉信息」——共线组里删哪个都可能换人（笔记「承重假设三」），要稳就该用 stability selection。",
+  "小样本的额外坑：笔记 §五 给出纯噪声下辅助回归 R² 的期望约 p/(n−1)（n=10、3 个辅助变量 → 0.333，期望 VIF 1.50；n=20 → 1.19），所以宽表 + 小样本下「筛出来的变量看起来很强」有一部分是流水线产生的；本页 10 行 4 变量正是这种小样本。"
+ ],
+ "note": "05_Dimension_Reduction/5.3 Multivariate Selection.md",
+ "slug": "selection-vif"
+}

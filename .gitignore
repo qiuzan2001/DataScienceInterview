@@ -1,2 +1,5 @@
 .DS_Store
 _meta/sources/
+
+# Knowledge Widgets：第三方库（6.5 MB，可由 _meta/tools/vendor/README.md 里的 URL 重下）
+_meta/tools/vendor/plotly*.js

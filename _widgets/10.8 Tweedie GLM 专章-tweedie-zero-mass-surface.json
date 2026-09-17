@@ -1,0 +1,107 @@
+{
+ "schema": "widget/v1",
+ "kind": "surface3d",
+ "uid": "",
+ "title": "Tweedie 的零点质量由均值、幂与离散尺度共同决定",
+ "subtitle": "x=log₁₀(μ)、y=p、z=log₁₀P(S=0)；φ 控制进入复合 Poisson-Gamma 的零点质量曲面",
+ "vars": {
+  "muRef": 100,
+  "pRef": 1.5,
+  "LN10": 2.302585092994046
+ },
+ "x": {
+  "min": -2,
+  "max": 2,
+  "points": 41,
+  "label": "log₁₀(μ)（μ=10ˣ：0.01 → 100）",
+  "fmt": "0.0"
+ },
+ "y": {
+  "min": 1.01,
+  "max": 1.99,
+  "points": 41,
+  "label": "幂参数 p（1.01–1.99）",
+  "fmt": "0.00"
+ },
+ "controls": [
+  {
+   "key": "disp",
+   "type": "slider",
+   "label": "离散参数 φ（0.5–5）",
+   "min": 0.5,
+   "max": 5,
+   "step": 0.1,
+   "value": 2,
+   "fmt": "0.0"
+  },
+  {
+   "key": "azimuth",
+   "type": "slider",
+   "label": "方位角（0–355°）",
+   "min": 0,
+   "max": 355,
+   "step": 5,
+   "value": 35,
+   "fmt": "0"
+  },
+  {
+   "key": "elevation",
+   "type": "slider",
+   "label": "仰角（0–89°；0°平视，90°俯视）",
+   "min": 0,
+   "max": 89,
+   "step": 1,
+   "value": 25,
+   "fmt": "0"
+  }
+ ],
+ "surface": {
+  "expr": "-pow(pow(10,x),2-y)/(disp*(2-y)*LN10)",
+  "mode": "surface",
+  "fmt": "0.0000"
+ },
+ "view": {
+  "azimuthKey": "azimuth",
+  "elevationKey": "elevation",
+  "zoom": 1
+ },
+ "readouts": [
+  {
+   "label": "隐含 λ（μ=100、p=1.5）",
+   "expr": "pow(muRef,2-pRef)/(disp*(2-pRef))",
+   "fmt": "0.000"
+  },
+  {
+   "label": "P(S=0)（μ=100、p=1.5）",
+   "expr": "exp(-pow(muRef,2-pRef)/(disp*(2-pRef)))",
+   "fmt": "0.00000000"
+  },
+  {
+   "label": "Var/E（μ=100、p=1.5）",
+   "expr": "disp*pow(muRef,pRef-1)",
+   "fmt": "0.00"
+  }
+ ],
+ "teaching": {
+  "question": "Tweedie 的零点质量为什么不是固定比例，而会随 μ、p 与 φ 联合变化？",
+  "sourceSection": "10_保险风控实务/10.8 Tweedie GLM 专章.md §三.2–§三.3（lines 135–185）与 §四「算一遍」（lines 350–392）：复合 Poisson-Gamma 重参数化、Var/E、λ 与 P(S=0) 的公式和 μ=100 算例。",
+  "controlEffect": {
+   "disp": "离散参数 φ 直接进入 surface.expr 的分母 φ(2−p)；拖动会改变整张 z=log₁₀P(S=0) 曲面，不是只改读数。",
+   "azimuth": "只改变三维正交投影视角，不改变曲面数值。",
+   "elevation": "只改变三维正交投影视角，不改变曲面数值。"
+  },
+  "visualEvidence": "41×41 的 surface 以 x=log₁₀(μ)、y=p 展示 log₁₀ 零点质量；默认 φ=2 的 μ=100、p=1.5 锚点读出 λ=10、P(S=0)=0.00004540、Var/E=20。",
+  "controls": [
+   "disp"
+  ]
+ },
+ "notes": [
+  "原文锚点：笔记 §四设定 μ=100、φ=2、p=1.5，并算得 λ=10、Var=2000、Var/E=20、P(S=0)=e⁻¹⁰=4.54×10⁻⁵（0.0045%）。读数默认正好落在这组参数；P0 的 0.00004540 是对原文 e⁻¹⁰ 的公式复算后按小数显示。",
+  "公式复算：x=log₁₀(μ)，所以 μ=10ˣ；y=p；surface.expr 使用 log₁₀P(S=0)=−λ/ln(10)，其中 λ=μ^(2−p)/[φ(2−p)]。φ 控件直接出现在 z 面；网格内除上述锚点外的数值均按笔记 §3.2–§3.3 公式连续复算，不是原文逐格观测。",
+  "口径：三个读数固定在 μ=100、p=1.5，只让 φ 随控件变化；Var/E 用 φμ^(p−1)。横轴是 μ 的 log₁₀ 轴，纵轴是有限内部范围 p∈[1.01,1.99]，因此不能把图上的端点当作 p=1 或 p=2 的精确值。",
+  "限制：p→1 的 Poisson 与 p→2 的 Gamma 是极限情形；只有 1<p<2 才使用这里的复合 Poisson-Gamma 重参数化。该构造还假设 N⊥Xi；免赔额、赔付上限、次数与金额相关、聚集出险或不合适的 Gamma 严重度都会使这张理论面误导。",
+  "本节构造：φ 的 0.5–5.0 滑块范围、41×41 网格和三维视角控件用于观察形状，不是笔记中的数据集估计；z 轴画的是 log₁₀ 零点质量，P(S=0) 的直接概率只在读数中显示。"
+ ],
+ "note": "10_保险风控实务/10.8 Tweedie GLM 专章.md",
+ "slug": "tweedie-zero-mass-surface"
+}

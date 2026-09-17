@@ -1,0 +1,113 @@
+{
+ "schema": "widget/v1",
+ "kind": "plot",
+ "uid": "",
+ "title": "共线性撑开的是区间：同一个 β̂=1200，95% CI 从 588 宽到 9800",
+ "subtitle": "Age：β̂=1200、SE₀=150；Experience：β̂=2800、SE₀=200，相关系数 0.95——数字出自笔记 3.「四、算一遍」与 3.3 级联效应表",
+ "vars": {},
+ "x": {
+  "min": 1,
+  "max": 18,
+  "points": 171,
+  "label": "SE 放大倍数 √VIF（横轴：1 → VIF=1，18 → VIF=324）",
+  "fmt": "0.0"
+ },
+ "controls": [
+  {
+   "key": "which",
+   "type": "select",
+   "label": "变量（两个系数各看一遍）",
+   "options": [
+    [
+     "1",
+     "Age：β̂=1200、SE₀=150、t₀=8.00"
+    ],
+    [
+     "2",
+     "Experience：β̂=2800、SE₀=200、t₀=14.00"
+    ]
+   ],
+   "value": "1"
+  },
+  {
+   "key": "vif",
+   "type": "slider",
+   "label": "VIF（1–300；反推出来的 Age=277.8、Experience=121）",
+   "min": 1,
+   "max": 300,
+   "step": 0.1,
+   "value": 121,
+   "fmt": "0.0"
+  }
+ ],
+ "series": [
+  {
+   "label": "95% CI 上界",
+   "expr": "ifelse(which > 1.5, 2800, 1200) + 1.96*ifelse(which > 1.5, 200, 150)*x",
+   "color": "#7fb8e6"
+  },
+  {
+   "label": "95% CI 下界",
+   "expr": "ifelse(which > 1.5, 2800, 1200) - 1.96*ifelse(which > 1.5, 200, 150)*x",
+   "color": "#e08a8a"
+  },
+  {
+   "label": "真实系数 β（区间中心，一直没动）",
+   "expr": "ifelse(which > 1.5, 2800, 1200)",
+   "color": "#9fd3a0",
+   "dash": true
+  },
+  {
+   "label": "0：下界穿过它，区间就盖住了 0",
+   "expr": "0",
+   "color": "#8b93a7",
+   "dash": true
+  }
+ ],
+ "markers": [
+  {
+   "x": "ifelse(which > 1.5, 14, 8)/1.96",
+   "label": "下界穿过 0",
+   "color": "#e08a8a"
+  },
+  {
+   "x": 3.162278,
+   "label": "VIF=10",
+   "color": "#c58ee0"
+  },
+  {
+   "x": "sqrt(vif)",
+   "label": "当前 VIF",
+   "color": "#e0a15a"
+  }
+ ],
+ "readouts": [
+  {
+   "label": "SE（=SE₀·√VIF）",
+   "expr": "ifelse(which > 1.5, 200, 150)*sqrt(vif)",
+   "fmt": "0,0.0"
+  },
+  {
+   "label": "t（=β̂/SE）",
+   "expr": "ifelse(which > 1.5, 2800, 1200)/(ifelse(which > 1.5, 200, 150)*sqrt(vif))",
+   "fmt": "0.00"
+  },
+  {
+   "label": "95% CI 宽度",
+   "expr": "3.92*ifelse(which > 1.5, 200, 150)*sqrt(vif)",
+   "fmt": "0,0"
+  },
+  {
+   "label": "95% CI 下界",
+   "expr": "ifelse(which > 1.5, 2800, 1200) - 1.96*ifelse(which > 1.5, 200, 150)*sqrt(vif)",
+   "fmt": "0,0"
+  }
+ ],
+ "notes": [
+  "数字出处：锚点取自笔记 3.〈四、算一遍〉——Age 的 VIF=(2500/150)²=277.8、Experience 的 VIF=(2200/200)²=121；条件检验表里 VIF=5 → SE 335.4 / t 3.58 / 宽度 1315，VIF=10 → 474.3 / 2.53 / 1859，VIF=121 → 1650.0 / 0.73 / 6468，VIF=277.8 → 2500.0 / 0.48 / 9800，以及「VIF=277.8 时区间宽度是 16.7 倍」。默认状态（Age、VIF=121）四个读数与笔记表逐格对上：SE 1650.0、t 0.73、宽度 6468、下界 −2034。其余位置按 note 同一口径复算 SE=SE₀√VIF、CI=β̂±1.96·SE（锚点=笔记数字，其余=复算）。",
+  "口径：这是同一个无偏 β̂ 的 95% 区间随共线性张开的过程——中心线（绿）始终等于笔记里的 β̂（Age 1200 / Experience 2800），变动的只有可信度。横轴用 √VIF（=SE 放大倍数）而不是 VIF，是因为 CI 宽度与 √VIF 成正比：两条边界才是直线。翻转点（红竖线）解 β̂−1.96·SE=0，即 VIF=(t₀/1.96)²：Age（t₀=8）→ VIF 16.66，正是笔记「t₀=8 要掉到 1.96 需要 VIF≈16.7」那句话；Experience（t₀=14）→ VIF 51.02，晚得多。",
+  "边界：① 门槛 5 / 10 与「显不显著」没有固定映射——同一条 VIF 轴上，Age 在 16.7 就盖住 0，Experience 要到 51，差别全在 t₀。② 这张图只画区间，不画抽样分布：β̂ 的分布中心没动（无偏），宽的是尾巴；高共线时单个样本的 β̂ 可以落到区间外的任何地方（笔记 3.3 里那张表就是同一批数据给出 β̂=−500 的样子）。③ 区间宽 ≠ 预测差：训练分布内 Xβ̂ 基本不动，被撑宽的是单个系数的推断区间。④ VIF 由 SE 反推（(SE/SE₀)²）在本页是笔记的算法，但在真实数据里 SE₀ 本身也要靠两条不同的模型去估。"
+ ],
+ "note": "03_Multicollinearity/3. Multicollinearity.md",
+ "slug": "multicollinearity-ci-fan"
+}

@@ -1,0 +1,115 @@
+{
+ "schema": "widget/v1",
+ "kind": "plot",
+ "uid": "",
+ "title": "PDO 是分辨率：同一段风险被换成多少分",
+ "subtitle": "评分卡 score = A + B·ln(good:bad)，B = PDO/ln2、基准点 600 分 ↔ 50:1（笔记 §三 3.2 与 §四 第 2–3 步）",
+ "vars": {
+  "baseScore": 600,
+  "lnBase": 3.912023005428146,
+  "lnJia": -0.736,
+  "lnYi": 2.1975,
+  "pdoLo": 10,
+  "pdoHi": 40
+ },
+ "x": {
+  "min": -1.5,
+  "max": 4.6,
+  "points": 123,
+  "label": "ln(good:bad)（对数几率）",
+  "fmt": "0.00"
+ },
+ "controls": [
+  {
+   "key": "PDO",
+   "type": "slider",
+   "label": "PDO 翻倍分（10–40 分；20 = 笔记算例）",
+   "min": 10,
+   "max": 40,
+   "step": 1,
+   "value": 20,
+   "fmt": "0"
+  },
+  {
+   "key": "score",
+   "type": "slider",
+   "label": "客户分数（400–800；466 附近 = 客户甲）",
+   "min": 400,
+   "max": 800,
+   "step": 1,
+   "value": 465.89,
+   "fmt": "0"
+  }
+ ],
+ "series": [
+  {
+   "label": "当前 PDO 的刻度：score = A + B·ln(good:bad)",
+   "expr": "baseScore - (PDO/log(2))*lnBase + (PDO/log(2))*x",
+   "color": "#4c9f70"
+  },
+  {
+   "label": "PDO = 10（参考刻度，分辨率细一倍）",
+   "expr": "baseScore - (pdoLo/log(2))*lnBase + (pdoLo/log(2))*x",
+   "color": "#e08a4a",
+   "dash": true
+  },
+  {
+   "label": "PDO = 40（参考刻度）",
+   "expr": "baseScore - (pdoHi/log(2))*lnBase + (pdoHi/log(2))*x",
+   "color": "#b07ad6",
+   "dash": true
+  }
+ ],
+ "markers": [
+  {
+   "x": "lnBase",
+   "label": "基准点 600 分 ↔ 50:1",
+   "color": "#555555"
+  },
+  {
+   "x": "lnJia",
+   "label": "客户甲",
+   "color": "#c0504d"
+  },
+  {
+   "x": "lnYi",
+   "label": "客户乙",
+   "color": "#2f7fb8"
+  },
+  {
+   "x": "(score - (baseScore - (PDO/log(2))*lnBase))/(PDO/log(2))",
+   "label": "当前分数",
+   "color": "#4c9f70"
+  }
+ ],
+ "readouts": [
+  {
+   "label": "B = PDO/ln2（分）",
+   "expr": "PDO/log(2)",
+   "fmt": "0.00"
+  },
+  {
+   "label": "反解 good:bad（当前分数）",
+   "expr": "exp((score - (baseScore - (PDO/log(2))*lnBase))/(PDO/log(2)))",
+   "fmt": "0.000"
+  },
+  {
+   "label": "对应坏率（当前分数）",
+   "expr": "1/(1 + exp((score - (baseScore - (PDO/log(2))*lnBase))/(PDO/log(2))))",
+   "fmt": "0.0%"
+  },
+  {
+   "label": "客户甲→乙的分差（分）",
+   "expr": "(PDO/log(2))*(lnYi - lnJia)",
+   "fmt": "0.00"
+  }
+ ],
+ "notes": [
+  "数字出处：《10.4 评分卡与 WOE 落地》§三 3.2「完整数值示例」与 §四「算一遍」第 2–3 步、条件检验一。锚点＝笔记原文数字：base_score=600、base_odds=50:1（good:bad）、PDO=20 ⇒ B=28.8539、A=487.1229；客户甲 465.89（反解 good:bad = 0.4790、坏率 67.6%）、客户乙 550.53（反解 9.0029）、两人相差 84.65 分；PDO 改成 10 ⇒ B=14.4270、A=543.5614，同样两名客户分差压到 42.32 分。readouts 的四行在默认取值（PDO=20、分数 465.89）给出 28.85 / 0.479 / 67.6% / 84.65，与笔记逐一对上；PDO 与分数在区间内连续变化的部分＝按笔记公式 score=A+B·ln(good:bad)（A、B 随 PDO 重算）复算（python3 + numpy）。补一句口径差：笔记写「两名客户相差 550.53−465.89 = 84.65 分」，按笔记未取整的 A=487.1229、B=28.8539 精算是 84.64 分（84.6429，取整差 0.01）；笔记自己紧接着写 84.65/20 = 4.23 个 PDO，与 84.64 一致，所以本条读数用精算值 84.64。",
+  "口径：ln(good:bad) 是客户的对数几率，横轴取 ln 后 score 就是一条直线（斜率 B）；两条虚线是 PDO=10 与 PDO=40 的刻度，用来看「同一段风险被换成多少分」的差别，同时把纵轴范围钉住，避免拖动 PDO 时坐标轴自己缩放。客户甲、客户乙两个标记固定在 ln(odds_good) = −0.7360 与 2.1975（即坏:好 1:2.09 与 good:bad 9.00），它们的分数随 PDO 变。",
+  "边界：分数是 log-odds 的仿射变换，不改变排序（AUC / Gini 不动），但取整与截断会真的动排序 —— 笔记条件检验二：用 466 反解是 0.4809，与未取整的 0.4790 差 +0.4%，所以阈值必须在未取整分数上定。「分差（分）」这一行是同一对客户在任意 PDO 下的分数差，不是概率差；另外本图按事件 odds 口径（bad:good）换算分数，若把 good:bad 的 base odds 直接塞进 bad-odds 公式，A 会从 487.12 变成 712.88（笔记 §五 假设一），整卡错位。",
+  "PDO 小不是「更准」，只是同样的风险差异被压缩成更小的读数（84.65 → 42.32 分）：所有阈值、分档、名单都要跟着重定。"
+ ],
+ "note": "10_保险风控实务/10.4 评分卡与 WOE 落地.md",
+ "slug": "scorecard-pdo"
+}

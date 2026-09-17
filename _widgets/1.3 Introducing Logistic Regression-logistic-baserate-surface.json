@@ -1,0 +1,110 @@
+{
+ "schema": "widget/v1",
+ "kind": "surface3d",
+ "uid": "",
+ "note": "01_LR_GLMs/1.3 Introducing Logistic Regression.md",
+ "title": "同一个 β₁ 的概率效应不是一条固定曲线：π₀ 与 β₁ 共同决定 Δp",
+ "subtitle": "x=基础率 π₀（0.01–0.90），y=β₁（0–3），surface 可切换 z=Δp 或 p₁；笔记拟合锚点 β₁=1.3291",
+ "vars": {
+  "b1_note": 1.3291,
+  "p0_anchor": 0.15,
+  "p0_low": 0.02,
+  "p0_high": 0.8
+ },
+ "x": {
+  "min": 0.01,
+  "max": 0.9,
+  "points": 45,
+  "label": "基础率 π₀（0.01–0.90）",
+  "fmt": "0.0%"
+ },
+ "y": {
+  "min": 0,
+  "max": 3,
+  "points": 31,
+  "label": "log-odds 斜率 β₁（0–3）",
+  "fmt": "0.0"
+ },
+ "controls": [
+  {
+   "key": "metric",
+   "type": "select",
+   "label": "主图 z 的口径（Δp 或 p₁）",
+   "options": [
+    [
+     "delta",
+     "Δp=p₁−π₀（概率百分点）"
+    ],
+    [
+     "p1",
+     "p₁（有折扣概率）"
+    ]
+   ],
+   "value": "delta"
+  },
+  {
+   "key": "azimuth",
+   "type": "slider",
+   "label": "方位角（0°–355°，只改变视角）",
+   "min": 0,
+   "max": 355,
+   "step": 5,
+   "value": 35,
+   "fmt": "0"
+  },
+  {
+   "key": "elevation",
+   "type": "slider",
+   "label": "仰角（0°–89°，只改变视角）",
+   "min": 0,
+   "max": 89,
+   "step": 1,
+   "value": 25,
+   "fmt": "0"
+  }
+ ],
+ "surface": {
+  "expr": "ifelse(metric==\"delta\",1/(1+exp(-(log(x/(1-x))+y)))-x,1/(1+exp(-(log(x/(1-x))+y))))",
+  "mode": "surface",
+  "fmt": "0.0000"
+ },
+ "view": {
+  "azimuthKey": "azimuth",
+  "elevationKey": "elevation"
+ },
+ "readouts": [
+  {
+   "label": "笔记锚点 π₀=15%、β₁=1.3291 的当前口径",
+   "expr": "ifelse(metric==\"delta\",1/(1+exp(-(log(p0_anchor/(1-p0_anchor))+b1_note)))-p0_anchor,1/(1+exp(-(log(p0_anchor/(1-p0_anchor))+b1_note))))",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "π₀=2%、β₁=1.3291 的 Δp",
+   "expr": "1/(1+exp(-(log(p0_low/(1-p0_low))+b1_note)))-p0_low",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "π₀=80%、β₁=1.3291 的 p₁",
+   "expr": "1/(1+exp(-(log(p0_high/(1-p0_high))+b1_note)))",
+   "fmt": "0.00%"
+  },
+  {
+   "label": "笔记拟合斜率 β₁",
+   "expr": "b1_note",
+   "fmt": "0.0000"
+  }
+ ],
+ "teaching": {
+  "question": "为什么同一个 logistic 系数 β₁ 在不同基础率下对应的概率变化会差很多？切换 Δp 与 p₁ 时，整张概率面如何变化？",
+  "sourceSection": "《01_LR_GLMs/1.3 Introducing Logistic Regression.md》§四「算一遍」第2–4步与「条件检验：同一个 β₁，换一个基础率会怎样」（原文第214–273行）",
+  "controlEffect": "metric 在 surface.expr 内切换 z=1/(1+exp(-(logit(π₀)+β₁)))-π₀ 与 z=1/(1+exp(-(logit(π₀)+β₁)))，因此改变的是整张主曲面；π₀ 与 β₁ 都是曲面的两个轴，不是沿固定曲线移动 marker。",
+  "visualEvidence": "Δp 面在 β₁≈1.3–1.4 的剖面上从低基础率的小幅提升爬到约 π₀=34% 的峰值后回落；p₁ 面则始终落在 0–1。精确 β₁=1.3291 的读数对齐笔记：π₀=2% 时 Δp=5.16pp，π₀=15% 时 p₁=40.00%、Δp=25.00pp，π₀=80% 时 p₁=93.79%。"
+ },
+ "notes": [
+  "数字出处：笔记§四第2步原文 β₀=−1.7346、β₁=1.3291，第3步 exp(β₁)=3.778；条件检验表原文锚点为 π₀=2%→π₁=7.16%（Δp=5.16pp）、5%→16.59%、15%→40.00%（+25.00pp）、30%→61.82%、50%→79.07%、80%→93.79%。",
+  "按笔记公式复算：logit(π₀)=log(π₀/(1−π₀))，π₁=sigmoid(logit(π₀)+β₁)，Δp=π₁−π₀；β₁=1.3291、π₀=0.15 时复算 π₁≈0.4000、Δp≈0.2500，与原文对上；其余曲面网格点是按同一公式计算，不把网格插值冒充原文数字。",
+  "定义域说明：π₀∈[0.01,0.90]、β₁∈[0,3] 是为观察形状设置的有限探索窗，不是笔记声称的系数置信区间；y 网格步长为 0.1，精确 β₁=1.3291 的原文锚点由读数直接代入，不假装是网格顶点；β₁ 的其它取值是公式的教学演算。",
+  "边界：这是单个二值预测变量、X 从 0 到 1 的饱和模型；β₁ 作用在 log-odds 上，不能把它直接读成概率百分点。基础率或协变量结构改变时需重新计算；azimuth/elevation 只改变投影。"
+ ],
+ "slug": "logistic-baserate-surface"
+}

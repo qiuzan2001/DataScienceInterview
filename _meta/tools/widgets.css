@@ -1,0 +1,298 @@
+/* FRM 知识地图 · 可交互知识组件样式（配合 widgets.js，类名统一 .wg-* 前缀）
+
+   默认白底；仅 .wg-wrap[data-theme="system"] 显式选择系统黑白。
+   调色板局部定义，不继承宿主的暗色变量。
+   只做布局与配色，不用 media query 判窄屏 —— 组件会被放进很窄的面板，
+   断点按**容器宽度**由 widgets.js 加 .wg-narrow 类来切（媒体查询看的是视口，会判错）。 */
+/* 页面级底色：单独打开 HTML 时也是白底；只有 data-wg-theme="system" 才跟随系统黑白 */
+html{background:#fff;}
+body{margin:0; background:#fff; color:#202938;}
+.wg-wrap{
+  color-scheme:light;
+  --bg:#fff; --text:#202938; --text-dim:#475569; --text-faint:#586579;
+  --panel-bg:#f8fafc; --card-bg:#fff; --card-border:#cbd5e1;
+  --wg-input-bg:#fff;
+  --wg-accent:#1769aa; --wg-warn:#985700; --wg-err:#b42318;
+  --wg-c1:#1769aa; --wg-c2:#b65e00; --wg-c3:#237a3c;
+  --wg-c4:#8345ad; --wg-c5:#b93838; --wg-c6:#087f83;
+  box-sizing:border-box;
+  max-width:100%;
+  padding:14px 14px 18px;
+  color:var(--text,#e6e8ee);
+  background:var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:13px; line-height:1.55;
+  overflow-wrap:anywhere;          /* 窄面板里长串数字/路径不撑破布局 */
+}
+.wg-wrap *{box-sizing:border-box;}
+
+/* ---- 头部 ---- */
+.wg-head{display:flex; flex-direction:column; gap:3px; margin:0 0 12px;
+         border-bottom:1px solid var(--card-border,#262b38); padding-bottom:10px;}
+.wg-title{font-size:16px; font-weight:650; margin:0; line-height:1.35; color:var(--text,#e6e8ee);}
+.wg-sub{font-size:12.5px; color:var(--text-dim,#8b93a7); margin:0; line-height:1.5;}
+.wg-src{font-size:11.5px; color:var(--wg-accent,#7fb8e6); text-decoration:none;
+        border-bottom:1px dotted #3d5a75; align-self:flex-start; margin-top:2px;}
+.wg-src:hover{color:#a8d3f5;}
+.wg-src-plain{border-bottom:none; color:var(--text-faint,#5a6272);}
+.wg-warn{font-size:11px; color:var(--wg-warn,#e0a15a); margin:0 0 8px;}
+
+/* ---- 主体：宽 → 左控件右图；窄 → 上下堆叠 ---- */
+.wg-body{display:grid; grid-template-columns:minmax(180px,250px) minmax(0,1fr); gap:14px; align-items:start;}
+.wg-body.wg-nocontrols{grid-template-columns:minmax(0,1fr);}
+.wg-wrap.wg-narrow .wg-body{grid-template-columns:minmax(0,1fr);}
+.wg-controls{background:var(--panel-bg,#12151d); border:1px solid var(--card-border,#262b38);
+             border-radius:9px; padding:10px 11px; min-width:0;}
+.wg-controls[hidden]{display:none;}
+.wg-ctl-title{font-size:10.5px; letter-spacing:.5px; text-transform:uppercase;
+              color:var(--text-faint,#5a6272); margin-bottom:8px;}
+.wg-ctl-list{display:grid; gap:9px; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+.wg-wrap.wg-narrow .wg-ctl-list{grid-template-columns:minmax(0,1fr);}
+.wg-ctl{display:flex; flex-direction:column; gap:4px; min-width:0;}
+.wg-lab{display:flex; justify-content:space-between; align-items:baseline; gap:8px;
+        font-size:11.5px; color:var(--text-dim,#8b93a7);}
+.wg-lab-text{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.wg-lab-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px;
+            color:var(--wg-accent,#7fb8e6); white-space:nowrap;}
+/* 控件全用原生 input/select：键盘可达、屏幕阅读器可读，不自己造轮子 */
+.wg-input{width:100%; max-width:100%; font-size:12px; color:var(--text,#e6e8ee);
+          background:var(--wg-input-bg); border:1px solid var(--card-border,#262b38);
+          border-radius:6px; padding:4px 6px; accent-color:var(--wg-accent,#7fb8e6);}
+input[type=range].wg-input{padding:0; border:none; background:transparent; height:20px;}
+input[type=checkbox].wg-input{width:auto; height:16px; padding:0; border:none; background:transparent; align-self:flex-start;}
+.wg-input:focus-visible{outline:2px solid var(--wg-accent,#7fb8e6); outline-offset:1px;}
+
+/* ---- 图区 ---- */
+.wg-stage{min-width:0; display:flex; flex-direction:column; gap:8px;}
+.wg-figure{position:relative; min-width:0; overflow:auto; max-height:72vh;
+           background:var(--card-bg,#171b25); border:1px solid var(--card-border,#262b38);
+           border-radius:9px; padding:6px 6px 2px; outline:none;}
+.wg-figure:focus-visible{outline:2px solid var(--wg-accent,#7fb8e6);}
+/* 只给 viewBox + width:100%，让 SVG 高度自己跟着纵横比走 —— 与鼠标坐标换算才一致 */
+.wg-svg{display:block; width:100%; height:auto; overflow:visible;}
+.wg-svg text{font-family:inherit; user-select:none;}
+
+/* ---- canvas 后端（只有 scatter / heatmap / surface3d 的密集标记走这条路）----
+   混合层，不是替换：SVG 仍是**排版元素**（内嵌时的高度自适应全靠它撑），canvas 只是压在它
+   下面一层画密集标记。绝对定位的 left/top/width/height 由 widgets.js 的 mountCanvas 按 SVG 的
+   实测矩形写成 px（只靠 inset:0 在图区出现滚动时会错位：滚动容器的 padding box 只有可见那么高）。
+   文字与轴一律不进 canvas —— 它们留在 SVG 里才清晰、才跟得上 CSS 主题。 */
+.wg-canvas{position:absolute; left:0; top:0; width:100%; height:100%;
+          display:block; pointer-events:none; z-index:0;}
+/* SVG 抬到 canvas 之上：轴、刻度文字、markers、连线都在 SVG 里，不能被画布盖住 */
+.wg-figure > .wg-svg{position:relative; z-index:1;}
+/* heatmap 的 canvas 是 .wg-heat 网格里的一项（不绝对定位）：行/列标签仍是 DOM 文本。
+   min-width/min-height:0 是为了不让 canvas 的固有尺寸（300×150）反过来撑大网格轨道。 */
+.wg-heat > .wg-canvas{position:static; width:100%; height:100%; min-width:0; min-height:0;}
+.wg-grid .wg-gline{stroke:var(--card-border,#262b38); stroke-width:1; opacity:.55;}
+.wg-axis{stroke:#3a4256; stroke-width:1;}
+.wg-zero{stroke:#4a5570; stroke-width:1.2;}
+.wg-tick{fill:var(--text-faint,#5a6272); font-size:10px;}
+.wg-line{fill:none; stroke-width:2; stroke-linejoin:round; stroke-linecap:round;}
+.wg-dot{stroke:none;}
+.wg-marker{stroke-width:1.4;}
+.wg-mk-label{font-size:10px; font-weight:600;}
+.wg-cursor-line{stroke:var(--text-dim,#8b93a7); stroke-width:1; stroke-dasharray:3 3;}
+.wg-cursor-dot{stroke:var(--bg,#0c0e13); stroke-width:1.5;}
+.wg-bar{rx:3px;}
+.wg-bar-val{font-size:10.5px; fill:var(--text,#e6e8ee); font-weight:600;}
+.wg-bar-val.wg-in{fill:#eef1f7;}
+.wg-bad-txt{font-size:10.5px; fill:var(--wg-err,#e06a6a);}
+.wg-tl-bar{stroke:none;}
+.wg-tl-label{font-size:10px; font-weight:600; fill:var(--text,#e6e8ee);}
+.wg-tl-amt{font-size:9.5px; fill:var(--text-faint,#5a6272); font-family:ui-monospace,Menlo,monospace;}
+.wg-node{fill:var(--card-bg,#171b25); stroke:var(--card-border,#262b38); stroke-width:1.2;}
+.wg-node.wg-node-has{cursor:pointer; stroke:#3a4256;}
+.wg-node.wg-node-has:hover{stroke:var(--wg-accent,#7fb8e6);}
+.wg-node.wg-node-collapsed{stroke-dasharray:4 3;}
+.wg-node:focus-visible{outline:2px solid var(--wg-accent,#7fb8e6); outline-offset:1px;}
+.wg-node-label{font-size:11.5px; font-weight:600; fill:var(--text,#e6e8ee);}
+.wg-node-val{font-size:10px; fill:var(--text-dim,#8b93a7); font-family:ui-monospace,Menlo,monospace;}
+.wg-edge{stroke:var(--card-border,#262b38); stroke-width:1.2;}
+.wg-edge-label{font-size:9.5px; fill:var(--text-faint,#5a6272); font-family:ui-monospace,Menlo,monospace;}
+.wg-custom{min-width:0;}
+
+/* ---- box / ecdf / qq：分布类图形 ----
+   颜色由运行时从主题变量（--wg-c1..c6 / --text-*）取，这里只定线宽、虚实与字体，
+   背景相关的颜色一律用 var(--card-bg) 之类的变量，不写死深色。 */
+.wg-box-q{stroke-width:1.3;}
+.wg-box-med{stroke-width:2.4; stroke-linecap:round;}
+.wg-box-whi{stroke-width:1.2;}
+.wg-box-cap{stroke-width:1.6;}
+.wg-box-out{stroke:var(--card-bg,#fff); stroke-width:1;}
+.wg-ecd{stroke-width:2; stroke-linejoin:round;}
+.wg-qq-ref{fill:none; stroke-width:1.4; stroke-dasharray:6 4;}
+.wg-qq-dot{stroke:var(--card-bg,#fff); stroke-width:0.8;}
+
+/* ---- contour / vector / matrix：标量场、向量场与 2×2 矩阵 ----
+   颜色一律由运行时从主题变量（--wg-c1..c6 / --text-*）取；这里只定线宽、虚实与字号，
+   背景相关颜色用 var(--card-bg) 之类的变量，不写死深色。 */
+.wg-contour{fill:none; stroke-width:1.6; stroke-linejoin:round;}
+.wg-vec{fill:none; stroke-width:1.1; stroke-linecap:round;}
+.wg-field-lab{font-size:10px; font-weight:600;}
+.wg-marker-dot{stroke:var(--card-bg,#fff); stroke-width:1;}
+.wg-mx-orig{fill:none; stroke:var(--card-border,#cbd5e1); stroke-width:1.3; stroke-dasharray:5 4;}
+.wg-mx-basis{fill:none; stroke-width:1.2; stroke-dasharray:5 4;}
+.wg-mx-trans{stroke-width:1.6;}
+.wg-mx-bimg{fill:none; stroke-width:2; stroke-linecap:round;}
+.wg-mx-eigen{stroke-width:1.4; stroke-dasharray:7 4;}
+.wg-mx-eimg{fill:none; stroke-width:2; stroke-linecap:round;}
+.wg-mx-link{stroke:var(--card-border,#cbd5e1); stroke-width:1; stroke-dasharray:3 3;}
+.wg-mx-samp{stroke-width:1.2;}
+.wg-mx-img{stroke:var(--card-bg,#fff); stroke-width:1;}
+
+/* ---- 图例 + 游标读数 chip：数值用文字给出，不靠颜色区分 ---- */
+.wg-legend{display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; min-height:0;}
+.wg-legend:empty{display:none;}
+.wg-lg-item{display:inline-flex; align-items:center; gap:5px; min-width:0; font-size:11.5px;}
+.wg-lg-sw{flex:0 0 auto;}
+.wg-lg-label{color:var(--text,#e6e8ee); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:170px;}
+.wg-lg-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--text-faint,#5a6272);
+           background:var(--wg-input-bg); border:1px solid var(--card-border,#262b38); border-radius:999px;
+           padding:1px 7px; white-space:nowrap; min-width:52px; text-align:center;}
+.wg-lg-val.wg-live{color:var(--wg-accent,#7fb8e6); border-color:#2f3b4d;}
+.wg-lg-x{font-family:ui-monospace,Menlo,monospace; font-size:11px; color:var(--text-faint,#5a6272);
+         border:1px dashed var(--card-border,#262b38); border-radius:999px; padding:1px 8px; white-space:nowrap;}
+.wg-caps{display:flex; flex-wrap:wrap; gap:4px 10px; font-size:11px; color:var(--text-faint,#5a6272);}
+.wg-caps:empty{display:none;}
+
+/* ---- readouts ---- */
+.wg-readouts{display:grid; gap:7px; grid-template-columns:repeat(auto-fit,minmax(132px,1fr));}
+.wg-readouts[hidden]{display:none;}
+.wg-ro{background:var(--card-bg,#171b25); border:1px solid var(--card-border,#262b38);
+       border-radius:8px; padding:6px 9px; min-width:0;}
+.wg-ro-label{font-size:10.5px; color:var(--text-faint,#5a6272); margin-bottom:2px;
+             overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.wg-ro-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px;
+           color:var(--text,#e6e8ee); word-break:break-all;}
+.wg-ro-val.wg-bad{color:var(--wg-err,#e06a6a); font-size:11.5px;}
+
+/* ---- 错误框：红框 + [错误] 前缀，出错也不白屏 ---- */
+.wg-err{display:flex; flex-direction:column; gap:3px;
+        background:rgba(224,106,106,.10); border:1px solid var(--wg-err,#e06a6a);
+        border-radius:8px; padding:7px 9px;}
+.wg-err[hidden]{display:none;}
+.wg-err-line{font-size:11.5px; line-height:1.5; color:var(--wg-err); word-break:break-word;}
+
+/* ---- 说明与页脚 ---- */
+.wg-notes{margin-top:12px; border-top:1px solid var(--card-border,#262b38); padding-top:9px;}
+.wg-notes-title{font-size:10.5px; letter-spacing:.5px; text-transform:uppercase;
+                color:var(--text-faint,#5a6272); margin-bottom:4px;}
+.wg-note-list{margin:0; padding-left:16px; font-size:11.5px; color:var(--text-dim,#8b93a7); line-height:1.6;}
+.wg-note-list li{margin:2px 0;}
+.wg-foot{margin-top:10px; font-size:10.5px; color:var(--text-faint,#5a6272); word-break:break-all;}
+
+/* ---- heatmap：DOM grid，列多时横向滚动而不是挤成一团 ---- */
+.wg-heat-wrap{overflow:auto; max-width:100%;}
+.wg-heat{display:grid; gap:2px; min-width:0;}
+/* matrix 的 2×2 编辑格子：不加这个上限，两列 1fr 会在宽笔记里被拉成每格好几百像素宽，
+   数字孤零零飘在巨大方框中央。热力图不加限制——它的列数本来就是内容的一部分。 */
+.wg-heat.wg-heat-2x2{max-width:420px;}
+.wg-heat-lab{display:flex; align-items:center; justify-content:center; text-align:center;
+             font-size:10.5px; color:var(--text-dim,#8b93a7); padding:2px 3px; min-width:0;
+             overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.wg-heat-lab.wg-row-lab{justify-content:flex-end;}
+.wg-heat-cell{min-height:30px; display:flex; align-items:center; justify-content:center;
+              border:1px solid transparent; border-radius:4px; padding:2px;
+              font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px;
+              color:var(--text,#e6e8ee); overflow:hidden;}
+.wg-heat-cell.wg-editable{padding:1px;}          /* 可编辑格子里有常驻输入框，边框交给它画 */
+.wg-heat-cell.wg-empty{background:var(--panel-bg); color:var(--text-faint,#5a6272);}
+/* 可编辑格子：里面是一个**常驻**的原生 <input type=number>（见 widgets.js 的 cellInput）。
+   平时看起来就是一段数字文本，悬停/聚焦才显出输入框的样子 —— 这样"能不能改"一眼可知，
+   又不必把格子画成一堆控件。之所以不"点一下再换成输入框"：那样要靠 focus() 抢焦点，
+   宿主（内嵌 iframe / 阅读视图）一旦把焦点抢回去就会立刻 blur 提交并把格子还原成原值。 */
+.wg-cell-input{width:100%; min-width:0; padding:3px 2px; text-align:center;
+               font-family:inherit; font-size:11px; font-weight:inherit;
+               color:inherit; background:transparent; cursor:text;
+               border:1px solid transparent; border-radius:4px;
+               appearance:textfield; -moz-appearance:textfield;}
+.wg-cell-input:hover{border-color:var(--card-border,#cbd5e1); background:var(--wg-input-bg,#fff);}
+.wg-cell-input:focus{border-color:var(--wg-accent,#1769aa); background:var(--wg-input-bg,#fff);
+                     color:var(--text,#202938); outline:none;}
+.wg-cell-input:focus-visible{outline:2px solid var(--wg-accent,#1769aa); outline-offset:1px;}
+/* 数字上下箭头会把 30px 高的格子挤变形：去掉（键盘上下键照旧可用） */
+.wg-cell-input::-webkit-outer-spin-button,
+.wg-cell-input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+.wg-heat-scale{display:flex; align-items:center; flex-wrap:wrap; gap:7px;
+               margin-top:7px; font-size:10.5px; color:var(--text-faint,#5a6272);}
+.wg-scale-bar{display:flex; width:96px; height:9px; border-radius:3px; overflow:hidden;
+              border:1px solid var(--card-border,#262b38);}
+.wg-scale-bar span{flex:1 1 auto;}
+.wg-scale-note{color:var(--text-faint,#5a6272);}
+
+/* ---- 新增渲染器（regression / pca / descent / surface3d / treefit）---- */
+/* 残差竖线：淡一点，别和数据点抢视线 */
+.wg-resid-line{stroke-width:1; stroke-dasharray:3 3; opacity:.75;}
+.wg-fit-line{stroke-linecap:round;}
+.wg-fit-manual{stroke-dasharray:6 4;}
+/* PCA 的投影辅助线：更淡，属于"看结构"的辅助元素 */
+.wg-proj-line{stroke-width:.9; stroke-dasharray:2 3; opacity:.5;}
+.wg-proj-dot{opacity:.85;}
+/* 梯度下降轨迹：深红实线 + 点，起点用大一点的实心点（fill 在 JS 里给） */
+.wg-gd-path{fill:none; stroke-width:1.8; stroke-linejoin:round; stroke-linecap:round;}
+.wg-gd-dot{stroke:#fff; stroke-width:.6;}
+.wg-gd-end{stroke-width:1.6;}
+/* 点图框换起点：给个十字光标，让"这里能点"可发现 */
+.wg-click-set{cursor:crosshair;}
+.wg-s3{cursor:default;}
+.wg-s3-edge{stroke:var(--card-border,#cbd5e1); stroke-width:.8; stroke-opacity:.75;}
+.wg-s3-face{stroke-linejoin:round;}
+.wg-s3-pt{stroke:#ffffff; stroke-width:.5;}
+.wg-s3-path{fill:none; stroke-width:2; stroke-linejoin:round;}
+.wg-s3-dot{stroke:#fff; stroke-width:.8;}
+.wg-s3-axlabel{font-size:11px; fill:var(--text-dim,#475569);}
+.wg-tree-cut{stroke-width:1.2;}
+.wg-tree-fit{fill:none; stroke-width:2; stroke-linejoin:round;}
+.wg-tree-region{stroke-width:1;}
+
+/* ---- 自动播放按钮（spec.controls[].animate）----
+   它是 UI，不是 spec 控件（不占"最多 4 个控件"的名额）。 */
+.wg-auto-bar{display:flex; gap:8px; margin-top:9px;}
+.wg-auto-btn{font:inherit; font-size:11.5px; line-height:1; padding:5px 9px; cursor:pointer;
+             color:var(--text); background:var(--wg-input-bg); border:1px solid var(--card-border);
+             border-radius:6px;}
+.wg-auto-btn:hover{border-color:var(--wg-accent); color:var(--wg-accent);}
+.wg-auto-btn[aria-pressed="true"]{border-color:var(--wg-accent); color:var(--wg-accent);
+                                  background:color-mix(in srgb, var(--wg-accent) 12%, var(--wg-input-bg));}
+.wg-auto-btn:focus-visible{outline:2px solid var(--wg-accent); outline-offset:1px;}
+/* 组件里没有任何过渡动画，这里只是声明：用户的"减少动效"偏好不会被本层违反 */
+@media (prefers-reduced-motion: reduce){
+  .wg-wrap *{transition:none !important; animation:none !important;}
+}
+
+/* Opt-in only; an unmarked widget stays white even on a dark OS. */
+@media (prefers-color-scheme: dark){
+  .wg-wrap[data-theme="system"]{
+    color-scheme:dark;
+    --bg:#0c0e13; --text:#e6e8ee; --text-dim:#a6afc0; --text-faint:#a0aabd;
+    --panel-bg:#12151d; --card-bg:#171b25; --card-border:#465168;
+    --wg-input-bg:#1c212c;
+    --wg-accent:#7fb8e6; --wg-warn:#e0a15a; --wg-err:#ff9999;
+    --wg-c1:#7fb8e6; --wg-c2:#e0a15a; --wg-c3:#9fd3a0;
+    --wg-c4:#c58ee0; --wg-c5:#e08a8a; --wg-c6:#5ec4c4;
+  }
+  /* 页面底色也要跟着切，否则深色系统下组件四周会留白边（这两条必须在 .wg-wrap…{} 之外） */
+  html[data-wg-theme="system"]{background:#0c0e13;}
+  html[data-wg-theme="system"] body{background:#0c0e13; color:#e6e8ee;}
+}
+
+/* ---- 内嵌模式（被放进 <iframe> 时由 widgets.js 在 <html> 上打 data-wg-embed）----
+   内嵌时"视口"就是 iframe 自己，高度该由内容撑：这里取消按视口算的 max-height，
+   再由 Maps/_tools/widget-embed/view.js 读内容高度回设 iframe 高度。
+   独立打开组件页时不会有这个标记，行为与以前完全一样。 */
+html[data-wg-embed] .wg-figure{max-height:none;}
+html[data-wg-embed] .wg-wrap{padding:12px 12px 14px;}
+
+/* ---- 精简内嵌（内嵌 + wg-chrome=slim）：**只留交互图** ----
+   组件页本来就是"可独立打开的研究页"，副标题、来源链接、说明清单、页脚都是给"读"的；
+   内嵌进笔记时，这些解释性文字应该写在 md 里（和推导、出处放在一起），
+   留在图边上只会把图挤小。widgets.js 在精简模式下**根本不生成**这几个块；
+   下面这几条是对"旧组件页 + 新宿主"的兜底（旧页的 DOM 里可能已经有这些块）。 */
+html[data-wg-chrome="slim"] .wg-wrap{padding:12px 12px 14px;}
+html[data-wg-chrome="slim"] .wg-sub,
+html[data-wg-chrome="slim"] .wg-src,
+html[data-wg-chrome="slim"] .wg-notes,
+html[data-wg-chrome="slim"] .wg-foot{display:none;}
+/* 精简模式下图的"上边距"没有副标题垫着，收紧一点，别让标题和图之间空一大片 */
+html[data-wg-chrome="slim"] .wg-head{margin-bottom:9px; padding-bottom:7px;}

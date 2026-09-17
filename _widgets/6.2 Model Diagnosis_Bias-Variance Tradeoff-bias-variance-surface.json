@@ -1,0 +1,143 @@
+{
+ "schema": "widget/v1",
+ "kind": "surface3d",
+ "uid": "",
+ "note": "06_Model_Assessment/6.2 Model Diagnosis_Bias-Variance Tradeoff.md",
+ "title": "容量 k 与噪声 σ 的测试误差曲面：k=2 的谷底会被噪声推向 k=1",
+ "subtitle": "x 是整数容量 k=1–9，y 是噪声 σ=0.5–3.0；z=E[test MSE]，固定 f(x)=3x²、30 个 rng(7) 设计点，x₀ 可切换 0.5/0.9",
+ "vars": {
+  "b05_1": 0.06221158187414552,
+  "b05_2": 0,
+  "b05_3": 0,
+  "b05_4": 0,
+  "b05_5": 0,
+  "b05_6": 0,
+  "b05_7": 0,
+  "b05_8": 0,
+  "b05_9": 0,
+  "v05_1": 0.03351392968299762,
+  "v05_2": 0.06827964762666779,
+  "v05_3": 0.06829633745116893,
+  "v05_4": 0.10106958037971399,
+  "v05_5": 0.1068895431432821,
+  "v05_6": 0.1265128428287609,
+  "v05_7": 0.129367632288552,
+  "v05_8": 0.15385384036242533,
+  "v05_9": 0.15565761311920204,
+  "b09_1": 0.04361761482052219,
+  "b09_2": 0,
+  "b09_3": 0,
+  "b09_4": 0,
+  "b09_5": 0,
+  "b09_6": 0,
+  "b09_7": 0,
+  "b09_8": 0,
+  "b09_9": 0,
+  "v09_1": 0.09090299407954523,
+  "v09_2": 0.1152778395431048,
+  "v09_3": 0.11541594229430706,
+  "v09_4": 0.14411189696997667,
+  "v09_5": 0.2116209396386818,
+  "v09_6": 0.29277640846645964,
+  "v09_7": 0.3438154776100066,
+  "v09_8": 0.35031717782739596,
+  "v09_9": 0.35327601669643993,
+  "sigma_ref": 1
+ },
+ "x": {
+  "min": 1,
+  "max": 9,
+  "points": 9,
+  "label": "模型容量 k（整数 1–9；不表示连续多项式次数）",
+  "fmt": "0"
+ },
+ "y": {
+  "min": 0.5,
+  "max": 3,
+  "points": 11,
+  "label": "噪声 σ（0.5–3.0）",
+  "fmt": "0.0"
+ },
+ "controls": [
+  {
+   "key": "x0",
+   "type": "select",
+   "label": "评估点 x₀（选择 0.5 或 0.9）",
+   "options": [
+    [
+     0.5,
+     "x₀=0.5（原文主锚点）"
+    ],
+    [
+     0.9,
+     "x₀=0.9（边界条件检验）"
+    ]
+   ],
+   "value": 0.5
+  },
+  {
+   "key": "azimuth",
+   "type": "slider",
+   "label": "方位角（0°–355°，只改变视角）",
+   "min": 0,
+   "max": 355,
+   "step": 5,
+   "value": 35,
+   "fmt": "0"
+  },
+  {
+   "key": "elevation",
+   "type": "slider",
+   "label": "仰角（0°–89°，只改变视角）",
+   "min": 0,
+   "max": 89,
+   "step": 1,
+   "value": 25,
+   "fmt": "0"
+  }
+ ],
+ "surface": {
+  "expr": "ifelse(x0<0.7, ifelse(x<1.5,b05_1,ifelse(x<2.5,b05_2,ifelse(x<3.5,b05_3,ifelse(x<4.5,b05_4,ifelse(x<5.5,b05_5,ifelse(x<6.5,b05_6,ifelse(x<7.5,b05_7,ifelse(x<8.5,b05_8,b05_9))))))))+y*y*(1+ifelse(x<1.5,v05_1,ifelse(x<2.5,v05_2,ifelse(x<3.5,v05_3,ifelse(x<4.5,v05_4,ifelse(x<5.5,v05_5,ifelse(x<6.5,v05_6,ifelse(x<7.5,v05_7,ifelse(x<8.5,v05_8,v05_9))))))))), ifelse(x<1.5,b09_1,ifelse(x<2.5,b09_2,ifelse(x<3.5,b09_3,ifelse(x<4.5,b09_4,ifelse(x<5.5,b09_5,ifelse(x<6.5,b09_6,ifelse(x<7.5,b09_7,ifelse(x<8.5,b09_8,b09_9))))))))+y*y*(1+ifelse(x<1.5,v09_1,ifelse(x<2.5,v09_2,ifelse(x<3.5,v09_3,ifelse(x<4.5,v09_4,ifelse(x<5.5,v09_5,ifelse(x<6.5,v09_6,ifelse(x<7.5,v09_7,ifelse(x<8.5,v09_8,v09_9))))))))))",
+  "mode": "surface",
+  "fmt": "0.0000"
+ },
+ "view": {
+  "azimuthKey": "azimuth",
+  "elevationKey": "elevation"
+ },
+ "readouts": [
+  {
+   "label": "E[test MSE]：k=1、σ=1",
+   "expr": "ifelse(x0<0.7,b05_1+sigma_ref*sigma_ref*(1+v05_1),b09_1+sigma_ref*sigma_ref*(1+v09_1))",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "E[test MSE]：k=2、σ=1",
+   "expr": "ifelse(x0<0.7,b05_2+sigma_ref*sigma_ref*(1+v05_2),b09_2+sigma_ref*sigma_ref*(1+v09_2))",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "E[test MSE]：k=9、σ=1",
+   "expr": "ifelse(x0<0.7,b05_9+sigma_ref*sigma_ref*(1+v05_9),b09_9+sigma_ref*sigma_ref*(1+v09_9))",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "σ=1 时较优容量 k*（1 或 2）",
+   "expr": "ifelse(ifelse(x0<0.7,b05_1+sigma_ref*sigma_ref*(1+v05_1),b09_1+sigma_ref*sigma_ref*(1+v09_1))<ifelse(x0<0.7,b05_2+sigma_ref*sigma_ref*(1+v05_2),b09_2+sigma_ref*sigma_ref*(1+v09_2)),1,2)",
+   "fmt": "0"
+  }
+ ],
+ "teaching": {
+  "question": "为什么容量越大不一定越好？评估点和噪声怎样把 bias²–variance 的权衡改写成不同的测试误差？",
+  "sourceSection": "《06_Model_Assessment/6.2 Model Diagnosis_Bias-Variance Tradeoff.md》§四「算一遍」第1–3步与「条件检验一/二」（原文第141–229行）",
+  "controlEffect": "x0=0.5/0.9 在 surface.expr 中选择两套同一设计下的 bias² 与 leverage；y 是曲面自变量 σ，直接进入 y²(1+‖w‖²)，所以两个语义维度都改变主图的 z，而非只移动标记。",
+  "visualEvidence": "曲面在 k=1 处有 bias² 抬高、在 k=2 附近形成谷底、向 k=9 因 leverage 上升；沿 σ 轴上移后高容量面上升更快，约 σ=1.34 处 k=1 与 k=2 交叉；切到 x₀=0.9 可看到边界处 k=9 的方差更高。"
+ },
+ "notes": [
+  "数字出处：笔记§四第1步给出 f(x)=3x²、np.random.default_rng(7) 抽取并排序 30 个 U(0,1) 设计点、σ²=1、x₀=0.5；第2步原文锚点 k=1/2/9 的 bias²=0.0622/0/0、variance=0.0335/0.0683/0.1557；第3步原文 E[test MSE]=1.0957/1.0683/1.1557。条件检验一原文给 x₀=0.9 的 k=1/2/9：0.0436/0.1153/0.3533（bias²/variance），总误差 1.1345/1.1153/1.3533。",
+  "复算命令：python3 -c 'import numpy as np; r=np.random.default_rng(7); xx=np.sort(r.uniform(0,1,30)); f=3*xx**2; [(lambda X,xv: print(k,x0,(xv@np.linalg.inv(X.T@X)@X.T)@f-3*x0*x0,((xv@np.linalg.inv(X.T@X)@X.T)**2).sum()))(np.column_stack([xx**j for j in range(k+1)]),np.array([x0**j for j in range(k+1)])) for x0 in (0.5,0.9) for k in range(1,10)]'（输出 k、x₀、bias 与 ‖w‖²）。锚点沿用笔记四舍五入前的同口径值；按该口径复算的 k=3…8 leverage 为 x₀=0.5 时 0.0682963/0.1010696/0.1068895/0.1265128/0.1293676/0.1538538，x₀=0.9 时 0.1154159/0.1441119/0.2116209/0.2927764/0.3438155/0.3503172。",
+  "口径：z=bias²_k(x₀)+σ²·(1+‖w_k(x₀)‖²)，因为笔记的 σ²=1 只是在算例锚点；surface 的 y 轴把同一公式推广到 σ=0.5–3.0。σ≈1.34 来自笔记的交叉点；用存储的精确复算值解得 1.337704，显示时按原文写作≈1.34。",
+  "边界：x 网格只有整数 1–9，面片只是连接相邻离散模型，不能解释为“3.5 次多项式”；2 次以上对 f(x)=3x² 的 bias² 按笔记视为 0。该分解依赖平方损失、同分布独立训练集与固定设计，0–1 分类错误率不能套用。azimuth/elevation 只改正交投影，不改 z。"
+ ],
+ "slug": "bias-variance-surface"
+}

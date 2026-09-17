@@ -1,0 +1,59 @@
+/* Dataview 自定义视图 widget-embed 的样式。
+   Dataview 在用 `dv.view("目录名", …)`（即 目录/view.js）形式时会自动把这份 CSS 注入为
+   一个真正的 <style> 元素——这很关键：笔记里手写 <style> 会被 Obsidian 的清洗器删掉
+   （FORBID_TAGS: ["style"]），但 JS 创建的 <style> 不过清洗器。
+
+   组件页自带完整样式（白底），这里只管容器，不碰组件内部。 */
+.frm-embed {
+  margin: 10px 0 14px;
+}
+
+/* shell 只做两件事：给右下角把手当定位参照；把窗口拖得比笔记栏还宽时由它横向滚动，
+   而不是把笔记本身的布局撑破。 */
+.frm-embed-shell {
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* 组件是白底：加载/自适应重设高度期间不要闪成深色 */
+.frm-embed-frame {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* 右下角把手：拖动改宽/改高，双击恢复"满宽 + 自适应"。
+   做得低调（默认半透明），但整块都在可点区域内。 */
+.frm-embed-grip {
+  position: absolute;
+  /* 位置由 view.js 按 iframe 实际尺寸写 left/top（right/bottom 会被覆盖，留着只作退化兜底） */
+  right: 4px;
+  bottom: 4px;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  touch-action: none;                 /* 触控拖动时不要被滚动手势抢走 */
+  opacity: .5;
+  border-bottom-right-radius: 7px;
+  background-image: repeating-linear-gradient(-45deg,
+    var(--text-faint, #8b93a7) 0 1.5px, transparent 1.5px 5px);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+.frm-embed-shell:hover .frm-embed-grip { opacity: .9; }
+.frm-embed-shell[data-dragging] .frm-embed-grip { opacity: 1; }
+.frm-embed-shell[data-dragging] .frm-embed-frame {
+  border-color: var(--interactive-accent, #1769aa);
+}
+
+.frm-embed-err {
+  padding: 6px 9px;
+  border-left: 3px solid var(--text-error, #d33);
+  background: var(--background-modifier-error, rgba(220, 50, 50, .08));
+  font-family: var(--font-monospace);
+  font-size: 11.5px;
+  word-break: break-word;
+}

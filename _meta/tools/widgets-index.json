@@ -1,0 +1,138 @@
+{
+ "vault": "StateFarm Interview",
+ "_说明": "交互组件注册表：笔记 ↔ 交互组件的唯一映射。由 make_widget.py 维护，不要手改。json 是源 spec（可编辑），html 是派生产物（重建即覆盖），两者是否同步由 --check 校验。",
+ "widgets": [
+  {
+   "json": "_widgets/1.3 Introducing Logistic Regression-logistic-baserate-surface.json",
+   "html": "_widgets/1.3 Introducing Logistic Regression-logistic-baserate-surface.html",
+   "note": "01_LR_GLMs/1.3 Introducing Logistic Regression.md",
+   "uid": "",
+   "kind": "surface3d",
+   "title": "同一个 β₁ 的概率效应不是一条固定曲线：π₀ 与 β₁ 共同决定 Δp",
+   "spec_sha256": "aff1fe1a9ce0b20c5d64164a10a0cdad629ba370d2470813c152a48a7a7a4a60",
+   "html_sha256": "8bf36337005b348630a7685c44c58cfab40fd9d0f5de7013b9ca10bfc86adc43",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/1.4 Model Fitting-logistic-loss-probability.json",
+   "html": "_widgets/1.4 Model Fitting-logistic-loss-probability.html",
+   "note": "01_LR_GLMs/1.4 Model Fitting.md",
+   "uid": "",
+   "kind": "plotly",
+   "title": "目标换了会改变什么：MLE 与 L2 如何改写最优点和预测概率？",
+   "spec_sha256": "ad55bdcdf3f69efed140ed5f923db822754f7d554f7668c9f6d2684e5a0d24f4",
+   "html_sha256": "4670de8e73f4ecc4b4e74cdea0ecb4ee3ba13207d5a4a47207ed9eba0f220f1b",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/1.6 Estimation Issues & Separation-separation-objective-surface.json",
+   "html": "_widgets/1.6 Estimation Issues & Separation-separation-objective-surface.html",
+   "note": "01_LR_GLMs/1.6 Estimation Issues & Separation.md",
+   "uid": "",
+   "kind": "surface3d",
+   "title": "分离时 MLE 没有山顶：切到 Firth，发散方向变成有限目标面",
+   "spec_sha256": "ba48cfc7c5c243a8763fa40b7363a233ce9d03b45a0ea3ca72c4a0831621f583",
+   "html_sha256": "348fc612fdd0bff28f14c3cca44765e59b338bef2b56afe480368f3b1be2eee3",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/1.6.3 Regularization-regularization-contour.json",
+   "html": "_widgets/1.6.3 Regularization-regularization-contour.html",
+   "note": "01_LR_GLMs/1.6.3 Regularization.md",
+   "uid": "",
+   "kind": "contour",
+   "title": "拖 penalty 与 λ，看 OLS 损失地形如何变形",
+   "spec_sha256": "358c7e164e9ba3315c2d7b61fbf3aed7bc22360662862d485ff72dee8afda838",
+   "html_sha256": "d3ee308bf5a65929f60cef829c23c44f0204013c134b966444ff97078209e7cc",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/6.2 Model Diagnosis_Bias-Variance Tradeoff-bias-variance-surface.json",
+   "html": "_widgets/6.2 Model Diagnosis_Bias-Variance Tradeoff-bias-variance-surface.html",
+   "note": "06_Model_Assessment/6.2 Model Diagnosis_Bias-Variance Tradeoff.md",
+   "uid": "",
+   "kind": "surface3d",
+   "title": "容量 k 与噪声 σ 的测试误差曲面：k=2 的谷底会被噪声推向 k=1",
+   "spec_sha256": "d0296beba9007b4bd2753768b9381de2592dddba87cea5f00ada826a4190b7d5",
+   "html_sha256": "c45287856652700fe24e38c546686a69272fd6bce42338dc1d8966cbed8a95b0",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/6.3 Performance Metrics-precision-surface.json",
+   "html": "_widgets/6.3 Performance Metrics-precision-surface.html",
+   "note": "06_Model_Assessment/6.3 Performance Metrics.md",
+   "uid": "",
+   "kind": "surface3d",
+   "title": "基础率越低，固定 TPR 下 Precision 越容易被 FPR 拖低",
+   "spec_sha256": "ed1dbd15d318bbf8ba8c002dac390c3f82f998cfc2c08c0b608ffaac0aac57c5",
+   "html_sha256": "7e4b357b00fdeb196116b2273e9b7c52cd30a4853cc85d28f7ed14c71f2b6672",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/7.2. Building the Forest-rho-floor-surface.json",
+   "html": "_widgets/7.2. Building the Forest-rho-floor-surface.html",
+   "note": "07_Random_Forest/7.2. Building the Forest.md",
+   "uid": "",
+   "kind": "surface3d",
+   "title": "树数与相关性共同决定方差：加树会撞上 ρσ² 地板",
+   "spec_sha256": "6a2ca040d2ffa11df5c48a17587f7cfde07d4f9e646b86321a02fa17746d305a",
+   "html_sha256": "7aec37e16f4bcf049855c48bcebc5a3ddda600f5ce67ae237cf498295ad7dfb3",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/7.5 CART Algorithm-cart-split-treefit.json",
+   "html": "_widgets/7.5 CART Algorithm-cart-split-treefit.html",
+   "note": "07_Random_Forest/7.5 CART Algorithm.md",
+   "uid": "",
+   "kind": "treefit",
+   "title": "拖切点，看左右叶均值与 SSE 随分区重算",
+   "spec_sha256": "3156715da0978612f7094bb86b34db4b1da0ac60a3ab576406e63f51acc577b8",
+   "html_sha256": "067e9928af5968a947843583542ec8957766d70c64d92719f113a564069f9ef7",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/8.4.2.1 AdaBoost (Adaptive Boosting)-adaboost-weight-surface.json",
+   "html": "_widgets/8.4.2.1 AdaBoost (Adaptive Boosting)-adaboost-weight-surface.html",
+   "note": "08_ML_Methods/8.4.2.1 AdaBoost (Adaptive Boosting).md",
+   "uid": "",
+   "kind": "surface3d",
+   "title": "AdaBoost 把难样本抬高：权重面随轮次如何迁移",
+   "spec_sha256": "584b08bb4cff80aa647f1b8439c341b2946c7ae49ea6e006ae831755b4ae6347",
+   "html_sha256": "46bda822ce0f235b197c27641b50e093d9dc136da3b6ef8d6cf10635c5e20d95",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/8.4.2.2 Gradient Boosting-gradient-boosting-prediction-surface.json",
+   "html": "_widgets/8.4.2.2 Gradient Boosting-gradient-boosting-prediction-surface.html",
+   "note": "08_ML_Methods/8.4.2.2 Gradient Boosting.md",
+   "uid": "",
+   "kind": "surface3d",
+   "title": "GBM 的小步多轮：ν 怎样沿残差递推改变整张预测面",
+   "spec_sha256": "52f8f0a3fab74fde6a74e14712bca0e46ae9f1f28615a2cfe830b4fe05ad8940",
+   "html_sha256": "f3d1d7970b10b3d5886c9310d23b0d3b8c5d2958dc202f8a384893efb96975ba",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  },
+  {
+   "json": "_widgets/10.8 Tweedie GLM 专章-tweedie-zero-mass-surface.json",
+   "html": "_widgets/10.8 Tweedie GLM 专章-tweedie-zero-mass-surface.html",
+   "note": "10_保险风控实务/10.8 Tweedie GLM 专章.md",
+   "uid": "",
+   "kind": "surface3d",
+   "title": "Tweedie 的零点质量由均值、幂与离散尺度共同决定",
+   "spec_sha256": "fdf29f69df052dcfd0203594d8c02d0ae2f86b5b7ba738ecec43375f2ae3a760",
+   "html_sha256": "701f626d2e3af04e784928f226b41a204c73918f1747d8758cb7d2bb63ac617a",
+   "created": "2026-09-16",
+   "updated": "2026-09-16"
+  }
+ ]
+}

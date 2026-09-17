@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>交互组件看板</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --text:#1c2330; --dim:#5b6577; --faint:#8a93a3;
+    --border:#dfe3ea; --accent:#1769aa; --badge:#eef2f7;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--bg:#0f1116; --card:#161a21; --text:#e6e9ef; --dim:#a6afc0; --faint:#7b8494;
+          --border:#262b36; --accent:#7fb8e6; --badge:#1e242e; color-scheme:dark;}
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--text);
+       font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}
+  header.top{padding:22px 22px 14px; border-bottom:1px solid var(--border); background:var(--card);}
+  h1{margin:0; font-size:19px; letter-spacing:-.01em;}
+  .sub{margin:4px 0 0; color:var(--dim); font-size:12.5px;}
+  .note-gen{margin:2px 0 0; color:var(--faint); font-size:11.5px;}
+  .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 22px;
+           border-bottom:1px solid var(--border); background:var(--card); position:sticky; top:0; z-index:5;}
+  .toolbar input[type=search]{flex:1 1 220px; min-width:180px; padding:7px 10px; font:inherit;
+      color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:8px;}
+  .toolbar label{color:var(--dim); font-size:12.5px; display:inline-flex; gap:6px; align-items:center;}
+  .toolbar select{padding:6px 8px; font:inherit; color:var(--text); background:var(--bg);
+      border:1px solid var(--border); border-radius:8px;}
+  .count{color:var(--faint); font-size:12.5px; margin-left:auto;}
+  main{display:grid; gap:16px; padding:16px 22px 40px;
+       grid-template-columns:repeat(auto-fill,minmax(340px,1fr));}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden;
+        display:flex; flex-direction:column;}
+  .card-head{padding:12px 14px 6px;}
+  .card-title{margin:0; font-size:14.5px; font-weight:600;}
+  .card-meta{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:5px;
+             color:var(--dim); font-size:12px;}
+  .k{background:var(--badge); border-radius:999px; padding:1px 8px;
+     font-family:ui-monospace,Menlo,monospace; font-size:11.5px;}
+  .uid{font-family:ui-monospace,Menlo,monospace; font-size:11.5px; color:var(--faint);}
+  .when{margin-left:auto; color:var(--faint); font-size:11.5px;}
+  .card-actions{display:flex; gap:8px; align-items:center; padding:8px 14px 10px; flex-wrap:wrap;}
+  .btn{display:inline-flex; align-items:center; padding:5px 11px; border-radius:8px; font-size:12.5px;
+       text-decoration:none; border:1px solid var(--border); color:var(--text);}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .btn.disabled{color:var(--faint); border-style:dashed;}
+  .mini{font-size:12px; color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent);}
+  .card-body{border-top:1px solid var(--border); background:var(--bg);}
+  .frame{display:block; width:100%; height:460px; border:0; background:#fff;}
+  .frame.empty{padding:14px; color:var(--faint); font-size:12.5px; height:auto;}
+  body.no-preview .frame{display:none;}
+  body.no-preview .card-body{display:none;}
+  .empty-state{color:var(--dim); padding:20px; grid-column:1/-1;}
+  code{font-family:ui-monospace,Menlo,monospace; font-size:12px; background:var(--badge);
+       padding:1px 5px; border-radius:5px;}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>交互组件看板</h1>
+  <p class="sub">StateFarm Interview · 11 个组件 · 11 篇源笔记</p>
+  <p class="note-gen">本文件由 <code>make_widget.py --board</code> 生成，不要手改；改完 spec 重跑一次即可。</p>
+</header>
+<div class="toolbar">
+  <input id="q" type="search" placeholder="按标题 / 渲染器 / 条目 / 源笔记筛选…" autocomplete="off">
+  <label>排序
+    <select id="sort">
+      <option value="title">标题</option>
+      <option value="when">更新时间 · 新 → 旧</option>
+      <option value="kind">渲染器</option>
+    </select>
+  </label>
+  <label><input id="prev" type="checkbox" checked> 显示预览</label>
+  <span class="count" id="count">共 11 个组件</span>
+</div>
+<main id="grid">
+    <article class="card" data-hay="同一个 β₁ 的概率效应不是一条固定曲线：π₀ 与 β₁ 共同决定 δp surface3d — 1.3 introducing logistic regression" data-kind="surface3d" data-title="同一个 β₁ 的概率效应不是一条固定曲线：π₀ 与 β₁ 共同决定 Δp" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">同一个 β₁ 的概率效应不是一条固定曲线：π₀ 与 β₁ 共同决定 Δp</h3>
+        <div class="card-meta"><span class="k">surface3d</span><span class="uid">—</span><span class="note">1.3 Introducing Logistic Regression</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.3%20Introducing%20Logistic%20Regression-logistic-baserate-surface.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.3%20Introducing%20Logistic%20Regression.md">源笔记</a><a class="mini" href="1.3%20Introducing%20Logistic%20Regression-logistic-baserate-surface.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：同一个 β₁ 的概率效应不是一条固定曲线：π₀ 与 β₁ 共同决定 Δp" src="1.3%20Introducing%20Logistic%20Regression-logistic-baserate-surface.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="目标换了会改变什么：mle 与 l2 如何改写最优点和预测概率？ plotly — 1.4 model fitting" data-kind="plotly" data-title="目标换了会改变什么：MLE 与 L2 如何改写最优点和预测概率？" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">目标换了会改变什么：MLE 与 L2 如何改写最优点和预测概率？</h3>
+        <div class="card-meta"><span class="k">plotly</span><span class="uid">—</span><span class="note">1.4 Model Fitting</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.4%20Model%20Fitting-logistic-loss-probability.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.4%20Model%20Fitting.md">源笔记</a><a class="mini" href="1.4%20Model%20Fitting-logistic-loss-probability.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：目标换了会改变什么：MLE 与 L2 如何改写最优点和预测概率？" src="1.4%20Model%20Fitting-logistic-loss-probability.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="分离时 mle 没有山顶：切到 firth，发散方向变成有限目标面 surface3d — 1.6 estimation issues &amp; separation" data-kind="surface3d" data-title="分离时 MLE 没有山顶：切到 Firth，发散方向变成有限目标面" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">分离时 MLE 没有山顶：切到 Firth，发散方向变成有限目标面</h3>
+        <div class="card-meta"><span class="k">surface3d</span><span class="uid">—</span><span class="note">1.6 Estimation Issues &amp; Separation</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.6%20Estimation%20Issues%20%26%20Separation-separation-objective-surface.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.6%20Estimation%20Issues%20%26%20Separation.md">源笔记</a><a class="mini" href="1.6%20Estimation%20Issues%20%26%20Separation-separation-objective-surface.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：分离时 MLE 没有山顶：切到 Firth，发散方向变成有限目标面" src="1.6%20Estimation%20Issues%20%26%20Separation-separation-objective-surface.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="拖 penalty 与 λ，看 ols 损失地形如何变形 contour — 1.6.3 regularization" data-kind="contour" data-title="拖 penalty 与 λ，看 OLS 损失地形如何变形" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">拖 penalty 与 λ，看 OLS 损失地形如何变形</h3>
+        <div class="card-meta"><span class="k">contour</span><span class="uid">—</span><span class="note">1.6.3 Regularization</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="1.6.3%20Regularization-regularization-contour.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../01_LR_GLMs/1.6.3%20Regularization.md">源笔记</a><a class="mini" href="1.6.3%20Regularization-regularization-contour.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：拖 penalty 与 λ，看 OLS 损失地形如何变形" src="1.6.3%20Regularization-regularization-contour.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="容量 k 与噪声 σ 的测试误差曲面：k=2 的谷底会被噪声推向 k=1 surface3d — 6.2 model diagnosis_bias-variance tradeoff" data-kind="surface3d" data-title="容量 k 与噪声 σ 的测试误差曲面：k=2 的谷底会被噪声推向 k=1" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">容量 k 与噪声 σ 的测试误差曲面：k=2 的谷底会被噪声推向 k=1</h3>
+        <div class="card-meta"><span class="k">surface3d</span><span class="uid">—</span><span class="note">6.2 Model Diagnosis_Bias-Variance Tradeoff</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="6.2%20Model%20Diagnosis_Bias-Variance%20Tradeoff-bias-variance-surface.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../06_Model_Assessment/6.2%20Model%20Diagnosis_Bias-Variance%20Tradeoff.md">源笔记</a><a class="mini" href="6.2%20Model%20Diagnosis_Bias-Variance%20Tradeoff-bias-variance-surface.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：容量 k 与噪声 σ 的测试误差曲面：k=2 的谷底会被噪声推向 k=1" src="6.2%20Model%20Diagnosis_Bias-Variance%20Tradeoff-bias-variance-surface.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="基础率越低，固定 tpr 下 precision 越容易被 fpr 拖低 surface3d — 6.3 performance metrics" data-kind="surface3d" data-title="基础率越低，固定 TPR 下 Precision 越容易被 FPR 拖低" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">基础率越低，固定 TPR 下 Precision 越容易被 FPR 拖低</h3>
+        <div class="card-meta"><span class="k">surface3d</span><span class="uid">—</span><span class="note">6.3 Performance Metrics</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="6.3%20Performance%20Metrics-precision-surface.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../06_Model_Assessment/6.3%20Performance%20Metrics.md">源笔记</a><a class="mini" href="6.3%20Performance%20Metrics-precision-surface.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：基础率越低，固定 TPR 下 Precision 越容易被 FPR 拖低" src="6.3%20Performance%20Metrics-precision-surface.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="树数与相关性共同决定方差：加树会撞上 ρσ² 地板 surface3d — 7.2. building the forest" data-kind="surface3d" data-title="树数与相关性共同决定方差：加树会撞上 ρσ² 地板" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">树数与相关性共同决定方差：加树会撞上 ρσ² 地板</h3>
+        <div class="card-meta"><span class="k">surface3d</span><span class="uid">—</span><span class="note">7.2. Building the Forest</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="7.2.%20Building%20the%20Forest-rho-floor-surface.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../07_Random_Forest/7.2.%20Building%20the%20Forest.md">源笔记</a><a class="mini" href="7.2.%20Building%20the%20Forest-rho-floor-surface.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：树数与相关性共同决定方差：加树会撞上 ρσ² 地板" src="7.2.%20Building%20the%20Forest-rho-floor-surface.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="拖切点，看左右叶均值与 sse 随分区重算 treefit — 7.5 cart algorithm" data-kind="treefit" data-title="拖切点，看左右叶均值与 SSE 随分区重算" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">拖切点，看左右叶均值与 SSE 随分区重算</h3>
+        <div class="card-meta"><span class="k">treefit</span><span class="uid">—</span><span class="note">7.5 CART Algorithm</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="7.5%20CART%20Algorithm-cart-split-treefit.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../07_Random_Forest/7.5%20CART%20Algorithm.md">源笔记</a><a class="mini" href="7.5%20CART%20Algorithm-cart-split-treefit.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：拖切点，看左右叶均值与 SSE 随分区重算" src="7.5%20CART%20Algorithm-cart-split-treefit.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="adaboost 把难样本抬高：权重面随轮次如何迁移 surface3d — 8.4.2.1 adaboost (adaptive boosting)" data-kind="surface3d" data-title="AdaBoost 把难样本抬高：权重面随轮次如何迁移" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">AdaBoost 把难样本抬高：权重面随轮次如何迁移</h3>
+        <div class="card-meta"><span class="k">surface3d</span><span class="uid">—</span><span class="note">8.4.2.1 AdaBoost (Adaptive Boosting)</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="8.4.2.1%20AdaBoost%20%28Adaptive%20Boosting%29-adaboost-weight-surface.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../08_ML_Methods/8.4.2.1%20AdaBoost%20%28Adaptive%20Boosting%29.md">源笔记</a><a class="mini" href="8.4.2.1%20AdaBoost%20%28Adaptive%20Boosting%29-adaboost-weight-surface.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：AdaBoost 把难样本抬高：权重面随轮次如何迁移" src="8.4.2.1%20AdaBoost%20%28Adaptive%20Boosting%29-adaboost-weight-surface.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="gbm 的小步多轮：ν 怎样沿残差递推改变整张预测面 surface3d — 8.4.2.2 gradient boosting" data-kind="surface3d" data-title="GBM 的小步多轮：ν 怎样沿残差递推改变整张预测面" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">GBM 的小步多轮：ν 怎样沿残差递推改变整张预测面</h3>
+        <div class="card-meta"><span class="k">surface3d</span><span class="uid">—</span><span class="note">8.4.2.2 Gradient Boosting</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="8.4.2.2%20Gradient%20Boosting-gradient-boosting-prediction-surface.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../08_ML_Methods/8.4.2.2%20Gradient%20Boosting.md">源笔记</a><a class="mini" href="8.4.2.2%20Gradient%20Boosting-gradient-boosting-prediction-surface.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：GBM 的小步多轮：ν 怎样沿残差递推改变整张预测面" src="8.4.2.2%20Gradient%20Boosting-gradient-boosting-prediction-surface.html"></iframe></div>
+    </article>
+    <article class="card" data-hay="tweedie 的零点质量由均值、幂与离散尺度共同决定 surface3d — 10.8 tweedie glm 专章" data-kind="surface3d" data-title="Tweedie 的零点质量由均值、幂与离散尺度共同决定" data-when="2026-09-16">
+      <div class="card-head">
+        <h3 class="card-title">Tweedie 的零点质量由均值、幂与离散尺度共同决定</h3>
+        <div class="card-meta"><span class="k">surface3d</span><span class="uid">—</span><span class="note">10.8 Tweedie GLM 专章</span><span class="when">2026-09-16</span></div>
+      </div>
+      <div class="card-actions"><a class="btn primary" href="10.8%20Tweedie%20GLM%20%E4%B8%93%E7%AB%A0-tweedie-zero-mass-surface.html" target="_blank" rel="noopener">打开</a><a class="mini" href="../10_%E4%BF%9D%E9%99%A9%E9%A3%8E%E6%8E%A7%E5%AE%9E%E5%8A%A1/10.8%20Tweedie%20GLM%20%E4%B8%93%E7%AB%A0.md">源笔记</a><a class="mini" href="10.8%20Tweedie%20GLM%20%E4%B8%93%E7%AB%A0-tweedie-zero-mass-surface.json">源 spec</a></div>
+      <div class="card-body"><iframe class="frame" loading="lazy" title="预览：Tweedie 的零点质量由均值、幂与离散尺度共同决定" src="10.8%20Tweedie%20GLM%20%E4%B8%93%E7%AB%A0-tweedie-zero-mass-surface.html"></iframe></div>
+    </article>
+</main>
+<script>
+/* 只做筛选 / 排序 / 预览开关。卡片是生成时渲染好的，所以禁掉 JS 也照样能看、能打开。 */
+(function () {
+  var grid = document.getElementById('grid');
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+  var q = document.getElementById('q');
+  var sort = document.getElementById('sort');
+  var prev = document.getElementById('prev');
+  var count = document.getElementById('count');
+  function apply() {
+    var needle = (q.value || '').trim().toLowerCase();
+    var shown = 0;
+    cards.forEach(function (c) {
+      var hit = !needle || (c.getAttribute('data-hay') || '').indexOf(needle) >= 0;
+      c.hidden = !hit;
+      if (hit) shown++;
+    });
+    count.textContent = needle ? ('匹配 ' + shown + ' / ' + cards.length + ' 个组件')
+                               : ('共 ' + cards.length + ' 个组件');
+  }
+  function resort() {
+    var mode = sort.value;
+    var sorted = cards.slice().sort(function (a, b) {
+      var x = String(a.getAttribute('data-' + mode)), y = String(b.getAttribute('data-' + mode));
+      if (mode === 'when') return y.localeCompare(x);                 /* 新 → 旧 */
+      return x.localeCompare(y, 'zh') || String(a.getAttribute('data-title')).localeCompare(String(b.getAttribute('data-title')), 'zh');
+    });
+    sorted.forEach(function (c) { grid.appendChild(c); });
+  }
+  q.addEventListener('input', apply);
+  sort.addEventListener('change', resort);
+  prev.addEventListener('change', function () {
+    document.body.classList.toggle('no-preview', !prev.checked);
+  });
+  apply();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+{
+ "schema": "widget/v1",
+ "kind": "treefit",
+ "uid": "",
+ "title": "拖切点，看左右叶均值与 SSE 随分区重算",
+ "subtitle": "CART 回归第一刀；当前图画笔记 §四条件检验的 7 套房，初始 t=80，叶值=组内 y 均值、误差统一用 SSE",
+ "vars": {
+  "root7": 34821.428571428565
+ },
+ "x": {
+  "min": 30,
+  "max": 150,
+  "label": "面积 x（平方米）",
+  "fmt": "0"
+ },
+ "y": {
+  "min": 90,
+  "max": 330,
+  "label": "价格 y（千美元）",
+  "fmt": "0.0"
+ },
+ "controls": [
+  {
+   "key": "split",
+   "type": "slider",
+   "label": "切点 t（面积，40–140 平方米）",
+   "min": 40,
+   "max": 140,
+   "step": 1,
+   "value": 80,
+   "fmt": "0",
+   "animate": {
+    "from": 40,
+    "to": 140,
+    "seconds": 12,
+    "autostart": false
+   }
+  }
+ ],
+ "treefit": {
+  "mode": "1d",
+  "splits": [
+   {
+    "at": "split"
+   }
+  ],
+  "depth": 1
+ },
+ "points": [
+  [
+   30,
+   100
+  ],
+  [
+   50,
+   150
+  ],
+  [
+   70,
+   200
+  ],
+  [
+   90,
+   230
+  ],
+  [
+   110,
+   265
+  ],
+  [
+   130,
+   290
+  ],
+  [
+   150,
+   310
+  ]
+ ],
+ "readouts": [
+  {
+   "label": "左叶均值 ȳL（随 split 重算）",
+   "expr": "ifelse(split<=50,100,ifelse(split<=70,125,ifelse(split<=90,150,ifelse(split<=110,170,ifelse(split<=130,189,205.83333333333334)))))",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "右叶均值 ȳR（随 split 重算）",
+   "expr": "ifelse(split<=50,240.83333333333334,ifelse(split<=70,259,ifelse(split<=90,273.75,ifelse(split<=110,288.3333333333333,ifelse(split<=130,300,310)))))",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "合计 SSE（动态）",
+   "expr": "__tree__.mse*__tree__.n",
+   "fmt": "0.0000"
+  },
+  {
+   "label": "ΔSSE = 根 SSE − 合计 SSE（动态）",
+   "expr": "root7-__tree__.mse*__tree__.n",
+   "fmt": "0.0000"
+  }
+ ],
+ "notes": [
+  "数字出处：7 个真实房屋点 A–G（(30,100)、(50,150)、(70,200)、(90,230)、(110,265)、(130,290)、(150,310)）与 n=7 根 SSE=34821.4286 来自笔记 §四条件检验；初始 t=80 的合计 SSE=8568.7500、ΔSSE=26252.6786 与原文表一致，左右叶均值 150.0000 / 273.7500 由同一源数据按叶均值公式用 python3 + numpy 复算。n=5 的对照锚点来自同节前半：t=60 时左均值 125.0000、右均值 231.6667、合计 SSE=3366.6667、ΔSSE=13653.3333；这些均值和 SSE 也按相同分组口径复算。",
+  "口径/机制：当前 treefit renderer 支持 control-driven split；treefit.splits[0].at 写成表达式 \"split\"（不是 Plotly 专用的 \"=split\"），运行时每次 redraw 用控件值重新分叶。左组按 x<t、右组按 x≥t（renderer 的左闭右开区间约定在切点处等价于该分法），叶均值从当前区间数据现算；__tree__.mse×__tree__.n 给合计 SSE，root7 减它给 ΔSSE。",
+  "互动：拖 split 不是只移动竖线——切点跨过 50/70/90/110/130 平方米后，左右叶区间、叶均值、阶梯预测、合计 SSE 与 ΔSSE 都会一起重算。7 点数据的 t=80 是贪心冠军；t=60 在 n=7 时仍是次优，和 n=5 的 t=60 冠军不要混为同一个数据集。",
+  "边界：本页 live treefit 固定绘制 n=7 的 A–G；笔记里的 n=5、t=60 是单独记录的核对锚点，不在当前 v1 renderer 中伪造一个动态数据集切换。图只评价当前这一刀，CART 不在组件里重新搜索最优切点，也不展示后续递归分裂、剪枝或 MSE（SSE 与 MSE 只差当前 n 的倍数）。"
+ ],
+ "teaching": {
+  "question": "为什么 CART 的第一刀必须随着切点改变左右叶统计量，而不是只把一条竖线左右移动？",
+  "sourceSection": "07_Random_Forest/7.5 CART Algorithm.md §3.1「回归：方差与 SSE」、§四「算一遍」第 1–3 步、§四「条件检验」；5 套房与加入 F/G 后的 7 套房及其切点锚点均以这些段落为源。",
+  "controlEffect": [
+   "split 直接作为 treefit.splits[0].at 的 control-driven 表达式，驱动 renderer 重新归类实际 points 并重画叶区间、叶均值和阶梯预测。",
+   "同一个 split 也进入动态 SSE/ΔSSE 读数；切点跨过观测值时，主图数据与误差统计一起改变，不是只移动竖线。"
+  ],
+  "visualEvidence": "主图是 treefit mode=1d 的实际 7 点房屋数据；拖 split 跨过 50/70/90/110/130 时，阶梯的左右平台、左右叶均值、合计 SSE 和 ΔSSE 同步跳变。",
+  "controls": [
+   "split"
+  ],
+  "dynamicRenderer": true,
+  "learning_objective": "让读者直接观察 binary split 如何重分配样本，并把叶均值、SSE 与 ΔSSE 的贪心评价绑定到同一个切点。",
+  "core_claim": "切点一变，左右叶的成员与均值就变；CART 选择的是让子节点 SSE 最小、ΔSSE 最大的那一刀。",
+  "expected_observations": [
+   "初始 split=80 时，7 点 live 数据的左叶均值为 150.0000、右叶均值为 273.7500、合计 SSE 为 8568.7500、ΔSSE 为 26252.6786。",
+   "在同一 7 点数据上，split=60 的分区统计会重算为左均值 125.0000、右均值 259.0000、合计 SSE 9170.0000；不能把它当作 n=5 的 3366.6667。",
+   "n=5 的独立锚点 t=60 是 5 套房的最优第一刀；加入 F、G 后，n=7 的冠军移到 t=80。"
+  ],
+  "anchors": [
+   {
+    "dataset": "n=5",
+    "split": 60,
+    "left_mean": 125,
+    "right_mean": 231.66666666666666,
+    "sse": 3366.6666666666665,
+    "delta_sse": 13653.333333333334,
+    "source": "笔记 §四第 2–3 步"
+   },
+   {
+    "dataset": "n=7",
+    "split": 80,
+    "left_mean": 150,
+    "right_mean": 273.75,
+    "sse": 8568.75,
+    "delta_sse": 26252.678571428565,
+    "source": "笔记 §四条件检验"
+   }
+  ],
+  "renderer_capability": {
+   "dynamic_split": true,
+   "field": "treefit.splits[0].at",
+   "control_expression": "split",
+   "fallback": "none"
+  },
+  "boundaries": [
+   "当前 v1 treefit 固定使用 7 个 points；n=5 锚点用于透明的源数据对照，不假装由同一张 live 图切换数据集。",
+   "renderer 使用给定 split，不重新训练或搜索最优阈值；本图只演示一刀的贪心 SSE 评价。"
+  ],
+  "source": {
+   "note": "07_Random_Forest/7.5 CART Algorithm.md",
+   "sections": [
+    "§3.1 回归 SSE",
+    "§四算一遍",
+    "§四条件检验"
+   ]
+  }
+ },
+ "note": "07_Random_Forest/7.5 CART Algorithm.md",
+ "slug": "cart-split-treefit"
+}
